@@ -1,0 +1,18 @@
+365 champs, taille de la structure : 916 octets
+[   1.0s] vue de référence antigivre : {'position': [0.0272, 1.3754, 15.2335], 'pbh': [-63.157, -0.634, -0.0], 'fov': 1.183} ; fenêtre MSFS (0, 0, 1920, 1080)
+[   1.0s] 195 commandes surveillées — cliquez les interrupteurs du panneau
+[  52.8s] ICE_WingAntiIceSw: False -> True  clic gauche à (0.601, 0.342)
+[  54.0s] ICE_WingAntiIceSw: True -> False  clic gauche à (0.603, 0.364)
+[  54.9s] ICE_EngAntiIceSw[0]: False -> True  clic gauche à (0.645, 0.338)
+[  55.6s] ICE_EngAntiIceSw[0]: True -> False  clic gauche à (0.646, 0.374)
+[  56.3s] ICE_EngAntiIceSw[1]: False -> True  clic gauche à (0.670, 0.341)
+[  56.9s] ICE_EngAntiIceSw[1]: True -> False  clic gauche à (0.669, 0.372)
+[  66.0s] AIR_BleedAirSwitch[1]: True -> False  clic gauche à (0.797, 0.615)
+[  67.1s] AIR_BleedAirSwitch[1]: False -> True  clic gauche à (0.796, 0.589)
+[  68.9s] AIR_APUBleedAirSwitch: False -> True  clic gauche à (0.745, 0.585)
+[  69.5s] AIR_APUBleedAirSwitch: True -> False  clic gauche à (0.746, 0.617)
+[  70.1s] AIR_BleedAirSwitch[0]: True -> False  clic gauche à (0.715, 0.624)
+[  70.9s] AIR_BleedAirSwitch[0]: False -> True  clic gauche à (0.717, 0.587)
+[  99.1s] AIR_TrimAirSwitch: False -> True  clic gauche à (0.755, 0.196)
+[  99.9s] AIR_TrimAirSwitch: True -> False  clic gauche à (0.757, 0.206)
+[ 105.5s] AIR_TrimAirSwitch: False -> True  clic gauche à (0.753, 0.187)

@@ -1,0 +1,34 @@
+FlowXav
+Copyright 2026 Xavier BEGUE (xalacaga)
+https://github.com/xalacaga/FlowXav
+
+FlowXav is offered under the PolyForm Noncommercial License 1.0.0.
+Commercial use requires a separate written licence from the copyright
+holder. This is a source-available licence, not an open-source licence.
+
+FlowXav est proposé sous licence PolyForm Noncommercial 1.0.0. Une
+utilisation commerciale nécessite une licence écrite distincte du titulaire
+des droits. Il s'agit d'une licence « source available », et non d'une
+licence open source.
+
+Third-party software / Logiciels tiers
+--------------------------------------
+
+The Windows distribution contains third-party software under separate
+licenses (Python, FastAPI, Uvicorn, Pydantic, pywebview and their
+dependencies). Their license texts are installed in "licenses/third-party".
+It also carries the SimConnect library from the Microsoft Flight Simulator
+SDK, used privately by FlowXav and never installed into the system.
+
+Aircraft data / Données des avions
+----------------------------------
+
+Aircraft profiles describe where controls are on screen and how to read their
+state. Field and event names come from the public SDKs that aircraft
+developers publish for third-party tools (for example the PMDG SDK). FlowXav
+contains no manual excerpt, no aircraft model and no proprietary file from
+those products; the aircraft itself must be owned and installed by the user.
+
+Microsoft Flight Simulator is a trademark of Microsoft Corporation. PMDG,
+Boeing and Airbus are trademarks of their respective owners. FlowXav is not
+affiliated with, endorsed or sponsored by any of them.

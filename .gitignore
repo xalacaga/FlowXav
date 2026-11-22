@@ -1,0 +1,31 @@
+# Claude, Codex et graphify : outils locaux
+.claude/
+.claude.json
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+.codex/
+AGENTS.md
+.graphify/
+.graphify*
+graphify-out/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+release/
+.pytest_cache/
+.pytest_tmp/
+
+# Données locales, journaux, cache WebView2
+data/
+*.log.*
+installer/assets/MicrosoftEdgeWebView2Setup.exe
+
+# Captures du cockpit : images des produits des éditeurs, gardées en local (snap_view.py les régénère)
+tools/cartographie/*/captures/

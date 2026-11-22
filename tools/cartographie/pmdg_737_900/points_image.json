@@ -1,0 +1,662 @@
+{
+ "tableau_centre": [
+  [
+   "EVT_MCP_VNAV_SWITCH",
+   "VNAV",
+   845,
+   594
+  ],
+  [
+   "EVT_MCP_LNAV_SWITCH",
+   "LNAV",
+   988,
+   594
+  ],
+  [
+   "EVT_MCP_CMD_A_SWITCH",
+   "CMD A",
+   1328,
+   604
+  ],
+  [
+   "EVT_MCP_CMD_B_SWITCH",
+   "CMD B",
+   1383,
+   604
+  ],
+  [
+   "EVT_MCP_CO_SWITCH",
+   "C/O",
+   726,
+   655
+  ],
+  [
+   "EVT_MCP_SPD_INTV_SWITCH",
+   "SPD INTV",
+   828,
+   655
+  ],
+  [
+   "EVT_MCP_BANK_ANGLE_SELECTOR",
+   "BANK ANGLE",
+   893,
+   642
+  ],
+  [
+   "EVT_MCP_VOR_LOC_SWITCH",
+   "VOR LOC",
+   990,
+   645
+  ],
+  [
+   "EVT_MCP_ALT_INTV_SWITCH",
+   "ALT INTV",
+   1140,
+   652
+  ],
+  [
+   "EVT_MCP_VS_SELECTOR",
+   "molette V/S",
+   1255,
+   672
+  ],
+  [
+   "EVT_MCP_CWS_A_SWITCH",
+   "CWS A",
+   1330,
+   657
+  ],
+  [
+   "EVT_MCP_CWS_B_SWITCH",
+   "CWS B",
+   1385,
+   657
+  ],
+  [
+   "EVT_MCP_N1_SWITCH",
+   "N1",
+   651,
+   701
+  ],
+  [
+   "EVT_MCP_SPEED_SWITCH",
+   "SPEED",
+   703,
+   701
+  ],
+  [
+   "EVT_MCP_LVL_CHG_SWITCH",
+   "LVL CHG",
+   846,
+   700
+  ],
+  [
+   "EVT_MCP_HDG_SEL_SWITCH",
+   "HDG SEL",
+   916,
+   700
+  ],
+  [
+   "EVT_MCP_APP_SWITCH",
+   "APP",
+   990,
+   699
+  ],
+  [
+   "EVT_MCP_ALT_HOLD_SWITCH",
+   "ALT HLD",
+   1090,
+   698
+  ],
+  [
+   "EVT_MCP_VS_SWITCH",
+   "V/S",
+   1147,
+   697
+  ],
+  [
+   "EVT_EFIS_CPT_MINIMUMS_RST",
+   "EFIS G : RST",
+   235,
+   648
+  ],
+  [
+   "EVT_EFIS_CPT_FPV",
+   "EFIS G : FPV",
+   333,
+   632
+  ],
+  [
+   "EVT_EFIS_CPT_MTRS",
+   "EFIS G : MTRS",
+   383,
+   632
+  ],
+  [
+   "EVT_EFIS_CPT_BARO_STD",
+   "EFIS G : STD",
+   406,
+   647
+  ],
+  [
+   "EVT_EFIS_CPT_MODE_CTR",
+   "EFIS G : CTR",
+   308,
+   690
+  ],
+  [
+   "EVT_EFIS_CPT_RANGE_TFC",
+   "EFIS G : TFC",
+   379,
+   690
+  ],
+  [
+   "EVT_EFIS_CPT_WXR",
+   "EFIS G : WXR",
+   246,
+   721
+  ],
+  [
+   "EVT_EFIS_CPT_STA",
+   "EFIS G : STA",
+   283,
+   721
+  ],
+  [
+   "EVT_EFIS_CPT_WPT",
+   "EFIS G : WPT",
+   319,
+   721
+  ],
+  [
+   "EVT_EFIS_CPT_ARPT",
+   "EFIS G : ARPT",
+   354,
+   721
+  ],
+  [
+   "EVT_EFIS_CPT_DATA",
+   "EFIS G : DATA",
+   389,
+   721
+  ],
+  [
+   "EVT_EFIS_CPT_POS",
+   "EFIS G : POS",
+   424,
+   721
+  ],
+  [
+   "EVT_EFIS_CPT_TERR",
+   "EFIS G : TERR",
+   459,
+   721
+  ],
+  [
+   "EVT_EFIS_FO_MINIMUMS_RST",
+   "EFIS D : RST",
+   1624,
+   640
+  ],
+  [
+   "EVT_EFIS_FO_FPV",
+   "EFIS D : FPV",
+   1633,
+   627
+  ],
+  [
+   "EVT_EFIS_FO_MTRS",
+   "EFIS D : MTRS",
+   1683,
+   625
+  ],
+  [
+   "EVT_EFIS_FO_BARO_STD",
+   "EFIS D : STD",
+   1782,
+   640
+  ],
+  [
+   "EVT_EFIS_FO_MODE_CTR",
+   "EFIS D : CTR",
+   1645,
+   682
+  ],
+  [
+   "EVT_EFIS_FO_RANGE_TFC",
+   "EFIS D : TFC",
+   1711,
+   682
+  ],
+  [
+   "EVT_EFIS_FO_WXR",
+   "EFIS D : WXR",
+   1569,
+   713
+  ],
+  [
+   "EVT_EFIS_FO_STA",
+   "EFIS D : STA",
+   1601,
+   713
+  ],
+  [
+   "EVT_EFIS_FO_WPT",
+   "EFIS D : WPT",
+   1634,
+   713
+  ],
+  [
+   "EVT_EFIS_FO_ARPT",
+   "EFIS D : ARPT",
+   1666,
+   713
+  ],
+  [
+   "EVT_EFIS_FO_DATA",
+   "EFIS D : DATA",
+   1698,
+   713
+  ],
+  [
+   "EVT_EFIS_FO_POS",
+   "EFIS D : POS",
+   1731,
+   713
+  ],
+  [
+   "EVT_EFIS_FO_TERR",
+   "EFIS D : TERR",
+   1764,
+   713
+  ],
+  [
+   "MAIN_N1SetSelector",
+   "N1 SET",
+   908,
+   773
+  ],
+  [
+   "MAIN_SpdRefSelector",
+   "SPD REF",
+   967,
+   773
+  ],
+  [
+   "EVT_DSP_CPT_AP_RESET_SWITCH",
+   "G : AP P/RST",
+   556,
+   785
+  ],
+  [
+   "EVT_DSP_CPT_AT_RESET_SWITCH",
+   "G : A/T P/RST",
+   588,
+   785
+  ],
+  [
+   "EVT_DSP_CPT_FMC_RESET_SWITCH",
+   "G : FMC P/RST",
+   620,
+   785
+  ],
+  [
+   "EVT_DSP_FO_AP_RESET_SWITCH",
+   "D : AP P/RST",
+   1355,
+   795
+  ],
+  [
+   "EVT_DSP_FO_AT_RESET_SWITCH",
+   "D : A/T P/RST",
+   1383,
+   795
+  ],
+  [
+   "EVT_DSP_FO_FMC_RESET_SWITCH",
+   "D : FMC P/RST",
+   1412,
+   795
+  ]
+ ],
+ "panneau_sup_arriere": [
+  [
+   "IRS_ModeSelector[0]",
+   "IRS gauche (OFF/ALIGN/NAV/ATT)",
+   595,
+   720
+  ],
+  [
+   "IRS_ModeSelector[1]",
+   "IRS droit (OFF/ALIGN/NAV/ATT)",
+   750,
+   720
+  ],
+  [
+   "IRS_DisplaySelector",
+   "IRS DSPL SEL",
+   545,
+   378
+  ],
+  [
+   "IRS_SysDisplay_R",
+   "IRS SYS DSPL L/R",
+   555,
+   478
+  ],
+  [
+   "EVT_ISDU_KBD_1",
+   "clavier IRS 1",
+   702,
+   360
+  ],
+  [
+   "EVT_ISDU_KBD_2",
+   "clavier IRS 2 / N",
+   740,
+   360
+  ],
+  [
+   "EVT_ISDU_KBD_3",
+   "clavier IRS 3",
+   779,
+   360
+  ],
+  [
+   "EVT_ISDU_KBD_4",
+   "clavier IRS 4 / W",
+   704,
+   397
+  ],
+  [
+   "EVT_ISDU_KBD_5",
+   "clavier IRS 5 / H",
+   741,
+   397
+  ],
+  [
+   "EVT_ISDU_KBD_6",
+   "clavier IRS 6 / E",
+   781,
+   397
+  ],
+  [
+   "EVT_ISDU_KBD_7",
+   "clavier IRS 7",
+   705,
+   435
+  ],
+  [
+   "EVT_ISDU_KBD_8",
+   "clavier IRS 8 / S",
+   743,
+   435
+  ],
+  [
+   "EVT_ISDU_KBD_9",
+   "clavier IRS 9",
+   783,
+   435
+  ],
+  [
+   "EVT_ISDU_KBD_ENT",
+   "clavier IRS ENT",
+   708,
+   471
+  ],
+  [
+   "EVT_ISDU_KBD_0",
+   "clavier IRS 0",
+   745,
+   472
+  ],
+  [
+   "EVT_ISDU_KBD_CLR",
+   "clavier IRS CLR",
+   784,
+   469
+  ],
+  [
+   "COMM_ServiceInterphoneSw",
+   "SERVICE INTERPHONE",
+   926,
+   562
+  ],
+  [
+   "ENG_EECSwitch[0]",
+   "EEC 1",
+   1149,
+   527
+  ],
+  [
+   "ENG_EECSwitch[1]",
+   "EEC 2",
+   1217,
+   527
+  ],
+  [
+   "LTS_DomeWhiteSw",
+   "DOME WHITE",
+   930,
+   826
+  ],
+  [
+   "EVT_OH_LE_DEVICES_TEST_SWITCH",
+   "LE DEVICES TEST",
+   339,
+   718
+  ],
+  [
+   "OXY_SwNormal",
+   "PASS OXYGEN",
+   1300,
+   650
+  ],
+  [
+   "FLTREC_SwNormal",
+   "FLIGHT RECORDER",
+   1460,
+   422
+  ],
+  [
+   "EVT_OH_WARNING_TEST_MACH_IAS_1_PUSH",
+   "MACH AIRSPEED WARNING TEST 1",
+   1612,
+   410
+  ],
+  [
+   "EVT_OH_WARNING_TEST_MACH_IAS_2_PUSH",
+   "MACH AIRSPEED WARNING TEST 2",
+   1676,
+   410
+  ],
+  [
+   "EVT_OH_WARNING_TEST_STALL_1_PUSH",
+   "STALL WARNING TEST 1",
+   1473,
+   540
+  ],
+  [
+   "EVT_OH_WARNING_TEST_STALL_2_PUSH",
+   "STALL WARNING TEST 2",
+   1593,
+   540
+  ],
+  [
+   "EVT_OH_VOICEREC_SWITCH",
+   "VOICE RECORDER",
+   1497,
+   1003
+  ]
+ ],
+ "pylone": [
+  [
+   "EVT_CONTROL_STAND_SPEED_BRAKE_LEVER",
+   "SPEED BRAKE (levier)",
+   852,
+   232
+  ],
+  [
+   "EVT_CONTROL_STAND_FLAPS_LEVER",
+   "FLAPS (levier)",
+   1215,
+   270
+  ],
+  [
+   "EVT_CONTROL_STAND_FWD_THRUST1_LEVER",
+   "manette de poussée 1",
+   968,
+   612
+  ],
+  [
+   "EVT_CONTROL_STAND_FWD_THRUST2_LEVER",
+   "manette de poussée 2",
+   1124,
+   612
+  ],
+  [
+   "EVT_CONTROL_STAND_ENG1_START_LEVER",
+   "levier carburant 1 (IDLE/CUTOFF)",
+   972,
+   762
+  ],
+  [
+   "EVT_CONTROL_STAND_ENG2_START_LEVER",
+   "levier carburant 2 (IDLE/CUTOFF)",
+   1062,
+   762
+  ],
+  [
+   "EVT_CONTROL_STAND_PARK_BRAKE_LEVER",
+   "PARKING BRAKE",
+   858,
+   708
+  ],
+  [
+   "TRIM_StabTrimMainElecSw_NORMAL",
+   "STAB TRIM MAIN ELECT",
+   1128,
+   818
+  ],
+  [
+   "TRIM_StabTrimAutoPilotSw_NORMAL",
+   "STAB TRIM AUTO PILOT",
+   1192,
+   818
+  ],
+  [
+   "FIRE_HandlePos[0]",
+   "poignée feu moteur 1",
+   868,
+   940
+  ],
+  [
+   "FIRE_HandlePos[2]",
+   "poignée feu APU",
+   1016,
+   940
+  ],
+  [
+   "FIRE_HandlePos[1]",
+   "poignée feu moteur 2",
+   1160,
+   940
+  ],
+  [
+   "LTS_MainPanelKnob[0]",
+   "MAIN PANEL BRIGHT (gauche)",
+   335,
+   156
+  ],
+  [
+   "LTS_UpperDUBrtKnob",
+   "UPPER DU BRT",
+   430,
+   153
+  ],
+  [
+   "LTS_BackgroundKnob",
+   "BACKGROUND",
+   515,
+   156
+  ],
+  [
+   "LTS_AFDSFloodKnob",
+   "AFDS FLOOD",
+   608,
+   156
+  ],
+  [
+   "LTS_OutbdDUBrtKnob[0]",
+   "OUTBD DU BRT (gauche)",
+   333,
+   208
+  ],
+  [
+   "LTS_InbdDUBrtKnob[0]",
+   "INBD DU BRT (gauche)",
+   380,
+   208
+  ],
+  [
+   "LTS_LowerDUBrtKnob",
+   "LOWER DU BRT",
+   428,
+   208
+  ],
+  [
+   "LTS_MainPanelKnob[1]",
+   "MAIN PANEL BRIGHT (droit)",
+   1650,
+   155
+  ],
+  [
+   "LTS_InbdDUBrtKnob[1]",
+   "INBD DU BRT (droit)",
+   1607,
+   214
+  ],
+  [
+   "LTS_OutbdDUBrtKnob[1]",
+   "OUTBD DU BRT (droit)",
+   1655,
+   214
+  ],
+  [
+   "GPWS_FlapInhibitSw_NORM",
+   "GPWS FLAP INHIBIT",
+   1428,
+   192
+  ],
+  [
+   "GPWS_GearInhibitSw_NORM",
+   "GPWS GEAR INHIBIT",
+   1455,
+   192
+  ],
+  [
+   "GPWS_TerrInhibitSw_NORM",
+   "GPWS TERR INHIBIT",
+   1482,
+   192
+  ],
+  [
+   "EVT_GPWS_SYS_TEST_BTN",
+   "GPWS SYS TEST",
+   1367,
+   190
+  ],
+  [
+   "EVT_COM1_TRANSFER_SWITCH",
+   "VHF 1 : transfert ACTIVE/STANDBY",
+   737,
+   1057
+  ],
+  [
+   "EVT_COM2_TRANSFER_SWITCH",
+   "VHF 2 : transfert ACTIVE/STANDBY",
+   1328,
+   1057
+  ]
+ ]
+}

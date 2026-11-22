@@ -1,0 +1,19 @@
+{
+ "nom": "PMDG 737-900",
+ "constructeur": "Boeing",
+ "editeur": "PMDG",
+ "simulateur": "MSFS 2024",
+ "reconnaissance": {"titre_contient": ["737-900"]},
+ "etat": {
+  "source": "pmdg_ng3",
+  "zone": "PMDG_NG3_Data",
+  "disposition": "pmdg_ng3_layout.json",
+  "aide": "Activez la diffusion du SDK PMDG : dans le fichier 737_Options.ini de l'avion (dossier LocalState\\WASM\\MSFS2024\\pmdg-aircraft-739\\work), ajoutez une section [SDK] avec EnableDataBroadcast=1, puis rechargez l'avion."
+ },
+ "notes": [
+  "Carte relevée sur une fenêtre MSFS 1920 × 1080 : les points sont en proportion de la zone client.",
+  "ELEC_BatSelector : 0 OFF, 1 BAT, 2 ON (interrupteur à trois positions sur le -900 BW).",
+  "ELEC_GrdPwrSw et ELEC_APUGenSw sont à ressort : valider sur les barres (ELEC_BusPowered) ou les voyants.",
+  "Pas de champ SDK pour les leviers carburant, le frein de parc ni le levier des volets : valider par FUEL_annunENG_VALVE_CLOSED, PED_annunParkingBrake, MAIN_TEFlapsNeedle."
+ ]
+}

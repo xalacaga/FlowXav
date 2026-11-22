@@ -1,0 +1,80 @@
+{
+ "id": "demo_mise_sous_tension",
+ "titre": {"fr": "Démonstration : premières mises sous tension", "en": "Demo: first power-up steps"},
+ "description": {
+  "fr": "Quelques étapes sûres pour découvrir FlowXav. Départ conseillé : avion en Cold & Dark avec groupe de parc branché (état PMDG « COLDDARKgpu »). Ce n'est pas encore la procédure complète.",
+  "en": "A few safe steps to discover FlowXav. Recommended start: Cold & Dark with ground power connected (PMDG state \"COLDDARKgpu\"). This is not the full procedure yet."
+ },
+ "etapes": [
+  {
+   "id": "bat",
+   "commande": "ELEC_BatSelector",
+   "attendu": {"egal": 1},
+   "titre": {"fr": "Batterie sur BAT", "en": "Battery to BAT"},
+   "explication": {
+    "fr": "Soulevez le cache rouge puis placez l'interrupteur BAT sur BAT. Attention : juste en dessous se trouve STANDBY POWER, un autre interrupteur sous cache.",
+    "en": "Lift the red guard and set the BAT switch to BAT. Careful: STANDBY POWER, another guarded switch, sits just below."
+   }
+  },
+  {
+   "id": "standby_power",
+   "commande": "ELEC_StandbyPowerSelector",
+   "attendu": {"egal": 2},
+   "titre": {"fr": "STANDBY POWER sur AUTO", "en": "STANDBY POWER to AUTO"},
+   "explication": {
+    "fr": "L'alimentation de secours se met en automatique : elle prendra le relais sur batterie en cas de perte des génératrices.",
+    "en": "Standby power goes to automatic: it will take over from the battery if the generators are lost."
+   }
+  },
+  {
+   "id": "emer_exit",
+   "commande": "LTS_EmerExitSelector",
+   "attendu": {"egal": 1},
+   "titre": {"fr": "EMER EXIT LIGHTS sur ARMED", "en": "EMER EXIT LIGHTS to ARMED"},
+   "explication": {
+    "fr": "Soulevez le cache et placez le sélecteur sur ARMED : l'éclairage de secours de la cabine s'allumera seul en cas de coupure électrique.",
+    "en": "Lift the guard and select ARMED: cabin emergency lighting will come on by itself after a power loss."
+   }
+  },
+  {
+   "id": "fasten_belts",
+   "commande": "COMM_FastenBeltsSelector",
+   "attendu": {"parmi": [1, 2]},
+   "titre": {"fr": "FASTEN BELTS sur AUTO ou ON", "en": "FASTEN BELTS to AUTO or ON"},
+   "explication": {
+    "fr": "La consigne lumineuse « attachez vos ceintures » s'allume en cabine.",
+    "en": "The fasten seat belt sign comes on in the cabin."
+   }
+  },
+  {
+   "id": "position",
+   "commande": "LTS_PositionSw",
+   "attendu": {"egal": 0},
+   "titre": {"fr": "Feux de position sur STEADY", "en": "Position lights to STEADY"},
+   "explication": {
+    "fr": "Les feux de navigation s'allument : ils restent allumés dès que l'avion est sous tension.",
+    "en": "Navigation lights come on: they stay on whenever the aircraft is powered."
+   }
+  },
+  {
+   "id": "irs_gauche",
+   "commande": "IRS_ModeSelector[0]",
+   "attendu": {"egal": 2},
+   "titre": {"fr": "IRS gauche sur NAV", "en": "Left IRS to NAV"},
+   "explication": {
+    "fr": "La centrale inertielle gauche commence son alignement (environ dix minutes). L'avion ne doit pas bouger pendant ce temps.",
+    "en": "The left inertial reference unit starts aligning (about ten minutes). The aircraft must not move meanwhile."
+   }
+  },
+  {
+   "id": "irs_droite",
+   "commande": "IRS_ModeSelector[1]",
+   "attendu": {"egal": 2},
+   "titre": {"fr": "IRS droit sur NAV", "en": "Right IRS to NAV"},
+   "explication": {
+    "fr": "Même chose pour la centrale droite. Pendant l'alignement, on pourra programmer le FMC.",
+    "en": "Same for the right unit. While it aligns, the FMC can be programmed."
+   }
+  }
+ ]
+}

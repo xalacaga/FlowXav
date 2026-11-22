@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FlowXav</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="brand"><span class="logo">▲</span> FlowXav</div>
+    <div class="pills">
+      <span class="pill" id="pill-sim" data-i18n="sim_off"></span>
+      <span class="pill" id="pill-avion"></span>
+      <span class="pill" id="pill-etat"></span>
+    </div>
+    <select id="langue" aria-label="Langue">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+  </header>
+
+  <main>
+    <section class="card" id="choix">
+      <h2 data-i18n="choose_title"></h2>
+      <label><span data-i18n="aircraft"></span>
+        <select id="profil"></select>
+      </label>
+      <label><span data-i18n="procedure"></span>
+        <select id="procedure"></select>
+      </label>
+      <p class="hint" id="message-etat"></p>
+      <button class="primary" id="demarrer" data-i18n="start"></button>
+    </section>
+
+    <section class="card" id="etape" hidden>
+      <div class="progress"><div id="progression"></div></div>
+      <p class="meta" id="compteur"></p>
+      <h2 id="etape-titre"></h2>
+      <p class="control" id="etape-commande"></p>
+      <p id="etape-explication"></p>
+      <p class="status" id="etape-statut"></p>
+      <div class="actions">
+        <button id="precedente" data-i18n="previous"></button>
+        <button class="primary" id="fait" data-i18n="done"></button>
+        <button id="suivante" data-i18n="next"></button>
+        <button class="danger" id="arreter" data-i18n="stop"></button>
+      </div>
+    </section>
+
+    <section class="card" id="montrer">
+      <h2 data-i18n="showme_title"></h2>
+      <p class="hint" data-i18n="showme_hint"></p>
+      <input type="search" id="filtre" data-i18n-placeholder="search">
+      <ul id="commandes"></ul>
+    </section>
+  </main>
+
+  <footer data-i18n="footer"></footer>
+  <script src="/static/i18n.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
