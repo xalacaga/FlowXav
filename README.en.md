@@ -27,7 +27,7 @@ screen. FlowXav shows, you operate.
 
 | Aircraft | State | Control map |
 |---|---|---|
-| PMDG 737-900 (MSFS 2024) | PMDG SDK | 219 controls: overhead, aft overhead (IRS), centre panel (MCP, EFIS), pedestal |
+| PMDG 737-900 (MSFS 2024) | PMDG SDK | 289 controls: overhead, aft overhead (IRS), centre panel (MCP, EFIS), pedestal, left CDU |
 
 More aircraft, Boeing and Airbus alike, will come by adding their profiles.
 For the PMDG 737, the shipped procedure is a **demo** of the first power-up
