@@ -1,29 +1,36 @@
 "use strict";
 
+// FlowXav — interface : parcours des procédures, étape en cours, briefing (état de départ, SimBrief),
+// palette « Montre-moi ». Sans dépendance ; l'état vient de /api/etat toutes les 400 ms.
+
 const $ = (id) => document.getElementById(id);
+const STORE_SIMBRIEF = "flowxav.simbrief";
 let lang = "fr";
 let profiles = [];
 let controls = [];
+let lastState = null;
+let journeyKey = "";
+let paletteIndex = 0;
+let lastSuggestion;
 
-function storedLanguage() {
-  try { return localStorage.getItem("flowxav.langue"); } catch { return null; }
-}
+// ------------------------------------------------------------------ outils
+function stored(key) { try { return localStorage.getItem(key); } catch { return null; } }
+function store(key, value) { try { localStorage.setItem(key, value); } catch { /* stockage indisponible */ } }
 function t(key, values = {}) {
   const table = window.FLOWXAV_I18N[lang] || window.FLOWXAV_I18N.en;
   let text = table[key] ?? window.FLOWXAV_I18N.en[key] ?? key;
   for (const [name, value] of Object.entries(values)) text = text.replace(`{${name}}`, value);
   return text;
 }
-function translate() {
-  document.documentElement.lang = lang;
-  document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
-  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
-  fillProcedures();
-}
 function pick(entry) {
   return typeof entry === "object" && entry ? (entry[lang] || entry.en || entry.fr || "") : (entry || "");
 }
-
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
 async function api(path, body) {
   const response = await fetch(path, body === undefined ? {} : {
     method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
@@ -31,93 +38,480 @@ async function api(path, body) {
   if (!response.ok) throw new Error(await response.text());
   return response.json();
 }
-
-function fillProfiles() {
-  $("profil").innerHTML = profiles.map((p) => `<option value="${p.id}">${p.constructeur} — ${p.nom}</option>`).join("");
-  fillProcedures();
-  loadControls();
+async function post(path, body) {
+  // Comme api(), mais renvoie aussi les erreurs présentables du service ({detail: {code, detail}}).
+  const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await response.json().catch(() => ({ detail: { code: "interne", detail: `HTTP ${response.status}` } }));
+  return { ok: response.ok, data, status: response.status };
 }
+function errorText(prefix, error, status) {
+  const key = `${prefix}_err_${error.code}`;
+  return window.FLOWXAV_I18N.fr[key] ? t(key, { detail: error.detail || "" })
+    : t(`${prefix}_err_autre`, { detail: error.detail || error.code || status });
+}
+let toastTimer = 0;
+function toast(message) {
+  const node = $("toast");
+  node.textContent = message;
+  node.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { node.hidden = true; }, 1800);
+}
+function note(id, text, kind) {
+  const node = $(id);
+  node.hidden = !text;
+  node.textContent = text || "";
+  node.className = `note ${kind || ""}`;
+}
+function typing() {
+  const active = document.activeElement;
+  return active && (active.tagName === "INPUT" || active.tagName === "SELECT" || active.tagName === "TEXTAREA");
+}
+
+// ------------------------------------------------------------------ langue
+function translate() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach((node) => { node.textContent = t(node.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => { node.placeholder = t(node.dataset.i18nPlaceholder); });
+  document.querySelectorAll("[data-i18n-title]").forEach((node) => { node.title = t(node.dataset.i18nTitle); });
+  journeyKey = "";
+  renderResetButtons();
+  renderSimbrief(savedFlight());
+  if (lastState) render(lastState);
+}
+
+// ------------------------------------------------------------------ profils et commandes
 function currentProfile() { return profiles.find((p) => p.id === $("profil").value); }
-function fillProcedures() {
-  const profile = currentProfile();
-  $("procedure").innerHTML = (profile?.procedures || [])
-    .map((p) => `<option value="${p.id}">${pick(p.titre)} (${p.etapes} ${t("steps")})</option>`).join("");
+function procedures() { return currentProfile()?.procedures || []; }
+function mainProcedures() { return procedures().filter((p) => !p.demonstration); }
+// Phases du parcours : une phase peut avoir plusieurs variantes (mise sous tension sur APU ou sur GPU).
+function phaseGroups() {
+  const groups = [];
+  const byPhase = new Map();
+  mainProcedures().forEach((p, index) => {
+    const key = p.phase ?? `#${index}`;
+    if (!byPhase.has(key)) { byPhase.set(key, []); groups.push(byPhase.get(key)); }
+    byPhase.get(key).push(p);
+  });
+  return groups;
+}
+function fillProfiles() {
+  $("profil").innerHTML = "";
+  profiles.forEach((p) => $("profil").append(new Option(`${p.constructeur} — ${p.nom}`, p.id)));
+  loadControls();
 }
 async function loadControls() {
   const profile = currentProfile();
   controls = profile ? await api(`/api/profils/${profile.id}/commandes`) : [];
-  renderControls();
-}
-function renderControls() {
-  const filter = $("filtre").value.trim().toLowerCase();
-  const shown = controls.filter((c) => !filter || c.libelle.toLowerCase().includes(filter) || c.id.toLowerCase().includes(filter));
-  $("commandes").innerHTML = shown.slice(0, 200)
-    .map((c) => `<li data-id="${c.id}"><span>${c.libelle}</span><small>${c.vue.replaceAll("_", " ")}</small></li>`).join("");
+  renderPalette();
 }
 
+// ------------------------------------------------------------------ rendu général
 function render(state) {
+  lastState = state;
   const sim = state.simulateur;
-  const pillSim = $("pill-sim");
-  pillSim.textContent = sim.connecte ? t("sim_on") : t("sim_off");
-  pillSim.className = "pill " + (sim.connecte ? "ok" : "");
-  $("pill-avion").textContent = sim.connecte ? (sim.profil ? sim.avion : `${sim.avion || ""} — ${t("no_profile")}`) : "";
-  $("pill-avion").className = "pill " + (sim.profil ? "ok" : "warn");
-  $("pill-etat").textContent = sim.profil ? (sim.etat_disponible ? t("state_ok") : t("state_missing")) : "";
-  $("pill-etat").className = "pill " + (sim.etat_disponible ? "ok" : "warn");
+  setChip("chip-sim", sim.connecte ? "ok" : "", sim.connecte ? t("sim_on") : t("sim_off"));
+  setChip("chip-avion", sim.profil ? "ok" : "warn", sim.connecte ? (sim.profil ? sim.avion : `${sim.avion || ""} — ${t("no_profile")}`) : "", !sim.connecte);
+  setChip("chip-etat", sim.etat_disponible ? "ok" : "warn", sim.profil ? (sim.etat_disponible ? t("state_ok") : t("state_missing")) : "", !sim.profil);
+  setChip("chip-phase", "ok", sim.phase_vol ? t(`flight_${sim.phase_vol}`) : "", !sim.phase_vol);
+  $("message-etat").hidden = !sim.message_etat;
   $("message-etat").textContent = sim.message_etat || "";
   if (sim.profil && $("profil").value !== sim.profil && !state.guide.actif) {
     $("profil").value = sim.profil;
-    fillProcedures();
+    journeyKey = "";
     loadControls();
   }
-
+  announceSuggestion(state);
   const guide = state.guide;
-  $("etape").hidden = !guide.actif;
-  $("choix").hidden = guide.actif;
-  if (!guide.actif) return;
-  const step = guide.etape;
-  $("progression").style.width = `${((guide.index + (step.validee ? 1 : 0)) / guide.total) * 100}%`;
-  $("compteur").textContent = `${guide.titre_procedure} — ${t("step_of", { n: guide.index + 1, total: guide.total })}`;
-  $("etape-titre").textContent = step.titre;
-  $("etape-commande").textContent = step.commande;
-  $("etape-explication").textContent = step.explication;
-  const status = $("etape-statut");
-  status.textContent = guide.termine ? t("finished") : step.validee ? t("validated") : step.manuelle ? t("manual") : t("waiting");
-  status.className = "status " + (guide.termine || step.validee ? "ok" : "");
-  $("precedente").disabled = guide.index === 0;
-  $("suivante").disabled = guide.index + 1 >= guide.total;
-  $("fait").disabled = guide.termine || step.validee;
+  $("parcours-vue").hidden = guide.actif;
+  $("etape-vue").hidden = !guide.actif;
+  if (guide.actif) renderStep(guide);
+  else renderJourney(state);
+}
+function announceSuggestion(state) {
+  if (!state.simulateur.connecte) { lastSuggestion = undefined; return; }
+  const suggestion = state.suggestion || null;
+  if (lastSuggestion === undefined) { lastSuggestion = suggestion; return; }
+  if (suggestion && suggestion !== lastSuggestion) {
+    const procedure = procedures().find((p) => p.id === suggestion);
+    if (procedure) {
+      const group = phaseGroups().find((items) => items.some((p) => p.id === suggestion)) || [];
+      toast(group.length > 1 ? t("phase_suggest_variants", { name: pick(procedure.titre) })
+        : t("phase_suggest", { name: pick(procedure.titre) }));
+    }
+  }
+  lastSuggestion = suggestion;
+}
+function setChip(id, kind, text, hide = false) {
+  const chip = $(id);
+  chip.hidden = hide || !text;
+  chip.className = `dot-chip ${kind}`;
+  chip.querySelector("span").textContent = text;
 }
 
+// ------------------------------------------------------------------ parcours
+function heroTarget(state) {
+  const list = mainProcedures();
+  const statuses = state.parcours || {};
+  const suggested = list.find((p) => p.id === state.suggestion);
+  const allDone = list.length > 0 && list.every((p) => statuses[p.id] === "fait");
+  return { procedure: suggested || list[0], allDone, connected: Boolean(state.simulateur.etat_disponible) };
+}
+function renderJourney(state) {
+  const statuses = state.parcours || {};
+  const key = JSON.stringify([lang, $("profil").value, statuses, state.suggestion, state.simulateur.etat_disponible]);
+  if (key === journeyKey) return;
+  journeyKey = key;
+
+  const { procedure, allDone, connected } = heroTarget(state);
+  $("hero").hidden = !procedure;
+  if (procedure) {
+    $("hero-eyebrow").textContent = allDone ? t("hero_all_done") : t("next_up");
+    $("hero-titre").textContent = pick(procedure.titre);
+    $("hero-description").textContent = connected ? pick(procedure.description) : t("hero_offline_sub");
+    $("hero-demarrer").dataset.procedure = procedure.id;
+    const other = (phaseGroups().find((g) => g.some((p) => p.id === procedure.id)) || []).find((p) => p.id !== procedure.id);
+    $("hero-variante").hidden = !other;
+    if (other) {
+      $("hero-variante").textContent = t("other_variant", { name: pick(other.variante) });
+      $("hero-variante").onclick = () => startProcedure(other.id);
+    }
+  }
+
+  $("parcours").replaceChildren(...phaseGroups().map((group, index) => journeyItem(group, statuses[group[0].id] || "a_faire", index + 1, state.suggestion)));
+  const demos = procedures().filter((p) => p.demonstration);
+  $("demo-bloc").hidden = demos.length === 0;
+  $("demo-liste").replaceChildren(...demos.map((p) => journeyItem([p], "a_faire", "·")));
+}
+function journeyItem(group, status, number, suggestion) {
+  // Une ligne par phase ; s'il y a des variantes (APU / GPU), un bouton par variante.
+  const main = group.find((p) => p.id === suggestion) || group[0];
+  const item = el("li", `journey-item ${status}`);
+  const node = el("span", "journey-node", status === "fait" ? "✓" : String(number));
+  const body = el("div", "journey-body");
+  body.append(el("h3", "", pick(main.titre)));
+  body.append(el("p", "", group.length > 1 ? t("variants_hint") : t("steps_count", { n: main.etapes })));
+  const side = el("div", "journey-side");
+  if (!main.demonstration) side.append(el("span", `tag ${status}`, t(`tag_${status}`)));
+  const buttons = el("div", "variants");
+  group.forEach((p) => {
+    const primary = status === "propose" && p.id === main.id;
+    const label = group.length > 1 ? `${pick(p.variante)} · ${t("steps_count", { n: p.etapes })}` : t("start_short");
+    const button = el("button", primary ? "btn btn-primary btn-sm" : "btn btn-soft btn-sm", label);
+    button.type = "button";
+    button.addEventListener("click", () => startProcedure(p.id));
+    buttons.append(button);
+  });
+  side.append(buttons);
+  item.append(node, body, side);
+  return item;
+}
+function startProcedure(procedureId) {
+  if (!procedureId) return;
+  api("/api/guide/demarrer", { profil: $("profil").value, procedure: procedureId, langue: lang }).catch(() => {});
+}
+
+// ------------------------------------------------------------------ étape en cours
+function nextProcedure(guide) {
+  // Procédure suivante = première de la phase suivante (on saute l'autre variante de la même phase).
+  const list = (profiles.find((p) => p.id === guide.profil)?.procedures || []).filter((p) => !p.demonstration);
+  const index = list.findIndex((p) => p.id === guide.procedure);
+  if (index < 0) return undefined;
+  const phase = list[index].phase;
+  return list.slice(index + 1).find((p) => phase === undefined || phase === null || p.phase !== phase);
+}
+function renderStep(guide) {
+  const step = guide.etape;
+  const groups = phaseGroups();
+  const phase = groups.findIndex((g) => g.some((p) => p.id === guide.procedure));
+  $("compteur").textContent = t("step_of", { n: guide.index + 1, total: guide.total });
+  $("phase-titre").textContent = guide.titre_procedure + (phase >= 0 ? ` · ${t("phase_of", { n: phase + 1, total: groups.length })}` : "");
+
+  const segments = $("segments");
+  if (segments.childElementCount !== guide.total) {
+    segments.replaceChildren(...Array.from({ length: guide.total }, () => el("span")));
+  }
+  [...segments.children].forEach((bar, i) => {
+    const done = i < guide.index || (i === guide.index && (step.validee || guide.termine));
+    bar.className = done ? "done" : i === guide.index ? "current" : "";
+  });
+
+  $("etape-commande").hidden = !step.commande;
+  $("etape-commande").textContent = step.commande;
+  $("etape-titre").textContent = step.titre;
+  $("etape-explication").textContent = step.explication;
+  const following = nextProcedure(guide);
+  const status = $("etape-statut");
+  if (guide.termine) status.textContent = following ? t("finished_next", { name: pick(following.titre) }) : t("finished");
+  else status.textContent = step.validee ? t("validated") : step.manuelle ? t("manual") : t("waiting");
+  status.className = "step-status " + (guide.termine || step.validee ? "ok" : step.manuelle ? "manual" : "");
+  $("carte-etape").classList.toggle("validee", Boolean(guide.termine || step.validee));
+
+  $("precedente").disabled = guide.index === 0;
+  $("suivante").disabled = guide.index + 1 >= guide.total;
+  // « Fait » n'existe que pour les étapes manuelles : les autres attendent l'état de l'avion.
+  $("fait").disabled = guide.termine || step.validee || !step.manuelle;
+  const chain = guide.termine && following;
+  $("enchainer").hidden = !chain;
+  $("fait").hidden = $("suivante").hidden = Boolean(chain);
+
+  const alerts = guide.alertes || [];
+  $("alertes").hidden = alerts.length === 0;
+  $("alertes").replaceChildren(...alerts.map((message) => el("p", "", message)));
+  renderWait(alerts.length ? null : guide.attente);
+
+  const upcoming = guide.termine ? [] : (guide.suivantes || []);
+  $("a-suivre").hidden = upcoming.length === 0;
+  $("suivantes").replaceChildren(...upcoming.map((title) => el("li", "", title)));
+}
+// Compte à rebours d'une attente (démarrage de l'APU…) : la durée vient de l'avion lui-même une fois apprise.
+function renderWait(wait) {
+  const box = $("attente");
+  box.hidden = !wait;
+  if (!wait) return;
+  $("attente-libelle").textContent = wait.libelle;
+  const pending = wait.ecoule === null;
+  box.classList.toggle("pending", pending);
+  if (pending) {
+    $("attente-temps").textContent = clock(wait.duree);
+    $("attente-conseil").textContent = wait.debut || t("wait_pending");
+    return;
+  }
+  const left = wait.duree - wait.ecoule;
+  $("attente-temps").textContent = left > 0 ? `≈ ${clock(left)}` : t("wait_almost");
+  $("attente-barre").style.width = `${Math.min(100, (wait.ecoule / wait.duree) * 100)}%`;
+  $("attente-conseil").textContent = left > 0 ? t("wait_running") : t("wait_overdue");
+}
+function clock(seconds) {
+  const s = Math.max(0, Math.round(seconds));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+async function chainNext() {
+  const guide = (await api("/api/etat")).guide;
+  const following = guide.actif && nextProcedure(guide);
+  if (following) startProcedure(following.id);
+}
+
+// ------------------------------------------------------------------ palette « Montre-moi »
+function openPalette() {
+  $("palette").hidden = false;
+  $("filtre").value = "";
+  paletteIndex = 0;
+  renderPalette();
+  setTimeout(() => $("filtre").focus(), 0);
+}
+function closePalette() { $("palette").hidden = true; }
+function paletteMatches() {
+  const words = $("filtre").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  return controls.filter((c) => {
+    const haystack = `${c.libelle} ${c.id} ${c.vue}`.toLowerCase();
+    return words.every((word) => haystack.includes(word));
+  }).slice(0, 60);
+}
+function renderPalette() {
+  const matches = paletteMatches();
+  paletteIndex = Math.min(paletteIndex, Math.max(matches.length - 1, 0));
+  const list = $("commandes");
+  if (!matches.length) {
+    list.replaceChildren(el("li", "empty", t("palette_empty")));
+    return;
+  }
+  list.replaceChildren(...matches.map((c, i) => {
+    const item = el("li", i === paletteIndex ? "active" : "");
+    item.dataset.id = c.id;
+    item.setAttribute("role", "option");
+    item.append(el("span", "", c.libelle), el("small", "", c.vue.replaceAll("_", " ")));
+    item.addEventListener("click", () => showControl(c.id));
+    return item;
+  }));
+  list.children[paletteIndex]?.scrollIntoView({ block: "nearest" });
+}
+function showControl(id) {
+  closePalette();
+  api("/api/montrer", { profil: $("profil").value, commande: id }).catch(() => {});
+}
+
+// ------------------------------------------------------------------ état de départ
+function renderResetButtons() {
+  const states = currentProfile()?.depart_etats || [];
+  $("dp-etats").replaceChildren(...states.map((s) => {
+    const button = el("button", "btn btn-danger-soft grow dp-reset", t("dp_reset_to", { name: pick(s.libelle) }));
+    button.type = "button";
+    button.addEventListener("click", () => {
+      if (window.confirm(t("dp_confirm_state", { name: pick(s.libelle) }))) departAction("/api/depart/reinitialiser", "dp_loading", s.id);
+    });
+    return button;
+  }));
+}
+
+async function departAction(path, busyKey, state) {
+  note("dp-statut", t(busyKey), "busy");
+  $("dp-liste").hidden = true;
+  const buttons = [$("dp-check"), ...document.querySelectorAll(".dp-reset")];
+  buttons.forEach((b) => { b.disabled = true; });
+  try {
+    const { ok, data, status } = await post(path, { profil: $("profil").value, etat: state || null });
+    if (!ok) {
+      note("dp-statut", errorText("dp", data.detail || {}, status), "error");
+      setBadge("");
+      return;
+    }
+    const checks = data.verifications || [];
+    const failed = checks.filter((c) => !c.ok);
+    note("dp-statut", failed.length ? t("dp_ko", { n: failed.length }) : t("dp_ok"), failed.length ? "error" : "ok");
+    setBadge(failed.length ? "ko" : "ok", failed.length);
+    $("dp-liste").replaceChildren(...failed.map((c) => {
+      const item = el("li", "ko", pick(c.libelle));
+      item.append(el("small", "", pick(c.conseil)));
+      return item;
+    }));
+    $("dp-liste").hidden = failed.length === 0;
+  } catch {
+    note("dp-statut", t("dp_err_autre", { detail: "FlowXav" }), "error");
+  } finally {
+    buttons.forEach((b) => { b.disabled = false; });
+  }
+}
+function setBadge(kind, count = 0) {
+  const badge = $("dp-badge");
+  badge.hidden = !kind;
+  badge.className = `badge ${kind}`;
+  badge.textContent = kind === "ok" ? t("dp_badge_ok") : kind === "ko" ? t("dp_badge_ko", { n: count }) : "";
+}
+
+// ------------------------------------------------------------------ SimBrief (sur clic uniquement)
+function savedFlight() {
+  try { return JSON.parse(stored(STORE_SIMBRIEF) || "null"); } catch { return null; }
+}
+function renderSimbrief(flight, forceInput = false) {
+  const hasId = Boolean($("sb-identifiant").value.trim());
+  $("sb-vol").hidden = !flight;
+  $("sb-saisie").hidden = Boolean(flight && hasId && !forceInput);
+  $("sb-modifier").hidden = !$("sb-saisie").hidden;
+  if (!flight) return;
+  $("sb-orig").textContent = flight.origine;
+  $("sb-dest").textContent = flight.destination;
+  $("sb-rwy-dep").textContent = flight.piste_depart ? `RWY ${flight.piste_depart}` : "";
+  $("sb-rwy-arr").textContent = flight.piste_arrivee ? `RWY ${flight.piste_arrivee}` : "";
+  $("sb-meta").textContent = [flight.vol, flight.sid].filter(Boolean).join(" · ");
+  const withUnits = (value) => (value ? `${value} ${(flight.unites || "").toLowerCase()}` : "");
+  const cells = [
+    ["sb_level", flight.niveau, flight.altitude_croisiere], ["sb_ci", flight.cost_index],
+    ["sb_zfw", withUnits(flight.zfw), flight.zfw], ["sb_reserve", withUnits(flight.reserve), flight.reserve],
+    ["sb_trans", flight.altitude_transition], ["sb_block", withUnits(flight.carburant_bloc), flight.carburant_bloc],
+  ].filter(([, shown]) => shown);
+  $("sb-ofp").replaceChildren(...cells.map(([key, shown, raw]) => {
+    const cell = el("div");
+    cell.title = t("sb_copy_hint");
+    cell.append(el("dt", "", t(key)), el("dd", "", shown));
+    cell.addEventListener("click", () => copy(String(raw ?? shown)));
+    return cell;
+  }));
+  $("sb-route").textContent = flight.route || "";
+}
+async function copy(value) {
+  try { await navigator.clipboard.writeText(value); } catch {
+    const area = el("textarea"); area.value = value; document.body.append(area); area.select();
+    document.execCommand("copy"); area.remove();
+  }
+  toast(t("copied", { value }));
+}
+async function importSimbrief() {
+  note("sb-statut", t("sb_loading"), "busy");
+  $("sb-importer").disabled = true;
+  try {
+    const { ok, data, status } = await post("/api/simbrief/importer", { profil: $("profil").value, identifiant: $("sb-identifiant").value });
+    if (!ok) {
+      note("sb-statut", errorText("sb", data.detail || {}, status), "error");
+      return;
+    }
+    note("sb-statut", t("sb_ok", { file: data.fichier, fmc: data.fmc }) + (data.vents ? " " + t("sb_wind", { file: data.vents }) : ""), "ok");
+    store(STORE_SIMBRIEF, JSON.stringify(data));
+    renderSimbrief(data);
+  } catch {
+    note("sb-statut", t("sb_err_reseau"), "error");
+  } finally {
+    $("sb-importer").disabled = false;
+  }
+}
+
+// ------------------------------------------------------------------ clavier
+function onKey(event) {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+    event.preventDefault();
+    $("palette").hidden ? openPalette() : closePalette();
+    return;
+  }
+  if (!$("palette").hidden) {
+    const count = paletteMatches().length;
+    if (event.key === "Escape") closePalette();
+    else if (event.key === "ArrowDown") { paletteIndex = Math.min(paletteIndex + 1, count - 1); renderPalette(); event.preventDefault(); }
+    else if (event.key === "ArrowUp") { paletteIndex = Math.max(paletteIndex - 1, 0); renderPalette(); event.preventDefault(); }
+    else if (event.key === "Enter") { const match = paletteMatches()[paletteIndex]; if (match) showControl(match.id); }
+    return;
+  }
+  if (typing() || event.altKey || event.ctrlKey) return;
+  // Un bouton qui a le focus gère lui-même Entrée et Espace : pas de double action.
+  if ((event.key === " " || event.key === "Enter") && document.activeElement?.tagName === "BUTTON") return;
+  const guide = lastState?.guide;
+  if (event.key === "/") { event.preventDefault(); openPalette(); return; }
+  if (!guide?.actif) {
+    if (event.key === "Enter" && $("hero-demarrer").dataset.procedure) startProcedure($("hero-demarrer").dataset.procedure);
+    return;
+  }
+  if (event.key === " " || event.key === "Enter") {
+    event.preventDefault();
+    if (!$("enchainer").hidden) chainNext();
+    else if (!$("fait").disabled) api("/api/guide/fait", {});
+  } else if (event.key === "+" || event.key === "=") api("/api/camera/zoom", { pas: 2 });
+  else if (event.key === "-") api("/api/camera/zoom", { pas: -2 });
+  else if (event.key === "0") api("/api/camera/recentrer", {});
+  else if (event.key === "ArrowRight" && !$("suivante").disabled) api("/api/guide/suivante", {});
+  else if (event.key === "ArrowLeft" && !$("precedente").disabled) api("/api/guide/precedente", {});
+}
+
+// ------------------------------------------------------------------ démarrage
 async function poll() {
   try { render(await api("/api/etat")); } catch { /* service en cours d'arrêt */ }
   setTimeout(poll, 400);
 }
 
 async function init() {
-  lang = storedLanguage() || (navigator.language || "fr").slice(0, 2);
+  lang = stored("flowxav.langue") || (navigator.language || "fr").slice(0, 2);
   if (!window.FLOWXAV_I18N[lang]) lang = "en";
   $("langue").value = lang;
   $("langue").addEventListener("change", (event) => {
     lang = event.target.value;
-    try { localStorage.setItem("flowxav.langue", lang); } catch { /* stockage indisponible */ }
+    store("flowxav.langue", lang);
     translate();
   });
   profiles = await api("/api/profils");
   fillProfiles();
+  try { $("sb-identifiant").value = (await api("/api/simbrief")).identifiant || ""; } catch { /* réglages indisponibles */ }
   translate();
-  $("profil").addEventListener("change", () => { fillProcedures(); loadControls(); });
-  $("filtre").addEventListener("input", renderControls);
-  $("commandes").addEventListener("click", (event) => {
-    const item = event.target.closest("li");
-    if (item) api("/api/montrer", { profil: $("profil").value, commande: item.dataset.id });
-  });
-  $("demarrer").addEventListener("click", () =>
-    api("/api/guide/demarrer", { profil: $("profil").value, procedure: $("procedure").value, langue: lang }));
+
+  $("profil").addEventListener("change", () => { journeyKey = ""; loadControls(); renderResetButtons(); if (lastState) render(lastState); });
+  $("hero-demarrer").addEventListener("click", () => startProcedure($("hero-demarrer").dataset.procedure));
   $("fait").addEventListener("click", () => api("/api/guide/fait", {}));
   $("suivante").addEventListener("click", () => api("/api/guide/suivante", {}));
   $("precedente").addEventListener("click", () => api("/api/guide/precedente", {}));
-  $("arreter").addEventListener("click", () => api("/api/guide/arreter", {}));
+  $("arreter").addEventListener("click", () => { journeyKey = ""; api("/api/guide/arreter", {}); });
+  $("enchainer").addEventListener("click", chainNext);
+  $("zoom-plus").addEventListener("click", () => api("/api/camera/zoom", { pas: 2 }));
+  $("zoom-moins").addEventListener("click", () => api("/api/camera/zoom", { pas: -2 }));
+  $("zoom-centre").addEventListener("click", () => api("/api/camera/recentrer", {}));
+
+  $("ouvrir-palette").addEventListener("click", openPalette);
+  $("palette").addEventListener("click", (event) => { if (event.target === $("palette")) closePalette(); });
+  $("filtre").addEventListener("input", () => { paletteIndex = 0; renderPalette(); });
+
+  $("dp-check").addEventListener("click", () => departAction("/api/depart/verifier", "dp_checking"));
+  $("sb-importer").addEventListener("click", importSimbrief);
+  $("sb-identifiant").addEventListener("keydown", (event) => { if (event.key === "Enter") importSimbrief(); });
+  $("sb-modifier").addEventListener("click", () => { renderSimbrief(savedFlight(), true); $("sb-identifiant").focus(); });
+
+  document.addEventListener("keydown", onKey);
   poll();
 }
 

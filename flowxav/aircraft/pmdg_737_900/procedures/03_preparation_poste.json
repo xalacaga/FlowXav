@@ -1,0 +1,567 @@
+{
+ "id": "preparation_poste",
+ "phase": 2,
+ "titre": {
+  "fr": "2. Préparation du poste",
+  "en": "2. Cockpit preparation"
+ },
+ "description": {
+  "fr": "Le tour du panneau supérieur, de gauche à droite et de haut en bas, puis le pylône. À faire après « 1. Mise sous tension et APU », APU en marche, pendant l'alignement des IRS.",
+  "en": "The overhead panel flow, left to right and top to bottom, then the pedestal. Do it after \"1. Power-up and APU\", APU running, while the IRS align."
+ },
+ "etapes": [
+  {
+   "id": "altn_flaps",
+   "commande": "FCTL_AltnFlaps_Sw_ARM",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "ALTERNATE FLAPS sur OFF",
+    "en": "ALTERNATE FLAPS to OFF"
+   },
+   "explication": {
+    "fr": "Les volets de secours restent désarmés (interrupteur sous cache, cache fermé).",
+    "en": "Alternate flaps stay disarmed (guarded switch, guard closed)."
+   }
+  },
+  {
+   "id": "spoiler_a",
+   "commande": "FCTL_Spoiler_Sw[0]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "SPOILER A sur ON",
+    "en": "SPOILER A to ON"
+   },
+   "explication": {
+    "fr": "Les spoilers du circuit hydraulique A sont en service (cache fermé).",
+    "en": "Spoilers on hydraulic system A are on (guard closed)."
+   }
+  },
+  {
+   "id": "spoiler_b",
+   "commande": "FCTL_Spoiler_Sw[1]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "SPOILER B sur ON",
+    "en": "SPOILER B to ON"
+   },
+   "explication": {
+    "fr": "Même chose pour le circuit B.",
+    "en": "Same for system B."
+   }
+  },
+  {
+   "id": "fuel_aft_1",
+   "commande": "FUEL_PumpAftSw[0]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "FUEL PUMP AFT 1 sur ON",
+    "en": "FUEL PUMP AFT 1 to ON"
+   },
+   "explication": {
+    "fr": "Les pompes du réservoir gauche alimentent l'APU et le moteur 1. Le voyant LOW PRESSURE s'éteint quand la pompe débite.",
+    "en": "The left tank pumps feed the APU and engine 1. The LOW PRESSURE light goes out when the pump delivers."
+   }
+  },
+  {
+   "id": "fuel_fwd_1",
+   "commande": "FUEL_PumpFwdSw[0]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "FUEL PUMP FWD 1 sur ON",
+    "en": "FUEL PUMP FWD 1 to ON"
+   },
+   "explication": {
+    "fr": "Deuxième pompe du réservoir gauche.",
+    "en": "Second left tank pump."
+   }
+  },
+  {
+   "id": "fuel_fwd_2",
+   "commande": "FUEL_PumpFwdSw[1]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "FUEL PUMP FWD 2 sur ON",
+    "en": "FUEL PUMP FWD 2 to ON"
+   },
+   "explication": {
+    "fr": "Pompes du réservoir droit, pour le moteur 2.",
+    "en": "Right tank pumps, for engine 2."
+   }
+  },
+  {
+   "id": "fuel_aft_2",
+   "commande": "FUEL_PumpAftSw[1]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "FUEL PUMP AFT 2 sur ON",
+    "en": "FUEL PUMP AFT 2 to ON"
+   },
+   "explication": {
+    "fr": "Deuxième pompe du réservoir droit. Les pompes CTR (réservoir central) ne se mettent en marche que s'il y a du carburant au centre : une pompe ne doit jamais tourner à vide.",
+    "en": "Second right tank pump. The CTR (centre tank) pumps go on only if there is fuel in the centre tank: a pump must never run dry."
+   }
+  },
+  {
+   "id": "crossfeed",
+   "commande": "FUEL_CrossFeedSw",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "CROSSFEED fermé",
+    "en": "CROSSFEED closed"
+   },
+   "explication": {
+    "fr": "L'intercommunication carburant reste fermée : chaque réservoir alimente son moteur.",
+    "en": "Fuel crossfeed stays closed: each tank feeds its own engine."
+   }
+  },
+  {
+   "id": "cab_util",
+   "commande": "ELEC_CabUtilSw",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "CAB/UTIL sur ON",
+    "en": "CAB/UTIL to ON"
+   },
+   "explication": {
+    "fr": "Alimentation de la cabine et des offices.",
+    "en": "Cabin and galley power."
+   }
+  },
+  {
+   "id": "ife",
+   "commande": "ELEC_IFEPassSeatSw",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "IFE/PASS SEAT sur ON",
+    "en": "IFE/PASS SEAT to ON"
+   },
+   "explication": {
+    "fr": "Alimentation des sièges passagers et du divertissement en vol.",
+    "en": "Passenger seat and in-flight entertainment power."
+   }
+  },
+  {
+   "id": "emer_exit",
+   "commande": "LTS_EmerExitSelector",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "EMER EXIT LIGHTS sur ARMED",
+    "en": "EMER EXIT LIGHTS to ARMED"
+   },
+   "explication": {
+    "fr": "Soulevez le cache et placez le sélecteur sur ARMED : l'éclairage de secours de la cabine s'allumera seul en cas de coupure électrique.",
+    "en": "Lift the guard and select ARMED: cabin emergency lighting will come on by itself after a power loss."
+   }
+  },
+  {
+   "id": "no_smoking",
+   "commande": "COMM_NoSmokingSelector",
+   "attendu": {
+    "parmi": [
+     1,
+     2
+    ]
+   },
+   "titre": {
+    "fr": "NO SMOKING sur AUTO ou ON",
+    "en": "NO SMOKING to AUTO or ON"
+   },
+   "explication": {
+    "fr": "Consigne « défense de fumer » en cabine.",
+    "en": "Cabin no smoking sign."
+   }
+  },
+  {
+   "id": "fasten_belts",
+   "commande": "COMM_FastenBeltsSelector",
+   "attendu": {
+    "parmi": [
+     1,
+     2
+    ]
+   },
+   "titre": {
+    "fr": "FASTEN BELTS sur AUTO ou ON",
+    "en": "FASTEN BELTS to AUTO or ON"
+   },
+   "explication": {
+    "fr": "La consigne lumineuse « attachez vos ceintures » s'allume en cabine.",
+    "en": "The fasten seat belt sign comes on in the cabin."
+   }
+  },
+  {
+   "id": "window_heat_1",
+   "commande": "ICE_WindowHeatSw[0]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "WINDOW HEAT L SIDE sur ON",
+    "en": "WINDOW HEAT L SIDE to ON"
+   },
+   "explication": {
+    "fr": "Le chauffage des pare-brise doit être en marche au moins dix minutes avant le décollage. Le voyant vert ON s'allume.",
+    "en": "Window heat must be on at least ten minutes before takeoff. The green ON light comes on."
+   }
+  },
+  {
+   "id": "window_heat_2",
+   "commande": "ICE_WindowHeatSw[1]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "WINDOW HEAT L FWD sur ON",
+    "en": "WINDOW HEAT L FWD to ON"
+   },
+   "explication": {
+    "fr": "Pare-brise avant gauche.",
+    "en": "Left forward windshield."
+   }
+  },
+  {
+   "id": "window_heat_3",
+   "commande": "ICE_WindowHeatSw[2]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "WINDOW HEAT R FWD sur ON",
+    "en": "WINDOW HEAT R FWD to ON"
+   },
+   "explication": {
+    "fr": "Pare-brise avant droit.",
+    "en": "Right forward windshield."
+   }
+  },
+  {
+   "id": "window_heat_4",
+   "commande": "ICE_WindowHeatSw[3]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "WINDOW HEAT R SIDE sur ON",
+    "en": "WINDOW HEAT R SIDE to ON"
+   },
+   "explication": {
+    "fr": "Fenêtre latérale droite.",
+    "en": "Right side window."
+   }
+  },
+  {
+   "id": "hyd_eng_1",
+   "commande": "HYD_PumpSw_eng[0]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "HYD PUMP ENG 1 sur ON",
+    "en": "HYD PUMP ENG 1 to ON"
+   },
+   "explication": {
+    "fr": "Les pompes hydrauliques entraînées par les moteurs restent sur ON : elles débiteront dès le démarrage.",
+    "en": "Engine-driven hydraulic pumps stay ON: they will deliver as soon as the engines start."
+   }
+  },
+  {
+   "id": "hyd_elec_2",
+   "commande": "HYD_PumpSw_elec[0]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "HYD PUMP ELEC 2 sur ON",
+    "en": "HYD PUMP ELEC 2 to ON"
+   },
+   "explication": {
+    "fr": "La pompe électrique du circuit A met le circuit sous pression. Le voyant LOW PRESSURE s'éteint.",
+    "en": "The system A electric pump pressurises the system. The LOW PRESSURE light goes out."
+   }
+  },
+  {
+   "id": "hyd_elec_1",
+   "commande": "HYD_PumpSw_elec[1]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "HYD PUMP ELEC 1 sur ON",
+    "en": "HYD PUMP ELEC 1 to ON"
+   },
+   "explication": {
+    "fr": "Même chose pour le circuit B. Attention : les gouvernes peuvent bouger.",
+    "en": "Same for system B. Caution: flight control surfaces may move."
+   }
+  },
+  {
+   "id": "hyd_eng_2",
+   "commande": "HYD_PumpSw_eng[1]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "HYD PUMP ENG 2 sur ON",
+    "en": "HYD PUMP ENG 2 to ON"
+   },
+   "explication": {
+    "fr": "Pompe entraînée par le moteur 2.",
+    "en": "Engine 2 driven pump."
+   }
+  },
+  {
+   "id": "yaw_damper",
+   "commande": "FCTL_YawDamper_Sw",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "YAW DAMPER sur ON",
+    "en": "YAW DAMPER to ON"
+   },
+   "explication": {
+    "fr": "L'amortisseur de lacet s'enclenche (il lui faut le circuit hydraulique B). Le voyant YAW DAMPER s'éteint.",
+    "en": "The yaw damper engages (it needs hydraulic system B). The YAW DAMPER light goes out."
+   }
+  },
+  {
+   "id": "recirc_l",
+   "commande": "AIR_RecircFanSwitch[0]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "L RECIRC FAN sur AUTO",
+    "en": "L RECIRC FAN to AUTO"
+   },
+   "explication": {
+    "fr": "Recyclage de l'air de la cabine.",
+    "en": "Cabin air recirculation."
+   }
+  },
+  {
+   "id": "recirc_r",
+   "commande": "AIR_RecircFanSwitch[1]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "R RECIRC FAN sur AUTO",
+    "en": "R RECIRC FAN to AUTO"
+   },
+   "explication": {
+    "fr": "Même chose à droite.",
+    "en": "Same on the right."
+   }
+  },
+  {
+   "id": "bleed_1",
+   "commande": "AIR_BleedAirSwitch[0]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "BLEED 1 sur ON",
+    "en": "BLEED 1 to ON"
+   },
+   "explication": {
+    "fr": "Le prélèvement d'air du moteur 1 reste sur ON.",
+    "en": "Engine 1 bleed stays ON."
+   }
+  },
+  {
+   "id": "apu_bleed",
+   "commande": "AIR_APUBleedAirSwitch",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "APU BLEED sur ON",
+    "en": "APU BLEED to ON"
+   },
+   "explication": {
+    "fr": "L'APU fournit l'air comprimé : pour le conditionnement d'air puis le démarrage des moteurs. L'aiguille DUCT PRESS monte si l'APU tourne (sur groupe de parc, il sera démarré plus tard).",
+    "en": "The APU supplies compressed air: for air conditioning, then engine start. The DUCT PRESS needle rises."
+   }
+  },
+  {
+   "id": "bleed_2",
+   "commande": "AIR_BleedAirSwitch[1]",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "BLEED 2 sur ON",
+    "en": "BLEED 2 to ON"
+   },
+   "explication": {
+    "fr": "Même chose pour le moteur 2.",
+    "en": "Same for engine 2."
+   }
+  },
+  {
+   "id": "isolation",
+   "commande": "AIR_IsolationValveSwitch",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "ISOLATION VALVE sur AUTO",
+    "en": "ISOLATION VALVE to AUTO"
+   },
+   "explication": {
+    "fr": "La vanne d'isolement relie les deux côtés du circuit pneumatique quand c'est nécessaire.",
+    "en": "The isolation valve connects both sides of the pneumatic system when needed."
+   }
+  },
+  {
+   "id": "pack_l",
+   "commande": "AIR_PackSwitch[0]",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "L PACK sur AUTO",
+    "en": "L PACK to AUTO"
+   },
+   "explication": {
+    "fr": "Le groupe de conditionnement gauche ventile la cabine avec l'air de l'APU.",
+    "en": "The left pack ventilates the cabin with APU air."
+   }
+  },
+  {
+   "id": "pack_r",
+   "commande": "AIR_PackSwitch[1]",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "R PACK sur AUTO",
+    "en": "R PACK to AUTO"
+   },
+   "explication": {
+    "fr": "Même chose pour le groupe droit.",
+    "en": "Same for the right pack."
+   }
+  },
+  {
+   "id": "flt_alt",
+   "commande": "AIR_FltAltWindow",
+   "titre": {
+    "fr": "FLT ALT : altitude de croisière",
+    "en": "FLT ALT: cruise altitude"
+   },
+   "explication": {
+    "fr": "Sur le panneau de pressurisation, tournez la molette FLT ALT jusqu'à votre altitude de croisière (par exemple 35000) : le 737 ne la reçoit pas du FMC. Puis « Fait ».",
+    "en": "On the pressurisation panel, turn the FLT ALT knob to your cruise altitude (for example 35000): the 737 does not get it from the FMC. Then \"Done\"."
+   }
+  },
+  {
+   "id": "land_alt",
+   "commande": "AIR_LandAltWindow",
+   "titre": {
+    "fr": "LAND ALT : altitude du terrain d'arrivée",
+    "en": "LAND ALT: destination elevation"
+   },
+   "explication": {
+    "fr": "Tournez la molette LAND ALT jusqu'à l'altitude de l'aéroport de destination, en pieds. Puis « Fait ».",
+    "en": "Turn the LAND ALT knob to the destination airport elevation, in feet. Then \"Done\"."
+   }
+  },
+  {
+   "id": "press_mode",
+   "commande": "AIR_PressurizationModeSelector",
+   "attendu": {
+    "egal": 0
+   },
+   "titre": {
+    "fr": "PRESSURIZATION MODE sur AUTO",
+    "en": "PRESSURIZATION MODE to AUTO"
+   },
+   "explication": {
+    "fr": "La pressurisation sera gérée automatiquement.",
+    "en": "Pressurisation will be managed automatically."
+   }
+  },
+  {
+   "id": "stab_trim_main",
+   "commande": "TRIM_StabTrimMainElecSw_NORMAL",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "STAB TRIM MAIN ELECT sur NORMAL",
+    "en": "STAB TRIM MAIN ELECT to NORMAL"
+   },
+   "explication": {
+    "fr": "Sur le pylône, les coupe-circuits du trim de profondeur restent sur NORMAL (caches fermés).",
+    "en": "On the pedestal, the stabiliser trim cutouts stay at NORMAL (guards closed)."
+   }
+  },
+  {
+   "id": "stab_trim_ap",
+   "commande": "TRIM_StabTrimAutoPilotSw_NORMAL",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "STAB TRIM AUTO PILOT sur NORMAL",
+    "en": "STAB TRIM AUTO PILOT to NORMAL"
+   },
+   "explication": {
+    "fr": "Même chose pour le trim commandé par le pilote automatique.",
+    "en": "Same for autopilot trim."
+   }
+  },
+  {
+   "id": "fuel_lever_check",
+   "commande": "EVT_CONTROL_STAND_ENG1_START_LEVER",
+   "titre": {
+    "fr": "Leviers carburant : vérifier CUTOFF",
+    "en": "Start levers: check CUTOFF"
+   },
+   "explication": {
+    "fr": "Les deux leviers carburant, sous les manettes de poussée, doivent être en bas (CUTOFF). Puis « Fait ».",
+    "en": "Both start levers, below the thrust levers, must be down (CUTOFF). Then \"Done\"."
+   }
+  },
+  {
+   "id": "park_brake_light",
+   "commande": "EVT_CONTROL_STAND_PARK_BRAKE_LEVER",
+   "verifier": "PED_annunParkingBrake",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "Frein de parc : voyant allumé",
+    "en": "Parking brake: light on"
+   },
+   "explication": {
+    "fr": "Maintenant sous tension, le voyant rouge du frein de parc doit être allumé. L'étape se valide seule.",
+    "en": "Now powered, the red parking brake light must be on. The step validates by itself."
+   }
+  }
+ ]
+}

@@ -1,0 +1,158 @@
+{
+ "id": "approche_autoland",
+ "phase": 8,
+ "camera": "breve",
+ "phases_vol": [
+  "approche"
+ ],
+ "variante": {
+  "fr": "Atterrissage automatique",
+  "en": "Automatic landing"
+ },
+ "titre": {
+  "fr": "8. Approche — atterrissage automatique",
+  "en": "8. Approach — automatic landing"
+ },
+ "description": {
+  "fr": "Prépare et surveille un autoland double canal ; une remise de gaz reste obligatoire si les critères ne sont pas réunis.",
+  "en": "Prepares and monitors a dual-channel autoland; a go-around remains mandatory if criteria are not met."
+ },
+ "etapes": [
+  {
+   "id": "app",
+   "commande": "EVT_MCP_APP_SWITCH",
+   "verifier": "MCP_annunAPP",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "Armer APP",
+    "en": "Arm APP"
+   },
+   "explication": {
+    "fr": "Après autorisation d'interception ILS, armez APP et vérifiez LOC puis G/S sur le FMA.",
+    "en": "When cleared to intercept the ILS, arm APP and verify LOC then G/S on the FMA."
+   }
+  },
+  {
+   "id": "cmd_a",
+   "commande": "EVT_MCP_CMD_A_SWITCH",
+   "verifier": "MCP_annunCMD_A",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "CMD A engagé",
+    "en": "CMD A engaged"
+   },
+   "explication": {
+    "fr": "Le premier canal pilote automatique doit être engagé et suivre correctement l'ILS.",
+    "en": "The first autopilot channel must be engaged and correctly tracking the ILS."
+   }
+  },
+  {
+   "id": "cmd_b",
+   "commande": "EVT_MCP_CMD_B_SWITCH",
+   "verifier": "MCP_annunCMD_B",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "Engager CMD B",
+    "en": "Engage CMD B"
+   },
+   "explication": {
+    "fr": "Après capture LOC et G/S, engagez le second canal pour l'autoland. Les deux voyants CMD doivent être allumés.",
+    "en": "After LOC and G/S capture, engage the second channel for autoland. Both CMD lights must be on."
+   }
+  },
+  {
+   "id": "train_bas",
+   "sans_cible": true,
+   "verifier": "GEAR HANDLE POSITION",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "Train sur DOWN",
+    "en": "Gear DOWN"
+   },
+   "explication": {
+    "fr": "Sortez le train et contrôlez trois voyants verts.",
+    "en": "Lower the gear and verify three green lights."
+   }
+  },
+  {
+   "id": "volets",
+   "sans_cible": true,
+   "verifier": "FLAPS HANDLE INDEX",
+   "attendu": {
+    "min": 4
+   },
+   "titre": {
+    "fr": "Volets d'atterrissage",
+    "en": "Landing flaps"
+   },
+   "explication": {
+    "fr": "Configurez les volets sur la valeur FMC sans dépasser les vitesses limites.",
+    "en": "Set the FMC landing flap configuration without exceeding limits."
+   }
+  },
+  {
+   "id": "speedbrake",
+   "commande": "EVT_CONTROL_STAND_SPEED_BRAKE_LEVER",
+   "verifier": "SPOILERS ARMED",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "SPEED BRAKE sur ARMED",
+    "en": "SPEED BRAKE ARMED"
+   },
+   "explication": {
+    "fr": "Armez les spoilers avant la vérification finale.",
+    "en": "Arm the spoilers before the final check."
+   }
+  },
+  {
+   "id": "land3",
+   "sans_cible": true,
+   "titre": {
+    "fr": "Vérifier LAND 3 ou capacité annoncée",
+    "en": "Verify LAND 3 or displayed capability"
+   },
+   "explication": {
+    "fr": "Contrôlez sur le FMA la capacité d'atterrissage annoncée et les modes FLARE/ROLLOUT. Si l'annonce attendue manque ou se dégrade, remettez les gaz ou passez en manuel selon votre briefing. Puis « Fait ».",
+    "en": "Check the displayed landing capability and FLARE/ROLLOUT modes on the FMA. If the expected annunciation is missing or degrades, go around or revert to manual as briefed. Then select Done."
+   }
+  },
+  {
+   "id": "surveillance",
+   "sans_cible": true,
+   "titre": {
+    "fr": "Surveiller jusqu'au toucher",
+    "en": "Monitor through touchdown"
+   },
+   "explication": {
+    "fr": "Gardez les mains prêtes, surveillez trajectoire, vitesse et FMA. L'autoland ne remplace jamais la décision de remise de gaz. Puis « Fait ».",
+    "en": "Stay ready to take over and monitor path, speed and FMA. Autoland never replaces the go-around decision. Then select Done."
+   }
+  },
+  {
+   "id": "toucher",
+   "sans_cible": true,
+   "verifier": "SIM ON GROUND",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "Toucher automatique détecté",
+    "en": "Automatic touchdown detected"
+   },
+   "explication": {
+    "fr": "Après le toucher, surveillez ROLLOUT, spoilers, inverseurs et freinage, puis reprenez le contrôle pour quitter la piste.",
+    "en": "After touchdown monitor ROLLOUT, spoilers, reverse and braking, then take control to vacate the runway."
+   }
+  }
+ ]
+}

@@ -1,0 +1,142 @@
+{
+ "id": "apres_atterrissage",
+ "phase": 9,
+ "camera": "breve",
+ "phases_vol": [
+  "apres_atterrissage"
+ ],
+ "titre": {
+  "fr": "9. Après atterrissage",
+  "en": "9. After landing"
+ },
+ "description": {
+  "fr": "Nettoyage de la configuration, éclairage de roulage et arrivée au parking.",
+  "en": "Configuration cleanup, taxi lighting and arrival at the stand."
+ },
+ "etapes": [
+  {
+   "id": "speedbrake_down",
+   "commande": "EVT_CONTROL_STAND_SPEED_BRAKE_LEVER",
+   "verifier": "SPOILERS HANDLE POSITION",
+   "attendu": {
+    "max": 5
+   },
+   "titre": {
+    "fr": "SPEED BRAKE sur DOWN",
+    "en": "SPEED BRAKE DOWN"
+   },
+   "explication": {
+    "fr": "Une fois la piste quittée, rentrez complètement les spoilers.",
+    "en": "Once clear of the runway, fully retract the spoilers."
+   }
+  },
+  {
+   "id": "volets_up",
+   "sans_cible": true,
+   "verifier": "FLAPS HANDLE INDEX",
+   "attendu": {
+    "egal": 0
+   },
+   "titre": {
+    "fr": "Volets sur UP",
+    "en": "Flaps UP"
+   },
+   "explication": {
+    "fr": "Rentrez les volets après avoir dégagé la piste et vérifiez leur mouvement.",
+    "en": "Retract the flaps after vacating and monitor their movement."
+   }
+  },
+  {
+   "id": "autobrake_off",
+   "commande": "MAIN_AutobrakeSelector",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "AUTO BRAKE sur OFF",
+    "en": "AUTO BRAKE OFF"
+   },
+   "explication": {
+    "fr": "Remettez le sélecteur sur OFF.",
+    "en": "Return the selector to OFF."
+   }
+  },
+  {
+   "id": "landing_l_off",
+   "commande": "LTS_LandingLtFixedSw[0]",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "LANDING gauche OFF",
+    "en": "Left LANDING OFF"
+   },
+   "explication": {
+    "fr": "Coupez les phares après avoir quitté la piste.",
+    "en": "Switch off the landing lights after vacating."
+   }
+  },
+  {
+   "id": "landing_r_off",
+   "commande": "LTS_LandingLtFixedSw[1]",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "LANDING droit OFF",
+    "en": "Right LANDING OFF"
+   },
+   "explication": {
+    "fr": "Coupez le second phare.",
+    "en": "Switch off the second light."
+   }
+  },
+  {
+   "id": "taxi_on",
+   "commande": "LTS_TaxiSw",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "TAXI sur ON",
+    "en": "TAXI ON"
+   },
+   "explication": {
+    "fr": "Utilisez le phare de roulage selon les conditions et les consignes locales.",
+    "en": "Use the taxi light according to conditions and local rules."
+   }
+  },
+  {
+   "id": "apu",
+   "commande": "APU_Selector",
+   "verifier": "APU_EGTNeedle",
+   "attendu": {
+    "min": 150
+   },
+   "titre": {
+    "fr": "Démarrer l'APU avant le parking",
+    "en": "Start the APU before the stand"
+   },
+   "explication": {
+    "fr": "Si aucune alimentation sol n'est prévue, démarrez l'APU assez tôt pour qu'il soit disponible au parking.",
+    "en": "If ground power is not planned, start the APU early enough to be available at the stand."
+   }
+  },
+  {
+   "id": "parking",
+   "commande": "EVT_CONTROL_STAND_PARK_BRAKE_LEVER",
+   "verifier": "BRAKE PARKING POSITION",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "Au parking : frein de parc serré",
+    "en": "At stand: parking brake set"
+   },
+   "explication": {
+    "fr": "À l'arrêt sur le point de stationnement, serrez le frein de parc et attendez la confirmation des cales avant la coupure moteurs.",
+    "en": "Stopped on stand, set the parking brake and wait for chocks confirmation before engine shutdown."
+   }
+  }
+ ]
+}

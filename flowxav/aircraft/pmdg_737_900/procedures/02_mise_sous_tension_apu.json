@@ -1,0 +1,209 @@
+{
+ "id": "mise_sous_tension_apu",
+ "phase": 1,
+ "variante": {
+  "fr": "APU",
+  "en": "APU"
+ },
+ "titre": {
+  "fr": "1. Mise sous tension et APU",
+  "en": "1. Power-up and APU"
+ },
+ "description": {
+  "fr": "Départ : avion en Cold & Dark. Le plus sûr : dans FlowXav, « Remettre en Cold & Dark » puis « Vérifier l'état de départ » (manettes au ralenti, frein de parc serré…). L'électricité vient de l'APU, sans groupe de parc. Ensuite : « 2. Préparation du poste ».",
+  "en": "Start: aircraft Cold & Dark. Safest: in FlowXav, \"Reset to Cold & Dark\" then \"Check start state\" (thrust levers at idle, parking brake set…). Power comes from the APU, no ground power. Next: \"2. Cockpit preparation\"."
+ },
+ "etapes": [
+  {
+   "id": "park_brake",
+   "commande": "EVT_CONTROL_STAND_PARK_BRAKE_LEVER",
+   "titre": {
+    "fr": "Frein de parc : vérifier serré",
+    "en": "Parking brake: check set"
+   },
+   "explication": {
+    "fr": "Le frein de parc doit être serré. Sans courant, son voyant rouge est éteint : vérifiez le levier, puis « Fait ».",
+    "en": "The parking brake must be set. Without power its red light is dark: check the lever, then \"Done\"."
+   }
+  },
+  {
+   "id": "thrust_idle",
+   "commande": "EVT_CONTROL_STAND_FWD_THRUST1_LEVER",
+   "titre": {
+    "fr": "Manettes de poussée : ralenti",
+    "en": "Thrust levers: idle"
+   },
+   "explication": {
+    "fr": "Les deux manettes de poussée doivent être tout en arrière (ralenti). Si vous avez une manette physique (joystick, throttle), ramenez-la au ralenti : MSFS recopie sa position. Sinon, le klaxon de configuration de décollage retentit, et un moteur démarré monterait en poussée. Puis « Fait ».",
+    "en": "Both thrust levers must be fully aft (idle). If you have a physical throttle (joystick, throttle quadrant), pull it to idle: MSFS copies its position. Otherwise the takeoff configuration horn sounds, and an engine started would spool up. Then \"Done\"."
+   }
+  },
+  {
+   "id": "bat",
+   "commande": "ELEC_BatSelector",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "Batterie sur BAT",
+    "en": "Battery to BAT"
+   },
+   "explication": {
+    "fr": "Soulevez le cache rouge puis placez l'interrupteur BAT sur BAT. La batterie alimente les barres de secours : les premiers voyants s'allument. Attention : juste en dessous se trouve STANDBY POWER, un autre interrupteur sous cache.",
+    "en": "Lift the red guard and set the BAT switch to BAT. The battery powers the standby buses: the first lights come on. Careful: STANDBY POWER, another guarded switch, sits just below."
+   }
+  },
+  {
+   "id": "standby_power",
+   "commande": "ELEC_StandbyPowerSelector",
+   "attendu": {
+    "egal": 2
+   },
+   "titre": {
+    "fr": "STANDBY POWER sur AUTO",
+    "en": "STANDBY POWER to AUTO"
+   },
+   "explication": {
+    "fr": "L'alimentation de secours se met en automatique : elle prendra le relais sur batterie en cas de perte des génératrices.",
+    "en": "Standby power goes to automatic: it will take over from the battery if the generators are lost."
+   }
+  },
+  {
+   "id": "bus_transfer",
+   "commande": "ELEC_BusTransSw_AUTO",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "BUS TRANSFER sur AUTO",
+    "en": "BUS TRANSFER to AUTO"
+   },
+   "explication": {
+    "fr": "Le transfert automatique entre les barres électriques reste sur AUTO (interrupteur sous cache).",
+    "en": "Automatic transfer between the electrical buses stays at AUTO (guarded switch)."
+   }
+  },
+  {
+   "id": "position",
+   "commande": "LTS_PositionSw",
+   "attendu": {
+    "egal": 0
+   },
+   "titre": {
+    "fr": "Feux de position sur STEADY",
+    "en": "Position lights to STEADY"
+   },
+   "explication": {
+    "fr": "Les feux de navigation s'allument : ils restent allumés dès que l'avion est sous tension.",
+    "en": "Navigation lights come on: they stay on whenever the aircraft is powered."
+   }
+  },
+  {
+   "id": "apu_start",
+   "commande": "APU_Selector",
+   "verifier": "ELEC_annunAPU_GEN_OFF_BUS",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "APU sur START",
+    "en": "APU to START"
+   },
+   "explication": {
+    "fr": "Tournez le sélecteur APU jusqu'à START puis relâchez-le : il revient seul sur ON. S'arrêter sur ON ne démarre pas l'APU. L'aiguille APU EGT monte, le démarrage prend environ une minute. L'étape se valide d'elle-même quand le voyant bleu APU GEN OFF BUS s'allume : l'APU est prêt à fournir l'électricité.",
+    "en": "Turn the APU selector to START and release it: it springs back to ON. Stopping at ON does not start the APU. The APU EGT needle rises; the start takes about a minute. The step validates by itself when the blue APU GEN OFF BUS light comes on: the APU is ready to supply power."
+   },
+   "attente": {
+    "duree_s": 60,
+    "libelle": {
+     "fr": "Démarrage de l'APU",
+     "en": "APU start"
+    },
+    "debut": {
+     "cle": "APU_EGTNeedle",
+     "attendu": {
+      "min": 100
+     },
+     "conseil": {
+      "fr": "Démarrage pas encore détecté : tournez le sélecteur jusqu'à START.",
+      "en": "Start not detected yet: turn the selector to START."
+     }
+    }
+   },
+   "alertes": [
+    {
+     "cle": "APU_annunFAULT",
+     "attendu": {
+      "egal": true
+     },
+     "message": {
+      "fr": "APU FAULT : le démarrage a échoué. Sélecteur APU sur OFF, attendez une à deux minutes qu'il refroidisse, puis ON et START à nouveau. Le voyant LOW OIL PRESSURE, lui, est normal pendant un démarrage.",
+      "en": "APU FAULT: the start failed. APU selector OFF, wait one or two minutes for it to cool down, then ON and START again. The LOW OIL PRESSURE light is normal during a start."
+     }
+    }
+   ]
+  },
+  {
+   "id": "apu_gen_1",
+   "commande": "ELEC_APUGenSw[0]",
+   "verifier": "ELEC_annunSOURCE_OFF[0]",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "APU GEN 1 sur ON",
+    "en": "APU GEN 1 to ON"
+   },
+   "explication": {
+    "fr": "Basculez APU GEN 1 sur ON (interrupteur à ressort). L'APU alimente le côté gauche du réseau alternatif : le voyant SOURCE OFF 1 s'éteint.",
+    "en": "Flip APU GEN 1 to ON (spring-loaded switch). The APU powers the left side of the AC system: the SOURCE OFF 1 light goes out."
+   }
+  },
+  {
+   "id": "apu_gen_2",
+   "commande": "ELEC_APUGenSw[1]",
+   "verifier": "ELEC_annunSOURCE_OFF[1]",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "APU GEN 2 sur ON",
+    "en": "APU GEN 2 to ON"
+   },
+   "explication": {
+    "fr": "Même chose pour APU GEN 2 : les deux côtés du réseau sont alimentés par l'APU, le voyant SOURCE OFF 2 s'éteint.",
+    "en": "Same for APU GEN 2: both sides of the electrical system are powered by the APU, the SOURCE OFF 2 light goes out."
+   }
+  },
+  {
+   "id": "irs_gauche",
+   "commande": "IRS_ModeSelector[0]",
+   "attendu": {
+    "egal": 2
+   },
+   "titre": {
+    "fr": "IRS gauche sur NAV",
+    "en": "Left IRS to NAV"
+   },
+   "explication": {
+    "fr": "La centrale inertielle gauche commence son alignement (environ dix minutes). L'avion ne doit pas bouger pendant ce temps.",
+    "en": "The left inertial reference unit starts aligning (about ten minutes). The aircraft must not move meanwhile."
+   }
+  },
+  {
+   "id": "irs_droite",
+   "commande": "IRS_ModeSelector[1]",
+   "attendu": {
+    "egal": 2
+   },
+   "titre": {
+    "fr": "IRS droit sur NAV",
+    "en": "Right IRS to NAV"
+   },
+   "explication": {
+    "fr": "Même chose pour la centrale droite. On donnera la position de l'avion aux IRS depuis le FMC (« 3. Programmation du FMC »).",
+    "en": "Same for the right unit. The aircraft position will be given to the IRS from the FMC (\"3. FMC programming\")."
+   }
+  }
+ ]
+}

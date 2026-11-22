@@ -3,18 +3,22 @@
 from __future__ import annotations
 
 import logging
+import secrets
 from contextlib import asynccontextmanager
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 from flowxav import __version__
 from flowxav.aircraft import list_profiles, load_profile
-from flowxav.guide import Guide
+from flowxav.guide import Guide, journey, suggest
 from flowxav.paths import resource_path
+from flowxav import depart, simbrief
+from flowxav.sim.simconnect import SimConnectClient, SimConnectError
 from flowxav.simulator import Simulator
 
 LOGGER = logging.getLogger(__name__)
@@ -22,17 +26,47 @@ HOST = "127.0.0.1"
 DEFAULT_PORT = 8790
 LAST_PORT = 8799
 STATIC = resource_path("flowxav", "web", "static")
+SESSION_COOKIE = "flowxav_session"
+SAFE_HOSTS = {"127.0.0.1", "localhost"}
+SECURITY_HEADERS = {
+    "Content-Security-Policy": ("default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
+                                "connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; "
+                                "form-action 'self'"),
+    "Referrer-Policy": "no-referrer",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+}
 
 
-class StartRequest(BaseModel):
-    profil: str
-    procedure: str
-    langue: str = "fr"
+class StrictRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
 
-class PreviewRequest(BaseModel):
-    profil: str
-    commande: str
+class StartRequest(StrictRequest):
+    profil: str = Field(min_length=1, max_length=80)
+    procedure: str = Field(min_length=1, max_length=120)
+    langue: str = Field(default="fr", pattern=r"^[a-z]{2,8}$")
+
+
+class ZoomRequest(StrictRequest):
+    pas: float = Field(ge=-5.0, le=5.0, allow_inf_nan=False)
+
+
+class ProfileRequest(StrictRequest):
+    profil: str = Field(min_length=1, max_length=80)
+    etat: str | None = Field(default=None, max_length=80)
+
+
+class SimbriefRequest(StrictRequest):
+    profil: str = Field(min_length=1, max_length=80)
+    identifiant: str = Field(min_length=1, max_length=128)
+
+
+class PreviewRequest(StrictRequest):
+    profil: str = Field(min_length=1, max_length=80)
+    commande: str = Field(min_length=1, max_length=160)
 
 
 def create_app(simulator: Simulator | None = None, guide: Guide | None = None) -> FastAPI:
@@ -43,14 +77,46 @@ def create_app(simulator: Simulator | None = None, guide: Guide | None = None) -
     async def lifespan(_app: FastAPI):
         simulator.start()
         guide.start_thread()
-        yield
-        guide.stop()
-        guide.close()
-        simulator.close()
-        LOGGER.info("Services FlowXav arrêtés")
+        try:
+            yield
+        finally:
+            guide.stop()
+            guide.close()
+            simulator.close()
+            LOGGER.info("Services FlowXav arrêtés")
 
-    app = FastAPI(title="FlowXav", version=__version__, lifespan=lifespan)
+    app = FastAPI(title="FlowXav", version=__version__, lifespan=lifespan, max_body_size=64 * 1024,
+                  docs_url=None, redoc_url=None, openapi_url=None)
     app.state.simulator, app.state.guide = simulator, guide
+    app.state.session_token = secrets.token_urlsafe(32)
+
+    @app.exception_handler(RequestValidationError)
+    async def invalid_request(_request: Request, _error: RequestValidationError):
+        # Réponse volontairement générique : ne reflète ni entrée personnelle, ni NaN non sérialisable.
+        return JSONResponse({"detail": "requête invalide"}, status_code=422)
+
+    @app.middleware("http")
+    async def local_security(request: Request, call_next):
+        """Refuse DNS rebinding/CSRF et pose les en-têtes de confinement du WebView."""
+        host_header = request.headers.get("host", "")
+        hostname = host_header.rsplit(":", 1)[0].lower() if ":" in host_header else host_header.lower()
+        if hostname not in SAFE_HOSTS:
+            response: Response = JSONResponse({"detail": "hôte local refusé"}, status_code=400)
+        else:
+            origin = request.headers.get("origin")
+            expected_origin = f"http://{host_header}"
+            if origin and origin.rstrip("/") != expected_origin:
+                response = JSONResponse({"detail": "origine refusée"}, status_code=403)
+            elif (request.url.path.startswith("/api/") and request.method not in {"GET", "HEAD", "OPTIONS"}
+                  and not secrets.compare_digest(request.cookies.get(SESSION_COOKIE, ""), app.state.session_token)):
+                response = JSONResponse({"detail": "session locale requise"}, status_code=403)
+            else:
+                response = await call_next(request)
+        for name, value in SECURITY_HEADERS.items():
+            response.headers[name] = value
+        if request.url.path.startswith("/api/"):
+            response.headers["Cache-Control"] = "no-store"
+        return response
 
     def profile_or_404(profile_id: str):
         try:
@@ -62,9 +128,18 @@ def create_app(simulator: Simulator | None = None, guide: Guide | None = None) -
     def status() -> dict[str, Any]:
         return {"version": __version__, "application": "FlowXav"}
 
+    procedures_cache: dict[str, list[dict[str, Any]]] = {}
+
     @app.get("/api/etat")
     def state() -> dict[str, Any]:
-        return {"simulateur": simulator.snapshot().public(), "guide": guide.status()}
+        snapshot = simulator.snapshot()
+        proposal, statuses = None, {}
+        if snapshot.profile_id and snapshot.source_ok:
+            if snapshot.profile_id not in procedures_cache:
+                procedures_cache[snapshot.profile_id] = load_profile(snapshot.profile_id).procedures()
+            procedures = procedures_cache[snapshot.profile_id]
+            proposal, statuses = suggest(procedures, snapshot.values), journey(procedures, snapshot.values)
+        return {"simulateur": snapshot.public(), "guide": guide.status(), "suggestion": proposal, "parcours": statuses}
 
     @app.get("/api/profils")
     def profiles() -> list[dict[str, Any]]:
@@ -105,6 +180,20 @@ def create_app(simulator: Simulator | None = None, guide: Guide | None = None) -
         guide.stop()
         return guide.status()
 
+    @app.post("/api/camera/zoom")
+    def camera_zoom(request: ZoomRequest) -> dict[str, Any]:
+        zoom = getattr(guide.camera, "zoom", None)
+        if callable(zoom):
+            zoom(request.pas)
+        return {"ok": True}
+
+    @app.post("/api/camera/recentrer")
+    def camera_recenter() -> dict[str, Any]:
+        recenter = getattr(guide.camera, "recenter", None)
+        if callable(recenter):
+            recenter()
+        return {"ok": True}
+
     @app.post("/api/montrer")
     def preview(request: PreviewRequest) -> dict[str, Any]:
         profile = profile_or_404(request.profil)
@@ -113,9 +202,60 @@ def create_app(simulator: Simulator | None = None, guide: Guide | None = None) -
         guide.preview(profile, request.commande)
         return guide.status()
 
+    def depart_call(profile_id: str, action):
+        profile = profile_or_404(profile_id)
+        if not profile.data.get("depart"):
+            raise HTTPException(400, detail={"code": "non_pris_en_charge"})
+        try:
+            with SimConnectClient("FlowXav depart") as client:
+                return action(client, profile)
+        except depart.DepartError as error:
+            LOGGER.info("État de départ : %s", error.code)
+            raise HTTPException(400, detail={"code": error.code, "ecran": error.screen}) from error
+        except SimConnectError as error:
+            raise HTTPException(400, detail={"code": "simulateur", "detail": str(error)}) from error
+
+    @app.post("/api/depart/verifier")
+    def depart_verify(request: ProfileRequest) -> dict[str, Any]:
+        return {"verifications": depart_call(request.profil, depart.verify)}
+
+    @app.post("/api/depart/reinitialiser")
+    def depart_reset(request: ProfileRequest) -> dict[str, Any]:
+        """Sur clic et confirmation de l'utilisateur : charge l'état de départ par le CDU, puis vérifie."""
+        guide.stop()
+        result = depart_call(request.profil, lambda client, profile: depart.reset(client, profile, request.etat))
+        reset_flight = getattr(simulator, "reset_flight", None)
+        if callable(reset_flight):
+            reset_flight()                     # nouveau vol : la phase repart de « parking »
+        return result
+
+    @app.get("/api/simbrief")
+    def simbrief_settings() -> dict[str, Any]:
+        return {"identifiant": simbrief.load_identifier()}
+
+    @app.post("/api/simbrief/importer")
+    def simbrief_import(request: SimbriefRequest) -> dict[str, Any]:
+        """Sur clic de l'utilisateur seulement : jamais d'interrogation automatique de SimBrief."""
+        profile = profile_or_404(request.profil)
+        config = profile.data.get("plan_de_vol")
+        if not config:
+            raise HTTPException(400, detail={"code": "non_pris_en_charge"})
+        identifier = request.identifiant.strip()
+        simbrief.save_identifier(identifier)
+        try:
+            result = simbrief.import_latest(identifier, config)
+        except simbrief.SimbriefError as error:
+            LOGGER.info("Import SimBrief refusé : %s", error.code)
+            raise HTTPException(400, detail={"code": error.code, "detail": error.detail}) from error
+        return {**result, "fmc": config.get("fmc", "")}
+
     @app.get("/")
     def index() -> FileResponse:
-        return FileResponse(STATIC / "index.html")
+        response = FileResponse(STATIC / "index.html")
+        response.set_cookie(SESSION_COOKIE, app.state.session_token, httponly=True, samesite="strict",
+                            path="/api", max_age=86400)
+        response.headers["Cache-Control"] = "no-store"
+        return response
 
     app.mount("/static", StaticFiles(directory=STATIC), name="static")
     return app

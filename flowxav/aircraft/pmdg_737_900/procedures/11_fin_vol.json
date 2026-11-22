@@ -1,0 +1,23 @@
+{
+ "id": "fin_vol",
+ "phase": 10,
+ "phases_vol": ["apres_atterrissage", "fin_vol"],
+ "titre": {"fr": "10. Arrêt et fin de vol", "en": "10. Shutdown and end of flight"},
+ "description": {"fr": "Coupure des moteurs, sécurisation de l'avion et retour vers Cold & Dark.", "en": "Engine shutdown, aircraft securing and return towards Cold & Dark."},
+ "etapes": [
+  {"id": "parking", "commande": "EVT_CONTROL_STAND_PARK_BRAKE_LEVER", "verifier": "BRAKE PARKING POSITION", "attendu": {"egal": 1}, "titre": {"fr": "Frein de parc serré", "en": "Parking brake set"}, "explication": {"fr": "Confirmez les cales ou le maintien au parking avant de couper les moteurs.", "en": "Confirm chocks or secure parking before shutting down the engines."}},
+  {"id": "moteur1", "commande": "EVT_CONTROL_STAND_ENG1_START_LEVER", "verifier": "FUEL_annunENG_VALVE_CLOSED[0]", "attendu": {"egal": true}, "titre": {"fr": "Levier carburant 1 sur CUTOFF", "en": "Start lever 1 CUTOFF"}, "explication": {"fr": "Après établissement de l'alimentation APU ou sol, placez le levier 1 sur CUTOFF.", "en": "With APU or ground power established, move start lever 1 to CUTOFF."}},
+  {"id": "moteur2", "commande": "EVT_CONTROL_STAND_ENG2_START_LEVER", "verifier": "FUEL_annunENG_VALVE_CLOSED[1]", "attendu": {"egal": true}, "titre": {"fr": "Levier carburant 2 sur CUTOFF", "en": "Start lever 2 CUTOFF"}, "explication": {"fr": "Placez le levier 2 sur CUTOFF et surveillez la décélération des deux moteurs.", "en": "Move start lever 2 to CUTOFF and monitor both engines spooling down."}},
+  {"id": "beacon_off", "commande": "LTS_AntiCollisionSw", "attendu": {"egal": false}, "titre": {"fr": "ANTI COLLISION sur OFF", "en": "ANTI COLLISION OFF"}, "explication": {"fr": "Une fois les moteurs arrêtés, coupez le feu anticollision rouge.", "en": "Once the engines have stopped, switch off the red anti-collision light."}},
+  {"id": "taxi_off", "commande": "LTS_TaxiSw", "attendu": {"egal": false}, "titre": {"fr": "TAXI sur OFF", "en": "TAXI OFF"}, "explication": {"fr": "Coupez le phare de roulage au parking.", "en": "Switch off the taxi light at the stand."}},
+  {"id": "fuel_fwd1", "commande": "FUEL_PumpFwdSw[0]", "attendu": {"egal": false}, "titre": {"fr": "FUEL PUMP FWD 1 OFF", "en": "FUEL PUMP FWD 1 OFF"}, "explication": {"fr": "Coupez la pompe avant gauche.", "en": "Switch off the left forward pump."}},
+  {"id": "fuel_aft1", "commande": "FUEL_PumpAftSw[0]", "attendu": {"egal": false}, "titre": {"fr": "FUEL PUMP AFT 1 OFF", "en": "FUEL PUMP AFT 1 OFF"}, "explication": {"fr": "Coupez la pompe arrière gauche.", "en": "Switch off the left aft pump."}},
+  {"id": "fuel_fwd2", "commande": "FUEL_PumpFwdSw[1]", "attendu": {"egal": false}, "titre": {"fr": "FUEL PUMP FWD 2 OFF", "en": "FUEL PUMP FWD 2 OFF"}, "explication": {"fr": "Coupez la pompe avant droite.", "en": "Switch off the right forward pump."}},
+  {"id": "fuel_aft2", "commande": "FUEL_PumpAftSw[1]", "attendu": {"egal": false}, "titre": {"fr": "FUEL PUMP AFT 2 OFF", "en": "FUEL PUMP AFT 2 OFF"}, "explication": {"fr": "Coupez la pompe arrière droite.", "en": "Switch off the right aft pump."}},
+  {"id": "apu_off", "commande": "APU_Selector", "attendu": {"egal": 0}, "titre": {"fr": "APU sur OFF quand il n'est plus requis", "en": "APU OFF when no longer required"}, "explication": {"fr": "Après connexion d'une alimentation sol, ou pour terminer Cold & Dark, placez l'APU sur OFF.", "en": "After ground power is connected, or to finish Cold & Dark, set the APU OFF."}},
+  {"id": "belts_off", "commande": "COMM_FastenBeltsSelector", "attendu": {"egal": 0}, "titre": {"fr": "FASTEN BELTS sur OFF", "en": "FASTEN BELTS OFF"}, "explication": {"fr": "Libérez les passagers lorsque l'avion est immobilisé et sécurisé.", "en": "Release passengers once the aircraft is stopped and secure."}},
+  {"id": "irs_l_off", "commande": "IRS_ModeSelector[0]", "attendu": {"egal": 0}, "titre": {"fr": "IRS gauche sur OFF", "en": "Left IRS OFF"}, "explication": {"fr": "Pour une fin de service complète, placez l'IRS gauche sur OFF.", "en": "For full shutdown, set the left IRS OFF."}},
+  {"id": "irs_r_off", "commande": "IRS_ModeSelector[1]", "attendu": {"egal": 0}, "titre": {"fr": "IRS droit sur OFF", "en": "Right IRS OFF"}, "explication": {"fr": "Placez l'IRS droit sur OFF.", "en": "Set the right IRS OFF."}},
+  {"id": "battery_off", "commande": "ELEC_BatSelector", "attendu": {"egal": 0}, "titre": {"fr": "BAT sur OFF : fin de vol", "en": "BAT OFF: end of flight"}, "explication": {"fr": "Après extinction des systèmes et selon votre scénario de stationnement, coupez la batterie. L'avion est sécurisé.", "en": "After systems are shut down and according to your parking scenario, switch off the battery. The aircraft is secure."}}
+ ]
+}

@@ -3,12 +3,263 @@
  "constructeur": "Boeing",
  "editeur": "PMDG",
  "simulateur": "MSFS 2024",
- "reconnaissance": {"titre_contient": ["737-900"]},
+ "reconnaissance": {
+  "titre_contient": [
+   "737-900"
+  ]
+ },
  "etat": {
   "source": "pmdg_ng3",
   "zone": "PMDG_NG3_Data",
   "disposition": "pmdg_ng3_layout.json",
   "aide": "Activez la diffusion du SDK PMDG : dans le fichier 737_Options.ini de l'avion (dossier LocalState\\WASM\\MSFS2024\\pmdg-aircraft-739\\work), ajoutez une section [SDK] avec EnableDataBroadcast=1, puis rechargez l'avion."
+ },
+ "suivi_vol": {
+  "simvars": [
+   ["SIM ON GROUND", "Bool"],
+   ["GROUND VELOCITY", "Knots"],
+   ["PLANE ALT ABOVE GROUND", "Feet"],
+   ["INDICATED ALTITUDE", "Feet"],
+   ["VERTICAL SPEED", "Feet per minute"],
+   ["AIRSPEED INDICATED", "Knots"],
+   ["GEAR HANDLE POSITION", "Bool"],
+   ["FLAPS HANDLE INDEX", "Number"],
+   ["SPOILERS ARMED", "Bool"],
+   ["SPOILERS HANDLE POSITION", "Percent"],
+   ["AUTOPILOT MASTER", "Bool"],
+   ["BRAKE PARKING POSITION", "Bool"],
+   ["GENERAL ENG COMBUSTION:1", "Bool"],
+   ["GENERAL ENG COMBUSTION:2", "Bool"]
+  ]
+ },
+ "cdu": {
+  "zone": "PMDG_NG3_CDU_0",
+  "touches": "EVT_CDU_L_"
+ },
+ "plan_de_vol": {
+  "format": "pmdg_rte",
+  "dossiers": [
+   "%LOCALAPPDATA%\\Packages\\Microsoft.Limitless_8wekyb3d8bbwe\\LocalState\\WASM\\MSFS2024\\pmdg-aircraft-739\\work\\Flightplans",
+   "%APPDATA%\\Microsoft Flight Simulator 2024\\WASM\\MSFS2024\\pmdg-aircraft-739\\work\\Flightplans"
+  ],
+  "fmc": "RTE > FLT PLAN REQUEST (R3)"
+ },
+ "depart": {
+  "etat_pmdg": "COLDDARK",
+  "cdu": "PMDG_NG3_CDU_0",
+  "verifications": [
+   {
+    "id": "manette_1",
+    "simvar": [
+     "GENERAL ENG THROTTLE LEVER POSITION:1",
+     "Percent"
+    ],
+    "attendu": {
+     "max": 5
+    },
+    "libelle": {
+     "fr": "Manette de poussée 1 au ralenti",
+     "en": "Thrust lever 1 at idle"
+    },
+    "conseil": {
+     "fr": "Ramenez votre manette physique tout en arrière (ou touche F1).",
+     "en": "Pull your physical throttle fully aft (or press F1)."
+    }
+   },
+   {
+    "id": "manette_2",
+    "simvar": [
+     "GENERAL ENG THROTTLE LEVER POSITION:2",
+     "Percent"
+    ],
+    "attendu": {
+     "max": 5
+    },
+    "libelle": {
+     "fr": "Manette de poussée 2 au ralenti",
+     "en": "Thrust lever 2 at idle"
+    },
+    "conseil": {
+     "fr": "Ramenez votre manette physique tout en arrière (ou touche F1).",
+     "en": "Pull your physical throttle fully aft (or press F1)."
+    }
+   },
+   {
+    "id": "frein_parc",
+    "simvar": [
+     "BRAKE PARKING POSITION",
+     "Bool"
+    ],
+    "attendu": {
+     "egal": 1
+    },
+    "libelle": {
+     "fr": "Frein de parc serré",
+     "en": "Parking brake set"
+    },
+    "conseil": {
+     "fr": "Serrez le frein de parc (levier PARKING BRAKE, ou Ctrl + point).",
+     "en": "Set the parking brake (PARKING BRAKE lever, or Ctrl + period)."
+    }
+   },
+   {
+    "id": "volets",
+    "simvar": [
+     "FLAPS HANDLE INDEX",
+     "Number"
+    ],
+    "attendu": {
+     "egal": 0
+    },
+    "libelle": {
+     "fr": "Volets rentrés (UP)",
+     "en": "Flaps up"
+    },
+    "conseil": {
+     "fr": "Ramenez le levier des volets sur UP.",
+     "en": "Move the flap lever to UP."
+    }
+   },
+   {
+    "id": "speedbrake",
+    "simvar": [
+     "SPOILERS HANDLE POSITION",
+     "Percent"
+    ],
+    "attendu": {
+     "max": 5
+    },
+    "libelle": {
+     "fr": "Speedbrake rentré (DOWN)",
+     "en": "Speedbrake down"
+    },
+    "conseil": {
+     "fr": "Ramenez le levier SPEED BRAKE en bas (DOWN).",
+     "en": "Move the SPEED BRAKE lever down."
+    }
+   },
+   {
+    "id": "train",
+    "cle": "MAIN_GearLever",
+    "attendu": {
+     "egal": 2
+    },
+    "libelle": {
+     "fr": "Levier de train sur DOWN",
+     "en": "Gear lever DOWN"
+    },
+    "conseil": {
+     "fr": "Le levier de train doit être en bas.",
+     "en": "The gear lever must be down."
+    }
+   },
+   {
+    "id": "batterie",
+    "cle": "ELEC_BatSelector",
+    "attendu": {
+     "egal": 0
+    },
+    "libelle": {
+     "fr": "Batterie sur OFF",
+     "en": "Battery OFF"
+    },
+    "conseil": {
+     "fr": "L'avion n'est pas en Cold & Dark : utilisez « Remettre en Cold & Dark ».",
+     "en": "The aircraft is not Cold & Dark: use \"Reset to Cold & Dark\"."
+    }
+   },
+   {
+    "id": "apu",
+    "cle": "APU_Selector",
+    "attendu": {
+     "egal": 0
+    },
+    "libelle": {
+     "fr": "APU sur OFF",
+     "en": "APU OFF"
+    },
+    "conseil": {
+     "fr": "Placez le sélecteur APU sur OFF.",
+     "en": "Set the APU selector to OFF."
+    }
+   },
+   {
+    "id": "irs_gauche",
+    "cle": "IRS_ModeSelector[0]",
+    "attendu": {
+     "egal": 0
+    },
+    "libelle": {
+     "fr": "IRS gauche sur OFF",
+     "en": "Left IRS OFF"
+    },
+    "conseil": {
+     "fr": "Placez le sélecteur IRS gauche sur OFF.",
+     "en": "Set the left IRS selector to OFF."
+    }
+   },
+   {
+    "id": "irs_droit",
+    "cle": "IRS_ModeSelector[1]",
+    "attendu": {
+     "egal": 0
+    },
+    "libelle": {
+     "fr": "IRS droit sur OFF",
+     "en": "Right IRS OFF"
+    },
+    "conseil": {
+     "fr": "Placez le sélecteur IRS droit sur OFF.",
+     "en": "Set the right IRS selector to OFF."
+    }
+   },
+   {
+    "id": "demarrage_1",
+    "cle": "ENG_StartSelector[0]",
+    "attendu": {
+     "egal": 1
+    },
+    "libelle": {
+     "fr": "ENGINE START 1 sur OFF",
+     "en": "ENGINE START 1 OFF"
+    },
+    "conseil": {
+     "fr": "Placez ENGINE START 1 sur OFF.",
+     "en": "Set ENGINE START 1 to OFF."
+    }
+   },
+   {
+    "id": "demarrage_2",
+    "cle": "ENG_StartSelector[1]",
+    "attendu": {
+     "egal": 1
+    },
+    "libelle": {
+     "fr": "ENGINE START 2 sur OFF",
+     "en": "ENGINE START 2 OFF"
+    },
+    "conseil": {
+     "fr": "Placez ENGINE START 2 sur OFF.",
+     "en": "Set ENGINE START 2 to OFF."
+    }
+   }
+  ],
+  "etats": [
+   {
+    "id": "COLDDARK",
+    "libelle": {
+     "fr": "Cold & Dark",
+     "en": "Cold & Dark"
+    }
+   },
+   {
+    "id": "COLDDARKGPU",
+    "libelle": {
+     "fr": "Cold & Dark + GPU",
+     "en": "Cold & Dark + GPU"
+    }
+   }
+  ]
  },
  "notes": [
   "Carte relevée sur une fenêtre MSFS 1920 × 1080 : les points sont en proportion de la zone client.",

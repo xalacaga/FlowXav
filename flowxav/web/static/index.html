@@ -7,56 +7,157 @@
   <link rel="stylesheet" href="/static/app.css">
 </head>
 <body>
-  <header class="bar">
-    <div class="brand"><span class="logo">▲</span> FlowXav</div>
-    <div class="pills">
-      <span class="pill" id="pill-sim" data-i18n="sim_off"></span>
-      <span class="pill" id="pill-avion"></span>
-      <span class="pill" id="pill-etat"></span>
+  <header class="topbar">
+    <div class="brand"><span class="logo" aria-hidden="true">▲</span><span>FlowXav</span></div>
+    <div class="status-strip" aria-live="polite">
+      <span class="dot-chip" id="chip-sim"><i></i><span></span></span>
+      <span class="dot-chip" id="chip-avion" hidden><i></i><span></span></span>
+      <span class="dot-chip" id="chip-etat" hidden><i></i><span></span></span>
+      <span class="dot-chip" id="chip-phase" hidden><i></i><span></span></span>
     </div>
-    <select id="langue" aria-label="Langue">
-      <option value="fr">Français</option>
-      <option value="en">English</option>
+    <button class="search-trigger" id="ouvrir-palette" type="button">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <span data-i18n="showme_title"></span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <select id="profil" class="compact" aria-label="Avion"></select>
+    <select id="langue" class="compact" aria-label="Langue">
+      <option value="fr">FR</option>
+      <option value="en">EN</option>
     </select>
   </header>
+  <p class="banner" id="message-etat" hidden></p>
 
-  <main>
-    <section class="card" id="choix">
-      <h2 data-i18n="choose_title"></h2>
-      <label><span data-i18n="aircraft"></span>
-        <select id="profil"></select>
-      </label>
-      <label><span data-i18n="procedure"></span>
-        <select id="procedure"></select>
-      </label>
-      <p class="hint" id="message-etat"></p>
-      <button class="primary" id="demarrer" data-i18n="start"></button>
-    </section>
+  <main class="layout">
+    <!-- Colonne principale : le parcours, ou l'étape en cours pendant le guidage -->
+    <section class="stage">
+      <div id="parcours-vue">
+        <div class="hero" id="hero">
+          <p class="eyebrow" id="hero-eyebrow" data-i18n="next_up"></p>
+          <h1 id="hero-titre"></h1>
+          <p class="hero-sub" id="hero-description"></p>
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-xl" id="hero-demarrer" type="button">
+              <span data-i18n="start"></span><kbd>↵</kbd>
+            </button>
+            <button class="btn btn-ghost" id="hero-variante" type="button" hidden></button>
+          </div>
+        </div>
 
-    <section class="card" id="etape" hidden>
-      <div class="progress"><div id="progression"></div></div>
-      <p class="meta" id="compteur"></p>
-      <h2 id="etape-titre"></h2>
-      <p class="control" id="etape-commande"></p>
-      <p id="etape-explication"></p>
-      <p class="status" id="etape-statut"></p>
-      <div class="actions">
-        <button id="precedente" data-i18n="previous"></button>
-        <button class="primary" id="fait" data-i18n="done"></button>
-        <button id="suivante" data-i18n="next"></button>
-        <button class="danger" id="arreter" data-i18n="stop"></button>
+        <h2 class="section-title" data-i18n="journey"></h2>
+        <ol class="journey" id="parcours"></ol>
+        <details class="demo" id="demo-bloc" hidden>
+          <summary data-i18n="demo_title"></summary>
+          <div id="demo-liste"></div>
+        </details>
+      </div>
+
+      <div id="etape-vue" hidden>
+        <div class="step-head">
+          <div>
+            <p class="eyebrow" id="compteur"></p>
+            <p class="step-phase" id="phase-titre"></p>
+          </div>
+          <div class="head-tools">
+            <div class="zoom" role="group" data-i18n-title="zoom_title">
+              <button class="icon-btn" id="zoom-moins" type="button" aria-label="−">−</button>
+              <button class="icon-btn" id="zoom-centre" type="button" data-i18n="recenter"></button>
+              <button class="icon-btn" id="zoom-plus" type="button" aria-label="+">+</button>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="arreter" type="button" data-i18n="stop"></button>
+          </div>
+        </div>
+        <div class="segments" id="segments"></div>
+
+        <article class="step-card" id="carte-etape">
+          <span class="control-chip" id="etape-commande"></span>
+          <h1 id="etape-titre"></h1>
+          <p class="step-text" id="etape-explication"></p>
+          <div class="alert" id="alertes" role="alert" hidden></div>
+          <div class="countdown" id="attente" hidden>
+            <div class="countdown-head"><span id="attente-libelle"></span><strong id="attente-temps"></strong></div>
+            <div class="countdown-bar"><span id="attente-barre"></span></div>
+            <p class="countdown-hint" id="attente-conseil"></p>
+          </div>
+          <p class="step-status" id="etape-statut"></p>
+          <div class="step-actions">
+            <button class="btn btn-ghost" id="precedente" type="button"><span aria-hidden="true">←</span> <span data-i18n="previous"></span></button>
+            <button class="btn btn-primary btn-xl grow" id="fait" type="button"><span data-i18n="done"></span><kbd data-i18n="key_space"></kbd></button>
+            <button class="btn btn-primary btn-xl grow" id="enchainer" type="button" hidden><span data-i18n="next_procedure"></span><kbd>↵</kbd></button>
+            <button class="btn btn-ghost" id="suivante" type="button"><span data-i18n="next"></span> <span aria-hidden="true">→</span></button>
+          </div>
+        </article>
+
+        <div class="upcoming" id="a-suivre">
+          <p class="eyebrow" data-i18n="upcoming"></p>
+          <ol id="suivantes"></ol>
+        </div>
+        <p class="shortcuts" data-i18n="shortcuts"></p>
       </div>
     </section>
 
-    <section class="card" id="montrer">
-      <h2 data-i18n="showme_title"></h2>
-      <p class="hint" data-i18n="showme_hint"></p>
-      <input type="search" id="filtre" data-i18n-placeholder="search">
-      <ul id="commandes"></ul>
-    </section>
+    <!-- Panneau latéral : le briefing -->
+    <aside class="briefing">
+      <section class="panel" id="panneau-depart">
+        <header class="panel-head">
+          <h2 data-i18n="dp_title"></h2>
+          <span class="badge" id="dp-badge" hidden></span>
+        </header>
+        <p class="muted small" data-i18n="dp_hint"></p>
+        <div class="row">
+          <button class="btn btn-soft grow" id="dp-check" type="button" data-i18n="dp_check"></button>
+        </div>
+        <div class="row" id="dp-etats"></div>
+        <p class="note" id="dp-statut" hidden></p>
+        <ul class="checks" id="dp-liste" hidden></ul>
+      </section>
+
+      <section class="panel" id="panneau-simbrief">
+        <header class="panel-head">
+          <h2 data-i18n="sb_title"></h2>
+          <button class="link" id="sb-modifier" type="button" data-i18n="sb_edit" hidden></button>
+        </header>
+        <div id="sb-saisie">
+          <p class="muted small" data-i18n="sb_hint"></p>
+          <label class="field"><span data-i18n="sb_id"></span>
+            <input type="text" id="sb-identifiant" autocomplete="off" spellcheck="false">
+          </label>
+        </div>
+        <button class="btn btn-soft full" id="sb-importer" type="button" data-i18n="sb_import"></button>
+        <p class="note" id="sb-statut" hidden></p>
+        <div class="flight" id="sb-vol" hidden>
+          <div class="route-line">
+            <div><strong id="sb-orig"></strong><span id="sb-rwy-dep"></span></div>
+            <span class="route-arrow" aria-hidden="true"></span>
+            <div class="end"><strong id="sb-dest"></strong><span id="sb-rwy-arr"></span></div>
+          </div>
+          <p class="flight-meta" id="sb-meta"></p>
+          <p class="muted small" data-i18n="sb_copy_hint"></p>
+          <dl class="fmc-grid" id="sb-ofp"></dl>
+          <details class="route-text">
+            <summary data-i18n="sb_route"></summary>
+            <p id="sb-route"></p>
+          </details>
+        </div>
+      </section>
+    </aside>
   </main>
 
-  <footer data-i18n="footer"></footer>
+  <!-- Palette « Montre-moi » -->
+  <div class="palette-backdrop" id="palette" hidden>
+    <div class="palette" role="dialog" aria-modal="true" aria-labelledby="palette-titre">
+      <div class="palette-input">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input type="search" id="filtre" data-i18n-placeholder="search" autocomplete="off">
+        <kbd>Esc</kbd>
+      </div>
+      <p class="palette-hint" id="palette-titre" data-i18n="showme_hint"></p>
+      <ul class="palette-list" id="commandes" role="listbox"></ul>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+  <footer class="foot" data-i18n="footer"></footer>
   <script src="/static/i18n.js"></script>
   <script src="/static/app.js"></script>
 </body>

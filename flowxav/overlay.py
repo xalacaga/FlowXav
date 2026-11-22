@@ -5,6 +5,10 @@ clics (WS_EX_LAYERED | WS_EX_TRANSPARENT) et ne prend jamais le focus. Elle
 couvre la zone client de MSFS et tourne dans son propre fil : les appels
 publics sont sûrs depuis n'importe quel fil.
 
+Si l'utilisateur tourne la vue ou zoome (regard libre), l'anneau est recalculé
+à chaque image depuis la direction de la commande : il reste dessus. Hors
+champ, une flèche au bord de l'écran indique de quel côté regarder.
+
 Limites connues : plein écran fenêtré ou fenêtré uniquement (pas de plein
 écran exclusif), pas de VR.
 """
@@ -18,13 +22,36 @@ import sys
 import threading
 import time
 from dataclasses import dataclass
+from typing import Callable
 
+from flowxav.sim.projection import direction, project
+from flowxav.sim.simconnect import Pose
 from flowxav.sim.window import msfs_client_rect
 
 LOGGER = logging.getLogger(__name__)
 
 TRANSPARENT = "#ff00ff"
-WAITING, DONE = "#ffb000", "#30d158"
+WAITING, DONE = "#ffb000", "#34d17a"
+PILL, PILL_TEXT = "#12171d", "#eef2f6"
+FADE_TO = "#1a1408"                     # teinte vers laquelle l'onde s'estompe (pas d'alpha dans Tk)
+FONT = ("Segoe UI Semibold", 11)
+RING_R, PING_R, PING_PERIOD_S = 15, 36, 1.5
+LABEL_S = 4.0          # l'étiquette s'efface ensuite : elle ne doit pas masquer les commandes voisines
+
+
+def blend(start: str, end: str, amount: float) -> str:
+    """Couleur entre `start` et `end` (0 → start, 1 → end), au format #rrggbb."""
+    a = [int(start[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(end[i:i + 2], 16) for i in (1, 3, 5)]
+    amount = max(0.0, min(1.0, amount))
+    return "#" + "".join(f"{round(x + (y - x) * amount):02x}" for x, y in zip(a, b))
+
+
+def pill_points(x0: float, y0: float, x1: float, y1: float, radius: float) -> list[float]:
+    """Contour d'un rectangle aux coins arrondis, pour create_polygon(smooth=True)."""
+    r = min(radius, (x1 - x0) / 2, (y1 - y0) / 2)
+    return [x0 + r, y0, x1 - r, y0, x1, y0, x1, y0 + r, x1, y1 - r, x1, y1, x1 - r, y1,
+            x0 + r, y1, x0, y1, x0, y1 - r, x0, y0 + r, x0, y0]
 WS_EX = 0x80000 | 0x20 | 0x80 | 0x08000000 | 0x8   # LAYERED, TRANSPARENT, TOOLWINDOW, NOACTIVATE, TOPMOST
 
 
@@ -34,6 +61,22 @@ class Target:
     v: float
     label: str
     done: bool = False
+    reference: Pose | None = None                       # vue où (u, v) a été relevé
+    current: Callable[[], Pose | None] | None = None    # vue affichée maintenant
+    vector: tuple[float, float, float] | None = None
+    shown_at: float = 0.0
+    done_at: float = 0.0
+
+    def screen(self, aspect: float) -> tuple[float, float, bool]:
+        """Position actuelle de la commande à l'écran (u, v, visible)."""
+        if self.reference is None or self.current is None:
+            return self.u, self.v, True
+        pose = self.current()
+        if pose is None:
+            return self.u, self.v, True
+        if self.vector is None:
+            self.vector = direction(self.reference, self.u, self.v, aspect)
+        return project(pose, self.vector, aspect)
 
 
 class Overlay:
@@ -43,9 +86,10 @@ class Overlay:
         self._ready = threading.Event()
 
     # -------------------------------------------------------------- API publique (tout fil)
-    def show(self, u: float, v: float, label: str) -> None:
+    def show(self, u: float, v: float, label: str, reference: Pose | None = None,
+             current: Callable[[], Pose | None] | None = None) -> None:
         self._ensure_started()
-        self._commands.put(("show", Target(u, v, label)))
+        self._commands.put(("show", Target(u, v, label, reference=reference, current=current)))
 
     def mark_done(self) -> None:
         self._commands.put(("done", None))
@@ -77,9 +121,13 @@ class Overlay:
         root.attributes("-transparentcolor", TRANSPARENT)
         canvas = tk.Canvas(root, bg=TRANSPARENT, highlightthickness=0)
         canvas.pack(fill="both", expand=True)
-        ring = canvas.create_oval(0, 0, 0, 0, outline=WAITING, width=5)
-        halo = canvas.create_oval(0, 0, 0, 0, outline=WAITING, width=2)
-        label = canvas.create_text(0, 0, text="", fill=WAITING, font=("Segoe UI", 16, "bold"))
+        ping = canvas.create_oval(0, 0, 0, 0, outline=WAITING, width=2)
+        ring = canvas.create_oval(0, 0, 0, 0, outline=WAITING, width=2)
+        dot = canvas.create_oval(0, 0, 0, 0, fill=WAITING, outline="")
+        arrow = canvas.create_polygon(0, 0, 0, 0, 0, 0, fill=WAITING, outline="")
+        pill = canvas.create_polygon(0, 0, 0, 0, 0, 0, smooth=True, fill=PILL, outline=WAITING, width=1)
+        mark = canvas.create_oval(0, 0, 0, 0, fill=WAITING, outline="")
+        label = canvas.create_text(0, 0, text="", fill=PILL_TEXT, font=FONT, anchor="w")
         state = {"target": None, "area": None, "placed": 0.0}
         root.withdraw()
         root.update_idletasks()
@@ -110,10 +158,12 @@ class Overlay:
                         root.destroy()
                         return
                     if command == "show":
+                        payload.shown_at = time.monotonic()
                         state["target"], state["placed"] = payload, 0.0
                         root.deiconify()
                     elif command == "done" and state["target"]:
                         state["target"].done = True
+                        state["target"].done_at = time.monotonic()
                     elif command == "hide":
                         state["target"] = None
                         root.withdraw()
@@ -124,17 +174,64 @@ class Overlay:
                 place(now)
                 area = state["area"]
                 if area:
-                    phase = (math.sin(now * 2 * math.pi * 1.2) + 1) / 2
                     colour = DONE if target.done else WAITING
-                    cx, cy = target.u * area[2], target.v * area[3]
-                    r, h = 28 + 9 * phase, 13 * phase
-                    canvas.coords(ring, cx - r, cy - r, cx + r, cy + r)
-                    canvas.coords(halo, cx - r - h, cy - r - h, cx + r + h, cy + r + h)
-                    canvas.itemconfigure(ring, outline=colour, width=3 + 3 * phase)
-                    canvas.itemconfigure(halo, outline=colour)
-                    below = cy + 64 if cy < area[3] - 90 else cy - 64
-                    canvas.coords(label, cx, below)
-                    canvas.itemconfigure(label, fill=colour, text=target.label + (" ✓" if target.done else ""))
+                    text = target.label + ("  ✓" if target.done else "")
+                    u, v, visible = target.screen(area[2] / area[3])
+                    cx, cy = u * area[2], v * area[3]
+                    hide = (0, 0, 0, 0)
+
+                    def caption(x: float, y: float) -> None:
+                        """Étiquette en pastille sombre À CÔTÉ de l'anneau (pas dessous : elle masquerait
+                        la commande voisine), visible quelques secondes puis effacée."""
+                        recent = now - target.shown_at < LABEL_S or (target.done and now - target.done_at < 2.0)
+                        if not recent:
+                            canvas.coords(pill, 0, 0, 0, 0, 0, 0)
+                            canvas.coords(mark, 0, 0, 0, 0)
+                            canvas.itemconfigure(label, text="")
+                            return
+                        canvas.itemconfigure(label, text=text)
+                        x0, y0, x1, y1 = canvas.bbox(label) or (0, 0, 0, 0)
+                        width, height = x1 - x0, y1 - y0
+                        box = width + 28
+                        gap = RING_R + 14
+                        left = x + gap if x + gap + box < area[2] - 6 else x - gap - box
+                        left = min(max(left, 6), area[2] - box - 6)
+                        canvas.coords(label, left + 18, y)
+                        canvas.coords(pill, *pill_points(left, y - height / 2 - 5, left + box, y + height / 2 + 5, 11))
+                        canvas.itemconfigure(pill, outline=blend(colour, PILL, 0.35))
+                        canvas.coords(mark, left + 8, y - 3, left + 14, y + 3)
+                        canvas.itemconfigure(mark, fill=colour)
+
+                    if visible:
+                        canvas.coords(arrow, *hide, 0, 0)
+                        canvas.coords(ring, cx - RING_R, cy - RING_R, cx + RING_R, cy + RING_R)
+                        canvas.itemconfigure(ring, outline=colour)
+                        canvas.coords(dot, cx - 2.5, cy - 2.5, cx + 2.5, cy + 2.5)
+                        canvas.itemconfigure(dot, fill=colour)
+                        if target.done:
+                            canvas.coords(ping, *hide)
+                        else:
+                            # Onde qui s'élargit et s'estompe, comme un sonar.
+                            wave = (now % PING_PERIOD_S) / PING_PERIOD_S
+                            radius = RING_R + (PING_R - RING_R) * wave
+                            canvas.coords(ping, cx - radius, cy - radius, cx + radius, cy + radius)
+                            canvas.itemconfigure(ping, outline=blend(colour, FADE_TO, wave), width=max(1.0, 2.0 - wave))
+                        caption(cx, cy)
+                    else:
+                        # Hors champ : chevron fin au bord de l'écran, pointé vers la commande.
+                        margin = 34
+                        cx = min(max(cx, margin), area[2] - margin)
+                        cy = min(max(cy, margin), area[3] - margin)
+                        ang = math.atan2(cy - area[3] / 2, cx - area[2] / 2)
+                        size = 14 + 3 * (math.sin(now * 2 * math.pi) + 1) / 2
+                        tip = (cx + size * math.cos(ang), cy + size * math.sin(ang))
+                        back_l = (cx + size * 0.9 * math.cos(ang + 2.5), cy + size * 0.9 * math.sin(ang + 2.5))
+                        back_r = (cx + size * 0.9 * math.cos(ang - 2.5), cy + size * 0.9 * math.sin(ang - 2.5))
+                        canvas.coords(arrow, *tip, *back_l, *back_r)
+                        canvas.itemconfigure(arrow, fill=colour)
+                        for item in (ring, ping, dot):
+                            canvas.coords(item, *hide)
+                        caption(cx, cy)
             root.after(33, tick)
 
         root.after(10, tick)

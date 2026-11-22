@@ -22,12 +22,16 @@ screen. FlowXav shows, you operate.
 - **Aircraft recognition** of the aircraft loaded in MSFS, from its title.
 - **One state source per aircraft**: the developer's SDK when there is one
   (PMDG), otherwise simulator variables.
+- **Whole-flight assistance**: climb, cruise, descent, approach, after landing
+  and shutdown, with automatic flight-phase detection.
+- **Two approach paths**: a manual landing or a monitored dual-channel
+  autoland, with a go-around reminder whenever the approach is not stable.
 
 ## Supported aircraft
 
 | Aircraft | State | Control map |
 |---|---|---|
-| PMDG 737-900 (MSFS 2024) | PMDG SDK | 408 controls: overhead, aft overhead (IRS), centre panel (MCP, EFIS), pedestal, aft pedestal (radios, transponder, audio), left CDU |
+| PMDG 737-900 (MSFS 2024) | PMDG SDK | 409 controls: overhead, aft overhead (IRS), centre panel (MCP, EFIS), pedestal, aft pedestal (radios, transponder, audio), left CDU |
 
 More aircraft, Boeing and Airbus alike, will come by adding their profiles.
 For the PMDG 737, the shipped procedure is a **demo** of the first power-up

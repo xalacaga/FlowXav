@@ -22,12 +22,16 @@ second écran. FlowXav montre, vous manœuvrez.
 - **Reconnaissance de l'avion** chargé dans MSFS, par son titre.
 - **Une source d'état par avion** : le SDK de l'éditeur quand il existe (PMDG),
   sinon les variables du simulateur.
+- **Assistance pendant tout le vol** : montée, croisière, descente, approche,
+  après-atterrissage et arrêt complet, avec détection automatique de la phase.
+- **Deux parcours d'approche** : atterrissage manuel ou autoland double canal,
+  toujours surveillé et avec rappel de remise de gaz si l'approche n'est pas stabilisée.
 
 ## Avions pris en charge
 
 | Avion | État | Carte des commandes |
 |---|---|---|
-| PMDG 737-900 (MSFS 2024) | SDK PMDG | 408 commandes : panneau supérieur, panneau supérieur arrière (IRS), tableau central (MCP, EFIS), pylône, pylône arrière (radios, transpondeur, audio), CDU gauche |
+| PMDG 737-900 (MSFS 2024) | SDK PMDG | 409 commandes : panneau supérieur, panneau supérieur arrière (IRS), tableau central (MCP, EFIS), pylône, pylône arrière (radios, transpondeur, audio), CDU gauche |
 
 D'autres avions, Boeing comme Airbus, viendront en ajoutant leur profil.
 Pour le PMDG 737, la procédure livrée est pour l'instant une **démonstration**

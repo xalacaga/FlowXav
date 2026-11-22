@@ -1,0 +1,130 @@
+{
+ "id": "approche_manuelle",
+ "phase": 8,
+ "camera": "breve",
+ "phases_vol": [
+  "approche"
+ ],
+ "variante": {
+  "fr": "Atterrissage manuel",
+  "en": "Manual landing"
+ },
+ "titre": {
+  "fr": "8. Approche — atterrissage manuel",
+  "en": "8. Approach — manual landing"
+ },
+ "description": {
+  "fr": "Configuration stabilisée, déconnexion des automatismes et atterrissage piloté à la main.",
+  "en": "Stable configuration, automation disconnect and a manually flown landing."
+ },
+ "etapes": [
+  {
+   "id": "approche_armee",
+   "commande": "EVT_MCP_APP_SWITCH",
+   "verifier": "MCP_annunAPP",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "Armer APP pour l'ILS",
+    "en": "Arm APP for the ILS"
+   },
+   "explication": {
+    "fr": "Pour une ILS, armez APP après autorisation d'interception. Pour une approche visuelle ou non-ILS, utilisez « Suivante ».",
+    "en": "For an ILS, arm APP when cleared to intercept. For a visual or non-ILS approach, use Next."
+   }
+  },
+  {
+   "id": "train_bas",
+   "sans_cible": true,
+   "verifier": "GEAR HANDLE POSITION",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "Train sur DOWN",
+    "en": "Gear DOWN"
+   },
+   "explication": {
+    "fr": "Sortez le train assez tôt pour stabiliser la trajectoire et contrôlez trois voyants verts.",
+    "en": "Lower the gear in time to stabilise the path and verify three green lights."
+   }
+  },
+  {
+   "id": "volets_atterrissage",
+   "sans_cible": true,
+   "verifier": "FLAPS HANDLE INDEX",
+   "attendu": {
+    "min": 4
+   },
+   "titre": {
+    "fr": "Volets d'atterrissage",
+    "en": "Landing flaps"
+   },
+   "explication": {
+    "fr": "Sortez les volets selon les vitesses limites jusqu'à la configuration FMC prévue.",
+    "en": "Extend flaps within limits to the FMC landing configuration."
+   }
+  },
+  {
+   "id": "speedbrake",
+   "commande": "EVT_CONTROL_STAND_SPEED_BRAKE_LEVER",
+   "verifier": "SPOILERS ARMED",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "SPEED BRAKE sur ARMED",
+    "en": "SPEED BRAKE ARMED"
+   },
+   "explication": {
+    "fr": "Armez les spoilers pour leur déploiement automatique au toucher.",
+    "en": "Arm the spoilers for automatic deployment at touchdown."
+   }
+  },
+  {
+   "id": "stabilisee",
+   "sans_cible": true,
+   "titre": {
+    "fr": "Approche stabilisée",
+    "en": "Stable approach"
+   },
+   "explication": {
+    "fr": "À 1 000 ft en IMC ou 500 ft en VMC : trajectoire, vitesse, configuration et taux de descente stabilisés. Sinon remettez les gaz. Puis « Fait ».",
+    "en": "By 1,000 ft in IMC or 500 ft in VMC: stable path, speed, configuration and descent rate. Otherwise go around. Then select Done."
+   }
+  },
+  {
+   "id": "ap_off",
+   "commande": "MCP_DisengageBar",
+   "verifier": "AUTOPILOT MASTER",
+   "attendu": {
+    "egal": 0
+   },
+   "titre": {
+    "fr": "Déconnecter le pilote automatique",
+    "en": "Disconnect the autopilot"
+   },
+   "explication": {
+    "fr": "Déconnectez avec la commande prévue sur votre matériel, acquittez l'alarme et reprenez le pilotage en douceur.",
+    "en": "Disconnect using the assigned control, cancel the warning and smoothly take over."
+   }
+  },
+  {
+   "id": "toucher",
+   "sans_cible": true,
+   "verifier": "SIM ON GROUND",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "Atterrissage",
+    "en": "Landing"
+   },
+   "explication": {
+    "fr": "Maintenez l'axe, réduisez au ralenti à l'arrondi, puis utilisez inverseurs et freinage selon le besoin. FlowXav détecte le toucher.",
+    "en": "Maintain centreline, close thrust in the flare, then use reverse and braking as required. FlowXav detects touchdown."
+   }
+  }
+ ]
+}

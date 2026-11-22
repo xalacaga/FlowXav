@@ -1,0 +1,16 @@
+{
+ "id": "croisiere",
+ "phase": 6,
+ "phases_vol": ["croisiere"],
+ "titre": {"fr": "6. Croisière", "en": "6. Cruise"},
+ "description": {"fr": "Surveillance de l'avion et préparation structurée de la descente et de l'arrivée.", "en": "Aircraft monitoring and structured preparation for descent and arrival."},
+ "etapes": [
+  {"id": "niveau", "sans_cible": true, "titre": {"fr": "Stabiliser la croisière", "en": "Settle into cruise"}, "explication": {"fr": "Vérifiez le niveau, la vitesse, le carburant prévu et les annonces du pilote automatique. Puis « Fait ».", "en": "Check level, speed, planned fuel and autopilot annunciations. Then select Done."}},
+  {"id": "carburant", "commande": "MAIN_FuelFlowSelector", "titre": {"fr": "Contrôle carburant", "en": "Fuel check"}, "explication": {"fr": "Comparez carburant restant et OFP, puis vérifiez l'équilibre gauche/droite. N'ouvrez pas le crossfeed sans raison. Puis « Fait ».", "en": "Compare remaining fuel with the OFP and check left/right balance. Do not open crossfeed without a reason. Then select Done."}},
+  {"id": "pressurisation", "commande": "AIR_PressurizationModeSelector", "titre": {"fr": "Contrôle pressurisation", "en": "Pressurisation check"}, "explication": {"fr": "Mode AUTO, altitude cabine et différentiel dans leur plage normale, aucun voyant d'alerte. Puis « Fait ».", "en": "AUTO mode, cabin altitude and differential pressure in their normal range, with no warning. Then select Done."}},
+  {"id": "meteo", "commande": "EVT_EFIS_CPT_WXR", "titre": {"fr": "Météo et route", "en": "Weather and route"}, "explication": {"fr": "Surveillez météo, turbulences, terrain et évolution de la route. Adaptez le range EFIS selon le besoin. Puis « Fait ».", "en": "Monitor weather, turbulence, terrain and route progress. Adjust EFIS range as needed. Then select Done."}},
+  {"id": "briefing_arrivee", "sans_cible": true, "titre": {"fr": "Briefing arrivée", "en": "Arrival briefing"}, "explication": {"fr": "Avant le TOD : météo et piste, STAR, approche, minima, remise de gaz, carburant et menaces particulières. Puis « Fait ».", "en": "Before TOD: weather and runway, STAR, approach, minima, missed approach, fuel and specific threats. Then select Done."}},
+  {"id": "altitude_descente", "commande": "MCP_Altitude", "titre": {"fr": "Altitude MCP autorisée", "en": "Cleared MCP altitude"}, "explication": {"fr": "Affichez uniquement une altitude autorisée par l'ATC ou la procédure, puis contrôlez-la à voix haute. Puis « Fait ».", "en": "Set only an altitude cleared by ATC or the procedure, then cross-check it aloud. Then select Done."}},
+  {"id": "descente_commencee", "sans_cible": true, "verifier": "VERTICAL SPEED", "attendu": {"max": -300}, "titre": {"fr": "Début de descente détecté", "en": "Descent detected"}, "explication": {"fr": "FlowXav attend une descente établie avant de proposer la phase suivante.", "en": "FlowXav waits for an established descent before proposing the next phase."}}
+ ]
+}

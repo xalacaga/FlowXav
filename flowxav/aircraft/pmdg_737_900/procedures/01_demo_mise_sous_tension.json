@@ -1,5 +1,6 @@
 {
  "id": "demo_mise_sous_tension",
+ "demonstration": true,
  "titre": {"fr": "Démonstration : premières mises sous tension", "en": "Demo: first power-up steps"},
  "description": {
   "fr": "Quelques étapes sûres pour découvrir FlowXav. Départ conseillé : avion en Cold & Dark avec groupe de parc branché (état PMDG « COLDDARKgpu »). Ce n'est pas encore la procédure complète.",

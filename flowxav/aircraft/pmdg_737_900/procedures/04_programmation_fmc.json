@@ -1,0 +1,439 @@
+{
+ "id": "programmation_fmc",
+ "phase": 3,
+ "titre": {
+  "fr": "3. Programmation du FMC",
+  "en": "3. FMC programming"
+ },
+ "description": {
+  "fr": "Sur le CDU gauche : position des IRS, route, performances et données de décollage. Préparez votre plan de vol (aéroports, piste, départ, route, altitude de croisière). Ce que vous tapez s'écrit en bas de l'écran (bloc-notes) ; on appuie ensuite sur la touche à côté de la ligne voulue.",
+  "en": "On the left CDU: IRS position, route, performance and takeoff data. Have your flight plan ready (airports, runway, departure, route, cruise altitude). What you type appears at the bottom of the screen (scratchpad); then press the key next to the target line."
+ },
+ "etapes": [
+  {
+   "id": "menu",
+   "commande": "EVT_CDU_L_MENU",
+   "titre": {
+    "fr": "MENU",
+    "en": "MENU"
+   },
+   "explication": {
+    "fr": "Appuyez sur MENU : le menu principal du CDU s'affiche.",
+    "en": "Press MENU: the CDU main menu appears."
+   }
+  },
+  {
+   "id": "fmc",
+   "commande": "EVT_CDU_L_L1",
+   "titre": {
+    "fr": "<FMC (touche L1)",
+    "en": "<FMC (key L1)"
+   },
+   "explication": {
+    "fr": "Touche L1, en face de <FMC : la page IDENT s'affiche (moteurs, base de navigation).",
+    "en": "Key L1, next to <FMC: the IDENT page appears (engines, navigation database)."
+   }
+  },
+  {
+   "id": "pos_init",
+   "commande": "EVT_CDU_L_R6",
+   "titre": {
+    "fr": "POS INIT> (touche R6)",
+    "en": "POS INIT> (key R6)"
+   },
+   "explication": {
+    "fr": "Touche R6 : page POS INIT, qui sert à donner leur position aux IRS.",
+    "en": "Key R6: POS INIT page, used to give the IRS their position."
+   }
+  },
+  {
+   "id": "ref_airport",
+   "commande": "EVT_CDU_L_L2",
+   "titre": {
+    "fr": "REF AIRPORT : code OACI du départ (L2)",
+    "en": "REF AIRPORT: departure ICAO code (L2)"
+   },
+   "explication": {
+    "fr": "Tapez le code OACI de l'aéroport de départ (par exemple LFPG), puis L2. Ses coordonnées s'affichent à droite.",
+    "en": "Type the departure airport ICAO code (for example LFPG), then L2. Its coordinates appear on the right."
+   }
+  },
+  {
+   "id": "copy_pos",
+   "commande": "EVT_CDU_L_R2",
+   "titre": {
+    "fr": "Copier la position (R2)",
+    "en": "Copy the position (R2)"
+   },
+   "explication": {
+    "fr": "Appuyez sur la touche à droite des coordonnées : elles passent dans le bloc-notes. Si une ligne GPS POS est affichée, préférez ses coordonnées (plus précises).",
+    "en": "Press the key to the right of the coordinates: they go to the scratchpad. If a GPS POS line is shown, use its coordinates instead (more accurate)."
+   }
+  },
+  {
+   "id": "set_irs_pos",
+   "commande": "EVT_CDU_L_R4",
+   "titre": {
+    "fr": "SET IRS POS (R4)",
+    "en": "SET IRS POS (R4)"
+   },
+   "explication": {
+    "fr": "Appuyez sur la touche en face des cases SET IRS POS : les IRS reçoivent la position et terminent leur alignement.",
+    "en": "Press the key next to the SET IRS POS boxes: the IRS receive the position and finish aligning."
+   }
+  },
+  {
+   "id": "route",
+   "commande": "EVT_CDU_L_R6",
+   "titre": {
+    "fr": "ROUTE> (R6)",
+    "en": "ROUTE> (R6)"
+   },
+   "explication": {
+    "fr": "Touche R6 : page RTE, celle de la route.",
+    "en": "Key R6: RTE page, for the route."
+   }
+  },
+  {
+   "id": "origin",
+   "commande": "EVT_CDU_L_L1",
+   "titre": {
+    "fr": "ORIGIN : aéroport de départ (L1)",
+    "en": "ORIGIN: departure airport (L1)"
+   },
+   "explication": {
+    "fr": "Tapez le code OACI de départ puis L1.",
+    "en": "Type the departure ICAO code then L1."
+   }
+  },
+  {
+   "id": "dest",
+   "commande": "EVT_CDU_L_R1",
+   "titre": {
+    "fr": "DEST : aéroport d'arrivée (R1)",
+    "en": "DEST: destination airport (R1)"
+   },
+   "explication": {
+    "fr": "Tapez le code OACI d'arrivée puis R1.",
+    "en": "Type the destination ICAO code then R1."
+   }
+  },
+  {
+   "id": "flt_no",
+   "commande": "EVT_CDU_L_R2",
+   "titre": {
+    "fr": "FLT NO : numéro de vol (R2, facultatif)",
+    "en": "FLT NO: flight number (R2, optional)"
+   },
+   "explication": {
+    "fr": "Tapez votre numéro de vol puis R2, ou passez avec « Fait ».",
+    "en": "Type your flight number then R2, or skip with \"Done\"."
+   }
+  },
+  {
+   "id": "flt_plan_request",
+   "commande": "EVT_CDU_L_R3",
+   "titre": {
+    "fr": "FLT PLAN REQUEST : plan SimBrief (R3)",
+    "en": "FLT PLAN REQUEST: SimBrief plan (R3)"
+   },
+   "explication": {
+    "fr": "Dans FlowXav, cadre « Plan de vol SimBrief », cliquez sur « Importer mon dernier plan » : le plan est déposé dans l'avion. Appuyez ensuite sur R3 : le FMC charge la route comme par liaison de données (choisissez le plan proposé s'il y en a plusieurs). Les pages suivantes n'auront plus qu'à être vérifiées. Sans plan SimBrief, passez avec « Fait ».",
+    "en": "In FlowXav, \"SimBrief flight plan\" panel, click \"Import my latest plan\": the plan is placed in the aircraft. Then press R3: the FMC loads the route as by datalink (pick the plan offered if there are several). The next pages then only need checking. Without a SimBrief plan, skip with \"Done\"."
+   }
+  },
+  {
+   "id": "load_uplink",
+   "commande": "EVT_CDU_L_R3",
+   "titre": {
+    "fr": "LOAD : charger la route reçue",
+    "en": "LOAD: load the received route"
+   },
+   "explication": {
+    "fr": "Quelques secondes après la demande, le CDU affiche ROUTE UPLINK READY. Appuyez sur la touche en face de LOAD (l'anneau s'y place dès qu'elle apparaît) : la route SimBrief est chargée, avec la piste et le départ. Sans plan SimBrief, passez avec « Fait ».",
+    "en": "A few seconds after the request, the CDU shows ROUTE UPLINK READY. Press the key next to LOAD (the ring moves there as soon as it appears): the SimBrief route is loaded, with runway and departure. Without a SimBrief plan, skip with \"Done\"."
+   },
+   "cible_cdu": {
+    "texte": "LOAD"
+   }
+  },
+  {
+   "id": "dep_arr",
+   "commande": "EVT_CDU_L_DEP_ARR",
+   "titre": {
+    "fr": "DEP ARR",
+    "en": "DEP ARR"
+   },
+   "explication": {
+    "fr": "Appuyez sur DEP ARR : index des départs et arrivées.",
+    "en": "Press DEP ARR: departures and arrivals index."
+   }
+  },
+  {
+   "id": "dep",
+   "commande": "EVT_CDU_L_L1",
+   "titre": {
+    "fr": "<DEP (L1)",
+    "en": "<DEP (L1)"
+   },
+   "explication": {
+    "fr": "Touche L1 : départs de votre aéroport. Les pistes sont à droite, les SID à gauche.",
+    "en": "Key L1: departures from your airport. Runways on the right, SIDs on the left."
+   }
+  },
+  {
+   "id": "runway",
+   "commande": "EVT_CDU_L_R1",
+   "titre": {
+    "fr": "Choisir la piste (colonne de droite)",
+    "en": "Select the runway (right column)"
+   },
+   "explication": {
+    "fr": "Appuyez sur la touche à droite de votre piste (NEXT PAGE si elle n'est pas sur la page). Avec un plan SimBrief, l'anneau se place sur sa piste ; si elle est déjà marquée <SEL> (route chargée), il suffit de vérifier. Puis « Fait ».",
+    "en": "Press the key to the right of your runway (NEXT PAGE if it is not on this page). With a SimBrief plan, the ring moves to its runway; if it already shows <SEL> (route loaded), just check it. Then \"Done\"."
+   },
+   "cible_cdu": {
+    "texte": "{piste_depart}"
+   }
+  },
+  {
+   "id": "sid",
+   "commande": "EVT_CDU_L_L1",
+   "titre": {
+    "fr": "Choisir le départ (SID) et sa transition",
+    "en": "Select the departure (SID) and its transition"
+   },
+   "explication": {
+    "fr": "Dans la colonne de gauche, appuyez sur la touche de votre SID, puis sur celle de la transition qui s'affiche. Avec un plan SimBrief, l'anneau se place sur sa SID ; déjà marquée <SEL>, il suffit de vérifier. Sans SID, passez avec « Fait ».",
+    "en": "In the left column, press the key of your SID, then of the transition that appears. With a SimBrief plan, the ring moves to its SID; already showing <SEL>, just check it. No SID: skip with \"Done\"."
+   },
+   "cible_cdu": {
+    "texte": "{sid_ident}"
+   }
+  },
+  {
+   "id": "rte_2",
+   "commande": "EVT_CDU_L_RTE",
+   "titre": {
+    "fr": "RTE puis NEXT PAGE : la route",
+    "en": "RTE then NEXT PAGE: the route"
+   },
+   "explication": {
+    "fr": "Appuyez sur RTE puis sur NEXT PAGE : page 2 de la route, VIA (voie aérienne) à gauche et TO (point) à droite. Saisissez votre route ligne par ligne, ou vérifiez celle chargée depuis SimBrief. Puis « Fait ».",
+    "en": "Press RTE then NEXT PAGE: route page 2, VIA (airway) on the left, TO (waypoint) on the right. Enter your route line by line, or check the one loaded from SimBrief. Then \"Done\"."
+   }
+  },
+  {
+   "id": "activate",
+   "commande": "EVT_CDU_L_R6",
+   "titre": {
+    "fr": "ACTIVATE> (R6)",
+    "en": "ACTIVATE> (R6)"
+   },
+   "explication": {
+    "fr": "Touche R6 : la route est prête à être activée, le voyant de la touche EXEC s'allume.",
+    "en": "Key R6: the route is ready to activate, the EXEC key light comes on."
+   }
+  },
+  {
+   "id": "exec_route",
+   "commande": "EVT_CDU_L_EXEC",
+   "titre": {
+    "fr": "EXEC",
+    "en": "EXEC"
+   },
+   "explication": {
+    "fr": "Appuyez sur EXEC : la route devient magenta sur l'écran de navigation.",
+    "en": "Press EXEC: the route turns magenta on the navigation display."
+   }
+  },
+  {
+   "id": "legs",
+   "commande": "EVT_CDU_L_LEGS",
+   "titre": {
+    "fr": "LEGS : vérifier la route",
+    "en": "LEGS: check the route"
+   },
+   "explication": {
+    "fr": "Appuyez sur LEGS et faites défiler (NEXT PAGE) : chaque point doit correspondre au plan de vol. Puis « Fait ».",
+    "en": "Press LEGS and scroll (NEXT PAGE): every waypoint must match the flight plan. Then \"Done\"."
+   }
+  },
+  {
+   "id": "perf_init",
+   "commande": "EVT_CDU_L_INIT_REF",
+   "titre": {
+    "fr": "INIT REF : page PERF INIT",
+    "en": "INIT REF: PERF INIT page"
+   },
+   "explication": {
+    "fr": "Appuyez sur INIT REF : page PERF INIT (masses, réserves, indice de coût, altitude de croisière).",
+    "en": "Press INIT REF: PERF INIT page (weights, reserves, cost index, cruise altitude)."
+   }
+  },
+  {
+   "id": "zfw",
+   "commande": "EVT_CDU_L_L3",
+   "titre": {
+    "fr": "ZFW : masse sans carburant (L3 deux fois)",
+    "en": "ZFW: zero fuel weight (L3 twice)"
+   },
+   "explication": {
+    "fr": "Raccourci du PMDG : un premier appui sur L3 met la bonne masse dans le bloc-notes, un second l'entre.",
+    "en": "PMDG shortcut: a first press on L3 puts the correct weight in the scratchpad, a second one enters it."
+   }
+  },
+  {
+   "id": "reserves",
+   "commande": "EVT_CDU_L_L4",
+   "titre": {
+    "fr": "RESERVES (L4)",
+    "en": "RESERVES (L4)"
+   },
+   "explication": {
+    "fr": "Tapez la réserve de carburant en milliers (par exemple 4.0) puis L4.",
+    "en": "Type the fuel reserve in thousands (for example 4.0) then L4."
+   }
+  },
+  {
+   "id": "cost_index",
+   "commande": "EVT_CDU_L_L5",
+   "titre": {
+    "fr": "COST INDEX (L5)",
+    "en": "COST INDEX (L5)"
+   },
+   "explication": {
+    "fr": "Tapez l'indice de coût (par exemple 30) puis L5 : plus il est bas, plus le vol est économe.",
+    "en": "Type the cost index (for example 30) then L5: the lower, the more economical."
+   }
+  },
+  {
+   "id": "crz_alt",
+   "commande": "EVT_CDU_L_R1",
+   "verifier": "FMC_CruiseAlt",
+   "attendu": {
+    "min": 1000
+   },
+   "titre": {
+    "fr": "CRZ ALT : altitude de croisière (R1)",
+    "en": "CRZ ALT: cruise altitude (R1)"
+   },
+   "explication": {
+    "fr": "Tapez l'altitude de croisière (par exemple 350 pour le FL350) puis R1.",
+    "en": "Type the cruise altitude (for example 350 for FL350) then R1."
+   }
+  },
+  {
+   "id": "exec_perf",
+   "commande": "EVT_CDU_L_EXEC",
+   "titre": {
+    "fr": "EXEC",
+    "en": "EXEC"
+   },
+   "explication": {
+    "fr": "Appuyez sur EXEC pour valider les performances.",
+    "en": "Press EXEC to confirm the performance data."
+   }
+  },
+  {
+   "id": "n1_limit",
+   "commande": "EVT_CDU_L_N1_LIMIT",
+   "titre": {
+    "fr": "N1 LIMIT",
+    "en": "N1 LIMIT"
+   },
+   "explication": {
+    "fr": "Appuyez sur N1 LIMIT : choix de la poussée de décollage (réduite ou pleine). Gardez les valeurs par défaut si vous débutez. Puis « Fait ».",
+    "en": "Press N1 LIMIT: takeoff thrust selection (reduced or full). Keep the defaults if you are a beginner. Then \"Done\"."
+   }
+  },
+  {
+   "id": "takeoff_ref",
+   "commande": "EVT_CDU_L_R6",
+   "titre": {
+    "fr": "TAKEOFF> (R6)",
+    "en": "TAKEOFF> (R6)"
+   },
+   "explication": {
+    "fr": "Touche R6 : page TAKEOFF REF.",
+    "en": "Key R6: TAKEOFF REF page."
+   }
+  },
+  {
+   "id": "to_flaps",
+   "commande": "EVT_CDU_L_L1",
+   "verifier": "FMC_TakeoffFlaps",
+   "attendu": {
+    "min": 1
+   },
+   "titre": {
+    "fr": "FLAPS : volets de décollage (L1)",
+    "en": "FLAPS: takeoff flaps (L1)"
+   },
+   "explication": {
+    "fr": "Tapez 5 puis L1 : volets 5, le cas le plus courant.",
+    "en": "Type 5 then L1: flaps 5, the most common setting."
+   }
+  },
+  {
+   "id": "to_cg",
+   "commande": "EVT_CDU_L_L3",
+   "titre": {
+    "fr": "CG : centrage et trim (L3 deux fois)",
+    "en": "CG: centre of gravity and trim (L3 twice)"
+   },
+   "explication": {
+    "fr": "Raccourci du PMDG : L3 une fois (le centrage arrive dans le bloc-notes), puis une seconde fois. Le FMC affiche le trim de décollage : notez-le, il faudra le régler avant le roulage.",
+    "en": "PMDG shortcut: L3 once (the CG goes to the scratchpad), then again. The FMC shows the takeoff trim: note it, it must be set before taxi."
+   }
+  },
+  {
+   "id": "v1",
+   "commande": "EVT_CDU_L_R1",
+   "verifier": "FMC_V1",
+   "attendu": {
+    "min": 80
+   },
+   "titre": {
+    "fr": "V1 (R1)",
+    "en": "V1 (R1)"
+   },
+   "explication": {
+    "fr": "Appuyez sur R1 pour accepter V1, la vitesse de décision.",
+    "en": "Press R1 to accept V1, the decision speed."
+   }
+  },
+  {
+   "id": "vr",
+   "commande": "EVT_CDU_L_R2",
+   "verifier": "FMC_VR",
+   "attendu": {
+    "min": 80
+   },
+   "titre": {
+    "fr": "VR (R2)",
+    "en": "VR (R2)"
+   },
+   "explication": {
+    "fr": "Appuyez sur R2 pour accepter VR, la vitesse de rotation.",
+    "en": "Press R2 to accept VR, the rotation speed."
+   }
+  },
+  {
+   "id": "v2",
+   "commande": "EVT_CDU_L_R3",
+   "verifier": "FMC_V2",
+   "attendu": {
+    "min": 80
+   },
+   "titre": {
+    "fr": "V2 (R3)",
+    "en": "V2 (R3)"
+   },
+   "explication": {
+    "fr": "Appuyez sur R3 pour accepter V2, la vitesse de sécurité au décollage. Les vitesses s'affichent sur le badin.",
+    "en": "Press R3 to accept V2, the takeoff safety speed. The speeds appear on the speed tape."
+   }
+  }
+ ]
+}

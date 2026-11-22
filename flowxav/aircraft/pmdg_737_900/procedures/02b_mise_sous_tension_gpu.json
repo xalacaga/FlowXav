@@ -1,0 +1,164 @@
+{
+ "id": "mise_sous_tension_gpu",
+ "phase": 1,
+ "variante": {
+  "fr": "GPU",
+  "en": "GPU"
+ },
+ "titre": {
+  "fr": "1. Mise sous tension sur groupe de parc",
+  "en": "1. Power-up on ground power"
+ },
+ "description": {
+  "fr": "Départ : avion en Cold & Dark avec le groupe de parc branché. Le plus sûr : dans FlowXav, « Cold & Dark + GPU » puis « Vérifier l'état de départ ». L'APU sera démarré plus tard, avant les moteurs. Ensuite : « 2. Préparation du poste ».",
+  "en": "Start: aircraft Cold & Dark with ground power connected. Safest: in FlowXav, \"Cold & Dark + GPU\" then \"Check start state\". The APU will be started later, before the engines. Next: \"2. Cockpit preparation\"."
+ },
+ "etapes": [
+  {
+   "id": "thrust_idle",
+   "commande": "EVT_CONTROL_STAND_FWD_THRUST1_LEVER",
+   "titre": {
+    "fr": "Manettes de poussée : ralenti",
+    "en": "Thrust levers: idle"
+   },
+   "explication": {
+    "fr": "Les deux manettes de poussée doivent être tout en arrière (ralenti). Si vous avez une manette physique, ramenez-la au ralenti : MSFS recopie sa position. Puis « Fait ».",
+    "en": "Both thrust levers must be fully aft (idle). If you have a physical throttle, pull it to idle: MSFS copies its position. Then \"Done\"."
+   }
+  },
+  {
+   "id": "park_brake",
+   "commande": "EVT_CONTROL_STAND_PARK_BRAKE_LEVER",
+   "titre": {
+    "fr": "Frein de parc : vérifier serré",
+    "en": "Parking brake: check set"
+   },
+   "explication": {
+    "fr": "Le frein de parc doit être serré. Sans courant, son voyant rouge est éteint : vérifiez le levier, puis « Fait ».",
+    "en": "The parking brake must be set. Without power its red light is dark: check the lever, then \"Done\"."
+   }
+  },
+  {
+   "id": "bat",
+   "commande": "ELEC_BatSelector",
+   "attendu": {
+    "egal": 1
+   },
+   "titre": {
+    "fr": "Batterie sur BAT",
+    "en": "Battery to BAT"
+   },
+   "explication": {
+    "fr": "Soulevez le cache rouge puis placez l'interrupteur BAT sur BAT. Attention : juste en dessous se trouve STANDBY POWER, un autre interrupteur sous cache.",
+    "en": "Lift the red guard and set the BAT switch to BAT. Careful: STANDBY POWER, another guarded switch, sits just below."
+   }
+  },
+  {
+   "id": "standby_power",
+   "commande": "ELEC_StandbyPowerSelector",
+   "attendu": {
+    "egal": 2
+   },
+   "titre": {
+    "fr": "STANDBY POWER sur AUTO",
+    "en": "STANDBY POWER to AUTO"
+   },
+   "explication": {
+    "fr": "L'alimentation de secours se met en automatique.",
+    "en": "Standby power goes to automatic."
+   }
+  },
+  {
+   "id": "bus_transfer",
+   "commande": "ELEC_BusTransSw_AUTO",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "BUS TRANSFER sur AUTO",
+    "en": "BUS TRANSFER to AUTO"
+   },
+   "explication": {
+    "fr": "Le transfert automatique entre les barres électriques reste sur AUTO.",
+    "en": "Automatic transfer between the electrical buses stays at AUTO."
+   }
+  },
+  {
+   "id": "gpu_available",
+   "commande": "ELEC_GrdPwrSw",
+   "verifier": "ELEC_annunGRD_POWER_AVAILABLE",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "GRD POWER AVAILABLE allumé",
+    "en": "GRD POWER AVAILABLE on"
+   },
+   "explication": {
+    "fr": "Le voyant bleu GRD POWER AVAILABLE doit être allumé : le groupe de parc est branché à l'avion. S'il est éteint, chargez « Cold & Dark + GPU » dans FlowXav, ou demandez le GPU par le CDU (MENU > FS ACTIONS > GROUND CONNECTIONS). L'étape se valide d'elle-même.",
+    "en": "The blue GRD POWER AVAILABLE light must be on: ground power is connected to the aircraft. If it is off, load \"Cold & Dark + GPU\" in FlowXav, or request the GPU through the CDU (MENU > FS ACTIONS > GROUND CONNECTIONS). The step validates by itself."
+   }
+  },
+  {
+   "id": "grd_pwr_on",
+   "commande": "ELEC_GrdPwrSw",
+   "verifier": "ELEC_annunSOURCE_OFF[0]",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "GRD POWER sur ON",
+    "en": "GRD POWER to ON"
+   },
+   "explication": {
+    "fr": "Basculez GRD POWER sur ON (interrupteur à ressort) : le groupe de parc alimente tout le réseau électrique, les voyants SOURCE OFF s'éteignent.",
+    "en": "Flip GRD POWER to ON (spring-loaded switch): ground power feeds the whole electrical system, the SOURCE OFF lights go out."
+   }
+  },
+  {
+   "id": "position",
+   "commande": "LTS_PositionSw",
+   "attendu": {
+    "egal": 0
+   },
+   "titre": {
+    "fr": "Feux de position sur STEADY",
+    "en": "Position lights to STEADY"
+   },
+   "explication": {
+    "fr": "Les feux de navigation s'allument : ils restent allumés dès que l'avion est sous tension.",
+    "en": "Navigation lights come on: they stay on whenever the aircraft is powered."
+   }
+  },
+  {
+   "id": "irs_gauche",
+   "commande": "IRS_ModeSelector[0]",
+   "attendu": {
+    "egal": 2
+   },
+   "titre": {
+    "fr": "IRS gauche sur NAV",
+    "en": "Left IRS to NAV"
+   },
+   "explication": {
+    "fr": "La centrale inertielle gauche commence son alignement (environ dix minutes). L'avion ne doit pas bouger pendant ce temps.",
+    "en": "The left inertial reference unit starts aligning (about ten minutes). The aircraft must not move meanwhile."
+   }
+  },
+  {
+   "id": "irs_droite",
+   "commande": "IRS_ModeSelector[1]",
+   "attendu": {
+    "egal": 2
+   },
+   "titre": {
+    "fr": "IRS droit sur NAV",
+    "en": "Right IRS to NAV"
+   },
+   "explication": {
+    "fr": "Même chose pour la centrale droite. On donnera la position de l'avion aux IRS depuis le FMC (« 3. Programmation du FMC »).",
+    "en": "Same for the right unit. The aircraft position will be given to the IRS from the FMC (\"3. FMC programming\")."
+   }
+  }
+ ]
+}
