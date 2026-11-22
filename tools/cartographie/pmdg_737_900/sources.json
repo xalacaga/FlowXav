@@ -8,7 +8,8 @@
   "panneau_sup_haut": "pose_panneau_sup_haut.json",
   "panneau_sup_arriere": "pose_panneau_sup_arriere.json",
   "tableau_centre": "pose_tableau_centre.json",
-  "pylone": "pose_pylone.json"
+  "pylone": "pose_pylone.json",
+  "cdu_gauche": "pose_cdu_gauche.json"
  },
  "sources": [
   {
@@ -43,6 +44,10 @@
   {
    "image": "pylone",
    "vue": "pylone"
+  },
+  {
+   "image": "cdu_gauche",
+   "vue": "cdu_gauche"
   }
  ],
  "exclus": [

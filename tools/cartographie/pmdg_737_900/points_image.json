@@ -658,5 +658,427 @@
    1328,
    1057
   ]
+ ],
+ "cdu_gauche": [
+  [
+   "EVT_CDU_L_L1",
+   "CDU gauche touche L1",
+   672,
+   200
+  ],
+  [
+   "EVT_CDU_L_L2",
+   "CDU gauche touche L2",
+   672,
+   237
+  ],
+  [
+   "EVT_CDU_L_L3",
+   "CDU gauche touche L3",
+   672,
+   273
+  ],
+  [
+   "EVT_CDU_L_L4",
+   "CDU gauche touche L4",
+   672,
+   311
+  ],
+  [
+   "EVT_CDU_L_L5",
+   "CDU gauche touche L5",
+   672,
+   349
+  ],
+  [
+   "EVT_CDU_L_L6",
+   "CDU gauche touche L6",
+   672,
+   386
+  ],
+  [
+   "EVT_CDU_L_R1",
+   "CDU gauche touche R1",
+   1129,
+   194
+  ],
+  [
+   "EVT_CDU_L_R2",
+   "CDU gauche touche R2",
+   1129,
+   230
+  ],
+  [
+   "EVT_CDU_L_R3",
+   "CDU gauche touche R3",
+   1129,
+   267
+  ],
+  [
+   "EVT_CDU_L_R4",
+   "CDU gauche touche R4",
+   1129,
+   304
+  ],
+  [
+   "EVT_CDU_L_R5",
+   "CDU gauche touche R5",
+   1129,
+   342
+  ],
+  [
+   "EVT_CDU_L_R6",
+   "CDU gauche touche R6",
+   1129,
+   380
+  ],
+  [
+   "EVT_CDU_L_INIT_REF",
+   "CDU gauche INIT REF",
+   734,
+   487
+  ],
+  [
+   "EVT_CDU_L_RTE",
+   "CDU gauche RTE",
+   798,
+   487
+  ],
+  [
+   "EVT_CDU_L_CLB",
+   "CDU gauche CLB",
+   863,
+   487
+  ],
+  [
+   "EVT_CDU_L_CRZ",
+   "CDU gauche CRZ",
+   928,
+   487
+  ],
+  [
+   "EVT_CDU_L_DES",
+   "CDU gauche DES",
+   992,
+   487
+  ],
+  [
+   "EVT_CDU_L_MENU",
+   "CDU gauche MENU",
+   734,
+   533
+  ],
+  [
+   "EVT_CDU_L_LEGS",
+   "CDU gauche LEGS",
+   799,
+   533
+  ],
+  [
+   "EVT_CDU_L_DEP_ARR",
+   "CDU gauche DEP ARR",
+   866,
+   533
+  ],
+  [
+   "EVT_CDU_L_HOLD",
+   "CDU gauche HOLD",
+   929,
+   533
+  ],
+  [
+   "EVT_CDU_L_PROG",
+   "CDU gauche PROG",
+   993,
+   533
+  ],
+  [
+   "EVT_CDU_L_EXEC",
+   "CDU gauche EXEC",
+   1079,
+   534
+  ],
+  [
+   "EVT_CDU_L_N1_LIMIT",
+   "CDU gauche N1 LIMIT",
+   734,
+   582
+  ],
+  [
+   "EVT_CDU_L_FIX",
+   "CDU gauche FIX",
+   800,
+   582
+  ],
+  [
+   "EVT_CDU_L_PREV_PAGE",
+   "CDU gauche PREV PAGE",
+   734,
+   631
+  ],
+  [
+   "EVT_CDU_L_NEXT_PAGE",
+   "CDU gauche NEXT PAGE",
+   800,
+   631
+  ],
+  [
+   "EVT_CDU_L_BRITENESS",
+   "CDU gauche BRT",
+   1075,
+   479
+  ],
+  [
+   "EVT_CDU_L_A",
+   "CDU gauche A",
+   884,
+   582
+  ],
+  [
+   "EVT_CDU_L_B",
+   "CDU gauche B",
+   936,
+   582
+  ],
+  [
+   "EVT_CDU_L_C",
+   "CDU gauche C",
+   988,
+   582
+  ],
+  [
+   "EVT_CDU_L_D",
+   "CDU gauche D",
+   1040,
+   582
+  ],
+  [
+   "EVT_CDU_L_E",
+   "CDU gauche E",
+   1092,
+   582
+  ],
+  [
+   "EVT_CDU_L_F",
+   "CDU gauche F",
+   884,
+   631
+  ],
+  [
+   "EVT_CDU_L_G",
+   "CDU gauche G",
+   936,
+   631
+  ],
+  [
+   "EVT_CDU_L_H",
+   "CDU gauche H",
+   988,
+   631
+  ],
+  [
+   "EVT_CDU_L_I",
+   "CDU gauche I",
+   1040,
+   631
+  ],
+  [
+   "EVT_CDU_L_J",
+   "CDU gauche J",
+   1092,
+   631
+  ],
+  [
+   "EVT_CDU_L_K",
+   "CDU gauche K",
+   884,
+   680
+  ],
+  [
+   "EVT_CDU_L_L",
+   "CDU gauche L",
+   936,
+   680
+  ],
+  [
+   "EVT_CDU_L_M",
+   "CDU gauche M",
+   988,
+   680
+  ],
+  [
+   "EVT_CDU_L_N",
+   "CDU gauche N",
+   1040,
+   680
+  ],
+  [
+   "EVT_CDU_L_O",
+   "CDU gauche O",
+   1092,
+   680
+  ],
+  [
+   "EVT_CDU_L_P",
+   "CDU gauche P",
+   884,
+   728
+  ],
+  [
+   "EVT_CDU_L_Q",
+   "CDU gauche Q",
+   936,
+   728
+  ],
+  [
+   "EVT_CDU_L_R",
+   "CDU gauche R",
+   988,
+   728
+  ],
+  [
+   "EVT_CDU_L_S",
+   "CDU gauche S",
+   1040,
+   728
+  ],
+  [
+   "EVT_CDU_L_T",
+   "CDU gauche T",
+   1092,
+   728
+  ],
+  [
+   "EVT_CDU_L_U",
+   "CDU gauche U",
+   884,
+   776
+  ],
+  [
+   "EVT_CDU_L_V",
+   "CDU gauche V",
+   936,
+   776
+  ],
+  [
+   "EVT_CDU_L_W",
+   "CDU gauche W",
+   988,
+   776
+  ],
+  [
+   "EVT_CDU_L_X",
+   "CDU gauche X",
+   1040,
+   776
+  ],
+  [
+   "EVT_CDU_L_Y",
+   "CDU gauche Y",
+   1092,
+   776
+  ],
+  [
+   "EVT_CDU_L_Z",
+   "CDU gauche Z",
+   886,
+   824
+  ],
+  [
+   "EVT_CDU_L_SPACE",
+   "CDU gauche SP",
+   939,
+   824
+  ],
+  [
+   "EVT_CDU_L_DEL",
+   "CDU gauche DEL",
+   991,
+   824
+  ],
+  [
+   "EVT_CDU_L_SLASH",
+   "CDU gauche /",
+   1045,
+   824
+  ],
+  [
+   "EVT_CDU_L_CLR",
+   "CDU gauche CLR",
+   1096,
+   824
+  ],
+  [
+   "EVT_CDU_L_1",
+   "CDU gauche 1",
+   722,
+   682
+  ],
+  [
+   "EVT_CDU_L_2",
+   "CDU gauche 2",
+   774,
+   682
+  ],
+  [
+   "EVT_CDU_L_3",
+   "CDU gauche 3",
+   826,
+   682
+  ],
+  [
+   "EVT_CDU_L_4",
+   "CDU gauche 4",
+   722,
+   730
+  ],
+  [
+   "EVT_CDU_L_5",
+   "CDU gauche 5",
+   774,
+   730
+  ],
+  [
+   "EVT_CDU_L_6",
+   "CDU gauche 6",
+   826,
+   730
+  ],
+  [
+   "EVT_CDU_L_7",
+   "CDU gauche 7",
+   722,
+   778
+  ],
+  [
+   "EVT_CDU_L_8",
+   "CDU gauche 8",
+   774,
+   778
+  ],
+  [
+   "EVT_CDU_L_9",
+   "CDU gauche 9",
+   826,
+   778
+  ],
+  [
+   "EVT_CDU_L_DOT",
+   "CDU gauche .",
+   723,
+   827
+  ],
+  [
+   "EVT_CDU_L_0",
+   "CDU gauche 0",
+   775,
+   827
+  ],
+  [
+   "EVT_CDU_L_PLUS_MINUS",
+   "CDU gauche +/-",
+   828,
+   827
+  ]
  ]
 }

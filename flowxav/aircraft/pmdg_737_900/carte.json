@@ -69,6 +69,19 @@
     -0.0
    ],
    "fov": 0.9864
+  },
+  "cdu_gauche": {
+   "position": [
+    0.1852,
+    1.5554,
+    15.3861
+   ],
+   "pbh": [
+    46.6169,
+    1.2463,
+    0.0
+   ],
+   "fov": 0.3475
   }
  },
  "commandes": {
@@ -1603,6 +1616,496 @@
    "u": 0.6917,
    "v": 0.9787,
    "libelle": "VHF 2 : transfert ACTIVE/STANDBY",
+   "origine": "image"
+  },
+  "EVT_CDU_L_L1": {
+   "vue": "cdu_gauche",
+   "u": 0.35,
+   "v": 0.1852,
+   "libelle": "CDU gauche touche L1",
+   "origine": "image"
+  },
+  "EVT_CDU_L_L2": {
+   "vue": "cdu_gauche",
+   "u": 0.35,
+   "v": 0.2194,
+   "libelle": "CDU gauche touche L2",
+   "origine": "image"
+  },
+  "EVT_CDU_L_L3": {
+   "vue": "cdu_gauche",
+   "u": 0.35,
+   "v": 0.2528,
+   "libelle": "CDU gauche touche L3",
+   "origine": "image"
+  },
+  "EVT_CDU_L_L4": {
+   "vue": "cdu_gauche",
+   "u": 0.35,
+   "v": 0.288,
+   "libelle": "CDU gauche touche L4",
+   "origine": "image"
+  },
+  "EVT_CDU_L_L5": {
+   "vue": "cdu_gauche",
+   "u": 0.35,
+   "v": 0.3231,
+   "libelle": "CDU gauche touche L5",
+   "origine": "image"
+  },
+  "EVT_CDU_L_L6": {
+   "vue": "cdu_gauche",
+   "u": 0.35,
+   "v": 0.3574,
+   "libelle": "CDU gauche touche L6",
+   "origine": "image"
+  },
+  "EVT_CDU_L_R1": {
+   "vue": "cdu_gauche",
+   "u": 0.588,
+   "v": 0.1796,
+   "libelle": "CDU gauche touche R1",
+   "origine": "image"
+  },
+  "EVT_CDU_L_R2": {
+   "vue": "cdu_gauche",
+   "u": 0.588,
+   "v": 0.213,
+   "libelle": "CDU gauche touche R2",
+   "origine": "image"
+  },
+  "EVT_CDU_L_R3": {
+   "vue": "cdu_gauche",
+   "u": 0.588,
+   "v": 0.2472,
+   "libelle": "CDU gauche touche R3",
+   "origine": "image"
+  },
+  "EVT_CDU_L_R4": {
+   "vue": "cdu_gauche",
+   "u": 0.588,
+   "v": 0.2815,
+   "libelle": "CDU gauche touche R4",
+   "origine": "image"
+  },
+  "EVT_CDU_L_R5": {
+   "vue": "cdu_gauche",
+   "u": 0.588,
+   "v": 0.3167,
+   "libelle": "CDU gauche touche R5",
+   "origine": "image"
+  },
+  "EVT_CDU_L_R6": {
+   "vue": "cdu_gauche",
+   "u": 0.588,
+   "v": 0.3519,
+   "libelle": "CDU gauche touche R6",
+   "origine": "image"
+  },
+  "EVT_CDU_L_INIT_REF": {
+   "vue": "cdu_gauche",
+   "u": 0.3823,
+   "v": 0.4509,
+   "libelle": "CDU gauche INIT REF",
+   "origine": "image"
+  },
+  "EVT_CDU_L_RTE": {
+   "vue": "cdu_gauche",
+   "u": 0.4156,
+   "v": 0.4509,
+   "libelle": "CDU gauche RTE",
+   "origine": "image"
+  },
+  "EVT_CDU_L_CLB": {
+   "vue": "cdu_gauche",
+   "u": 0.4495,
+   "v": 0.4509,
+   "libelle": "CDU gauche CLB",
+   "origine": "image"
+  },
+  "EVT_CDU_L_CRZ": {
+   "vue": "cdu_gauche",
+   "u": 0.4833,
+   "v": 0.4509,
+   "libelle": "CDU gauche CRZ",
+   "origine": "image"
+  },
+  "EVT_CDU_L_DES": {
+   "vue": "cdu_gauche",
+   "u": 0.5167,
+   "v": 0.4509,
+   "libelle": "CDU gauche DES",
+   "origine": "image"
+  },
+  "EVT_CDU_L_MENU": {
+   "vue": "cdu_gauche",
+   "u": 0.3823,
+   "v": 0.4935,
+   "libelle": "CDU gauche MENU",
+   "origine": "image"
+  },
+  "EVT_CDU_L_LEGS": {
+   "vue": "cdu_gauche",
+   "u": 0.4161,
+   "v": 0.4935,
+   "libelle": "CDU gauche LEGS",
+   "origine": "image"
+  },
+  "EVT_CDU_L_DEP_ARR": {
+   "vue": "cdu_gauche",
+   "u": 0.451,
+   "v": 0.4935,
+   "libelle": "CDU gauche DEP ARR",
+   "origine": "image"
+  },
+  "EVT_CDU_L_HOLD": {
+   "vue": "cdu_gauche",
+   "u": 0.4839,
+   "v": 0.4935,
+   "libelle": "CDU gauche HOLD",
+   "origine": "image"
+  },
+  "EVT_CDU_L_PROG": {
+   "vue": "cdu_gauche",
+   "u": 0.5172,
+   "v": 0.4935,
+   "libelle": "CDU gauche PROG",
+   "origine": "image"
+  },
+  "EVT_CDU_L_EXEC": {
+   "vue": "cdu_gauche",
+   "u": 0.562,
+   "v": 0.4944,
+   "libelle": "CDU gauche EXEC",
+   "origine": "image"
+  },
+  "EVT_CDU_L_N1_LIMIT": {
+   "vue": "cdu_gauche",
+   "u": 0.3823,
+   "v": 0.5389,
+   "libelle": "CDU gauche N1 LIMIT",
+   "origine": "image"
+  },
+  "EVT_CDU_L_FIX": {
+   "vue": "cdu_gauche",
+   "u": 0.4167,
+   "v": 0.5389,
+   "libelle": "CDU gauche FIX",
+   "origine": "image"
+  },
+  "EVT_CDU_L_PREV_PAGE": {
+   "vue": "cdu_gauche",
+   "u": 0.3823,
+   "v": 0.5843,
+   "libelle": "CDU gauche PREV PAGE",
+   "origine": "image"
+  },
+  "EVT_CDU_L_NEXT_PAGE": {
+   "vue": "cdu_gauche",
+   "u": 0.4167,
+   "v": 0.5843,
+   "libelle": "CDU gauche NEXT PAGE",
+   "origine": "image"
+  },
+  "EVT_CDU_L_BRITENESS": {
+   "vue": "cdu_gauche",
+   "u": 0.5599,
+   "v": 0.4435,
+   "libelle": "CDU gauche BRT",
+   "origine": "image"
+  },
+  "EVT_CDU_L_A": {
+   "vue": "cdu_gauche",
+   "u": 0.4604,
+   "v": 0.5389,
+   "libelle": "CDU gauche A",
+   "origine": "image"
+  },
+  "EVT_CDU_L_B": {
+   "vue": "cdu_gauche",
+   "u": 0.4875,
+   "v": 0.5389,
+   "libelle": "CDU gauche B",
+   "origine": "image"
+  },
+  "EVT_CDU_L_C": {
+   "vue": "cdu_gauche",
+   "u": 0.5146,
+   "v": 0.5389,
+   "libelle": "CDU gauche C",
+   "origine": "image"
+  },
+  "EVT_CDU_L_D": {
+   "vue": "cdu_gauche",
+   "u": 0.5417,
+   "v": 0.5389,
+   "libelle": "CDU gauche D",
+   "origine": "image"
+  },
+  "EVT_CDU_L_E": {
+   "vue": "cdu_gauche",
+   "u": 0.5687,
+   "v": 0.5389,
+   "libelle": "CDU gauche E",
+   "origine": "image"
+  },
+  "EVT_CDU_L_F": {
+   "vue": "cdu_gauche",
+   "u": 0.4604,
+   "v": 0.5843,
+   "libelle": "CDU gauche F",
+   "origine": "image"
+  },
+  "EVT_CDU_L_G": {
+   "vue": "cdu_gauche",
+   "u": 0.4875,
+   "v": 0.5843,
+   "libelle": "CDU gauche G",
+   "origine": "image"
+  },
+  "EVT_CDU_L_H": {
+   "vue": "cdu_gauche",
+   "u": 0.5146,
+   "v": 0.5843,
+   "libelle": "CDU gauche H",
+   "origine": "image"
+  },
+  "EVT_CDU_L_I": {
+   "vue": "cdu_gauche",
+   "u": 0.5417,
+   "v": 0.5843,
+   "libelle": "CDU gauche I",
+   "origine": "image"
+  },
+  "EVT_CDU_L_J": {
+   "vue": "cdu_gauche",
+   "u": 0.5687,
+   "v": 0.5843,
+   "libelle": "CDU gauche J",
+   "origine": "image"
+  },
+  "EVT_CDU_L_K": {
+   "vue": "cdu_gauche",
+   "u": 0.4604,
+   "v": 0.6296,
+   "libelle": "CDU gauche K",
+   "origine": "image"
+  },
+  "EVT_CDU_L_L": {
+   "vue": "cdu_gauche",
+   "u": 0.4875,
+   "v": 0.6296,
+   "libelle": "CDU gauche L",
+   "origine": "image"
+  },
+  "EVT_CDU_L_M": {
+   "vue": "cdu_gauche",
+   "u": 0.5146,
+   "v": 0.6296,
+   "libelle": "CDU gauche M",
+   "origine": "image"
+  },
+  "EVT_CDU_L_N": {
+   "vue": "cdu_gauche",
+   "u": 0.5417,
+   "v": 0.6296,
+   "libelle": "CDU gauche N",
+   "origine": "image"
+  },
+  "EVT_CDU_L_O": {
+   "vue": "cdu_gauche",
+   "u": 0.5687,
+   "v": 0.6296,
+   "libelle": "CDU gauche O",
+   "origine": "image"
+  },
+  "EVT_CDU_L_P": {
+   "vue": "cdu_gauche",
+   "u": 0.4604,
+   "v": 0.6741,
+   "libelle": "CDU gauche P",
+   "origine": "image"
+  },
+  "EVT_CDU_L_Q": {
+   "vue": "cdu_gauche",
+   "u": 0.4875,
+   "v": 0.6741,
+   "libelle": "CDU gauche Q",
+   "origine": "image"
+  },
+  "EVT_CDU_L_R": {
+   "vue": "cdu_gauche",
+   "u": 0.5146,
+   "v": 0.6741,
+   "libelle": "CDU gauche R",
+   "origine": "image"
+  },
+  "EVT_CDU_L_S": {
+   "vue": "cdu_gauche",
+   "u": 0.5417,
+   "v": 0.6741,
+   "libelle": "CDU gauche S",
+   "origine": "image"
+  },
+  "EVT_CDU_L_T": {
+   "vue": "cdu_gauche",
+   "u": 0.5687,
+   "v": 0.6741,
+   "libelle": "CDU gauche T",
+   "origine": "image"
+  },
+  "EVT_CDU_L_U": {
+   "vue": "cdu_gauche",
+   "u": 0.4604,
+   "v": 0.7185,
+   "libelle": "CDU gauche U",
+   "origine": "image"
+  },
+  "EVT_CDU_L_V": {
+   "vue": "cdu_gauche",
+   "u": 0.4875,
+   "v": 0.7185,
+   "libelle": "CDU gauche V",
+   "origine": "image"
+  },
+  "EVT_CDU_L_W": {
+   "vue": "cdu_gauche",
+   "u": 0.5146,
+   "v": 0.7185,
+   "libelle": "CDU gauche W",
+   "origine": "image"
+  },
+  "EVT_CDU_L_X": {
+   "vue": "cdu_gauche",
+   "u": 0.5417,
+   "v": 0.7185,
+   "libelle": "CDU gauche X",
+   "origine": "image"
+  },
+  "EVT_CDU_L_Y": {
+   "vue": "cdu_gauche",
+   "u": 0.5687,
+   "v": 0.7185,
+   "libelle": "CDU gauche Y",
+   "origine": "image"
+  },
+  "EVT_CDU_L_Z": {
+   "vue": "cdu_gauche",
+   "u": 0.4615,
+   "v": 0.763,
+   "libelle": "CDU gauche Z",
+   "origine": "image"
+  },
+  "EVT_CDU_L_SPACE": {
+   "vue": "cdu_gauche",
+   "u": 0.4891,
+   "v": 0.763,
+   "libelle": "CDU gauche SP",
+   "origine": "image"
+  },
+  "EVT_CDU_L_DEL": {
+   "vue": "cdu_gauche",
+   "u": 0.5161,
+   "v": 0.763,
+   "libelle": "CDU gauche DEL",
+   "origine": "image"
+  },
+  "EVT_CDU_L_SLASH": {
+   "vue": "cdu_gauche",
+   "u": 0.5443,
+   "v": 0.763,
+   "libelle": "CDU gauche /",
+   "origine": "image"
+  },
+  "EVT_CDU_L_CLR": {
+   "vue": "cdu_gauche",
+   "u": 0.5708,
+   "v": 0.763,
+   "libelle": "CDU gauche CLR",
+   "origine": "image"
+  },
+  "EVT_CDU_L_1": {
+   "vue": "cdu_gauche",
+   "u": 0.376,
+   "v": 0.6315,
+   "libelle": "CDU gauche 1",
+   "origine": "image"
+  },
+  "EVT_CDU_L_2": {
+   "vue": "cdu_gauche",
+   "u": 0.4031,
+   "v": 0.6315,
+   "libelle": "CDU gauche 2",
+   "origine": "image"
+  },
+  "EVT_CDU_L_3": {
+   "vue": "cdu_gauche",
+   "u": 0.4302,
+   "v": 0.6315,
+   "libelle": "CDU gauche 3",
+   "origine": "image"
+  },
+  "EVT_CDU_L_4": {
+   "vue": "cdu_gauche",
+   "u": 0.376,
+   "v": 0.6759,
+   "libelle": "CDU gauche 4",
+   "origine": "image"
+  },
+  "EVT_CDU_L_5": {
+   "vue": "cdu_gauche",
+   "u": 0.4031,
+   "v": 0.6759,
+   "libelle": "CDU gauche 5",
+   "origine": "image"
+  },
+  "EVT_CDU_L_6": {
+   "vue": "cdu_gauche",
+   "u": 0.4302,
+   "v": 0.6759,
+   "libelle": "CDU gauche 6",
+   "origine": "image"
+  },
+  "EVT_CDU_L_7": {
+   "vue": "cdu_gauche",
+   "u": 0.376,
+   "v": 0.7204,
+   "libelle": "CDU gauche 7",
+   "origine": "image"
+  },
+  "EVT_CDU_L_8": {
+   "vue": "cdu_gauche",
+   "u": 0.4031,
+   "v": 0.7204,
+   "libelle": "CDU gauche 8",
+   "origine": "image"
+  },
+  "EVT_CDU_L_9": {
+   "vue": "cdu_gauche",
+   "u": 0.4302,
+   "v": 0.7204,
+   "libelle": "CDU gauche 9",
+   "origine": "image"
+  },
+  "EVT_CDU_L_DOT": {
+   "vue": "cdu_gauche",
+   "u": 0.3766,
+   "v": 0.7657,
+   "libelle": "CDU gauche .",
+   "origine": "image"
+  },
+  "EVT_CDU_L_0": {
+   "vue": "cdu_gauche",
+   "u": 0.4036,
+   "v": 0.7657,
+   "libelle": "CDU gauche 0",
+   "origine": "image"
+  },
+  "EVT_CDU_L_PLUS_MINUS": {
+   "vue": "cdu_gauche",
+   "u": 0.4313,
+   "v": 0.7657,
+   "libelle": "CDU gauche +/-",
    "origine": "image"
   }
  }
