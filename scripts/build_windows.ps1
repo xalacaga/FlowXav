@@ -71,11 +71,29 @@ if (-not (Test-Path -LiteralPath $VenvPython)) {
     & $launcher.Source -3 -m venv (Join-Path $ProjectRoot ".venv")
 }
 & $VenvPython -c "import sys; assert sys.version_info >= (3, 11), sys.version"
+& $VenvPython -c "import pip; assert tuple(map(int, pip.__version__.split('.')[:2])) >= (26, 2), pip.__version__" 2>$null
+if ($LASTEXITCODE -ne 0) {
+    Write-Step "Mise à niveau sécurisée de pip"
+    Invoke-NativeTool { & $VenvPython -m pip install --disable-pip-version-check --upgrade "pip>=26.2" }
+    if ($LASTEXITCODE -ne 0) { throw "pip 26.2 ou plus récent est requis pour corriger ses vulnérabilités connues." }
+}
 
 Write-Step "Contrôle des bibliothèques du projet"
 if (-not (Test-PythonImports "fastapi, uvicorn, pydantic, webview, pytest")) {
     Invoke-NativeTool { & $VenvPython -m pip install --disable-pip-version-check -e "$ProjectRoot[dev]" }
 }
+& $VenvPython -m pip check
+if ($LASTEXITCODE -ne 0) { throw "Les dépendances Python installées sont incohérentes." }
+if (-not (Test-PythonImports "pip_audit")) {
+    if ($SkipToolInstall) { throw "pip-audit est absent. Relancez sans -SkipToolInstall." }
+    Write-Step "Installation de l'auditeur de dépendances"
+    Invoke-NativeTool { & $VenvPython -m pip install --disable-pip-version-check "pip-audit>=2.10,<3" }
+}
+
+Write-Step "Audit des vulnérabilités Python"
+$AuditCache = Join-Path $env:TEMP "FlowXav-pip-audit-$PID"
+Invoke-NativeTool { & $VenvPython -m pip_audit --local --progress-spinner off --cache-dir $AuditCache }
+if ($LASTEXITCODE -ne 0) { throw "Une dépendance Python présente une vulnérabilité connue." }
 if (-not (Test-PythonImports "PyInstaller")) {
     if ($SkipToolInstall) { throw "PyInstaller est absent. Relancez sans -SkipToolInstall." }
     Write-Step "Installation de PyInstaller"
@@ -94,12 +112,21 @@ if ($WebViewSignature.Status -ne "Valid" -or $WebViewSignature.SignerCertificate
 
 Write-Step "Tests automatisés"
 $TestTemp = Join-Path $env:TEMP "FlowXav-tests-$PID"
-Invoke-NativeTool { & $VenvPython -m pytest -m "not live_msfs" --basetemp $TestTemp -p no:cacheprovider }
+Invoke-NativeTool { & $VenvPython -m pytest -m "not live_msfs and not live_network and not installed" --basetemp $TestTemp -p no:cacheprovider }
 if ($LASTEXITCODE -ne 0) { throw "Les tests ont échoué ; distribution annulée." }
 
 Write-Step "Construction de l'application autonome"
 Invoke-NativeTool { & $VenvPython -m PyInstaller --noconfirm --clean (Join-Path $ProjectRoot "FlowXav.spec") }
 if ($LASTEXITCODE -ne 0) { throw "PyInstaller n'a pas produit l'application." }
+
+Write-Step "Smoke test de l'exécutable autonome"
+$SmokeListener = [Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback, 0)
+$SmokeListener.Start()
+$SmokePort = $SmokeListener.LocalEndpoint.Port
+$SmokeListener.Stop()
+$BuiltExe = Join-Path $ProjectRoot "dist\FlowXav\FlowXav.exe"
+Invoke-NativeTool { & $BuiltExe --smoke-test --port $SmokePort }
+if ($LASTEXITCODE -ne 0) { throw "L'exécutable autonome ne démarre ou ne s'arrête pas correctement." }
 
 New-Item -ItemType Directory -Path $ReleaseDir -Force | Out-Null
 $DistDir = Join-Path $ProjectRoot "dist\FlowXav"

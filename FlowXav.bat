@@ -28,6 +28,7 @@ if not defined BOOTSTRAP (
   goto :fail
 )
 %BOOTSTRAP% -m venv "%VENV%" || goto :fail
+"%PY%" -m pip install --disable-pip-version-check --upgrade "pip>=26.2" || goto :fail
 "%PY%" -m pip install --disable-pip-version-check -e ".[dev]" || goto :fail
 
 :ready

@@ -77,6 +77,36 @@ FlowXav.bat                                    # premier lancement : crée .venv
 .venv\Scripts\python.exe -m flowxav.desktop --no-open   # service seul, pour le diagnostic
 ```
 
+### Tests d'intégration opt-in
+
+Ces tests ne s'exécutent jamais sans variable d'environnement explicite :
+
+```powershell
+# Lecture non destructive du titre de l'avion et de la caméra
+$env:FLOWXAV_RUN_LIVE_MSFS = "1"
+.venv\Scripts\python.exe -m pytest tests/test_live_integrations.py -m live_msfs -k reads
+
+# Reconnexion réelle : le test demande de fermer puis relancer MSFS (180 s par défaut)
+$env:FLOWXAV_TEST_RECONNECT = "1"
+.venv\Scripts\python.exe -m pytest tests/test_live_integrations.py -k disconnect -s
+
+# Test visuel de deux secondes de la caméra et de l'overlay
+$env:FLOWXAV_TEST_CAMERA_OVERLAY = "1"
+.venv\Scripts\python.exe -m pytest tests/test_live_integrations.py -k camera_overlay
+
+# Import SimBrief réel, confiné au dossier temporaire de pytest
+$env:FLOWXAV_RUN_LIVE_SIMBRIEF = "1"
+$env:FLOWXAV_SIMBRIEF_ID = "votre_identifiant"
+.venv\Scripts\python.exe -m pytest tests/test_live_integrations.py -m live_network
+
+# Smoke test d'un exécutable construit ou réellement installé
+$env:FLOWXAV_INSTALLED_EXE = "C:\chemin\vers\FlowXav.exe"
+.venv\Scripts\python.exe -m pytest tests/test_live_integrations.py -m installed
+```
+
+Le script de distribution exécute aussi automatiquement le smoke test sur le
+binaire PyInstaller avant de créer l'archive et l'installateur.
+
 ## Construire la distribution
 
 ```powershell

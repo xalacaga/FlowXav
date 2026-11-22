@@ -111,11 +111,28 @@ def _run_window(url: str, port: int, server) -> None:
             server_thread.join(timeout=2)
 
 
+def _run_smoke(port: int, server) -> None:
+    """Démarre puis arrête réellement le service, pour tester un exécutable distribué."""
+    server_thread = threading.Thread(target=server.run, name="flowxav-smoke-server", daemon=False)
+    server_thread.start()
+    try:
+        _wait_until_ready(port)
+    finally:
+        server.should_exit = True
+        server_thread.join(timeout=6)
+        if server_thread.is_alive():
+            server.force_exit = True
+            server_thread.join(timeout=2)
+    if server_thread.is_alive():
+        raise RuntimeError("Le service FlowXav ne s'est pas arrêté après le smoke test.")
+
+
 def main(argv: list[str] | None = None) -> int:
     multiprocessing.freeze_support()
     parser = argparse.ArgumentParser(prog="FlowXav")
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--no-open", action="store_true", help="service sans fenêtre, pour le diagnostic")
+    parser.add_argument("--smoke-test", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     log_file = configure_logging()
     if sys.platform == "win32":
@@ -132,7 +149,9 @@ def main(argv: list[str] | None = None) -> int:
         url = f"http://{HOST}:{port}"
         logging.info("Démarrage de FlowXav %s sur %s", __version__, url)
         server = create_server(HOST, port)
-        if args.no_open:
+        if args.smoke_test:
+            _run_smoke(port, server)
+        elif args.no_open:
             server.run()
         else:
             _run_window(url, port, server)

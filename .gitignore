@@ -29,3 +29,4 @@ installer/assets/MicrosoftEdgeWebView2Setup.exe
 
 # Captures du cockpit : images des produits des éditeurs, gardées en local (snap_view.py les régénère)
 tools/cartographie/*/captures/
+.audit_pytest_cache/

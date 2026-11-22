@@ -14,15 +14,15 @@ classifiers = [
     "Topic :: Games/Entertainment :: Simulation",
 ]
 dependencies = [
-    "fastapi>=0.110",
-    "pydantic>=2.0",
-    "uvicorn>=0.29",
+    "fastapi>=0.110,<1",
+    "pydantic>=2.0,<3",
+    "uvicorn>=0.29,<1",
     # Fenêtre Windows native embarquant l'interface dans Edge WebView2.
     "pywebview>=6.0,<7 ; sys_platform == 'win32'",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "httpx>=0.27"]
+dev = ["pytest>=8.0,<10", "httpx>=0.27,<1"]
 
 [project.urls]
 Source = "https://github.com/xalacaga/FlowXav"
@@ -46,4 +46,6 @@ testpaths = ["tests"]
 addopts = "--basetemp=.pytest_tmp"
 markers = [
     "live_msfs: tests d'intégration qui nécessitent MSFS démarré",
+    "live_network: tests opt-in qui interrogent un service Internet réel",
+    "installed: smoke tests d'un exécutable FlowXav construit ou installé",
 ]
