@@ -82,6 +82,19 @@
     0.0
    ],
    "fov": 0.3475
+  },
+  "pylone_arriere": {
+   "position": [
+    -0.0239,
+    1.5554,
+    15.0174
+   ],
+   "pbh": [
+    70.2286,
+    -0.3178,
+    0.0
+   ],
+   "fov": 0.6725
   }
  },
  "commandes": {
@@ -1422,6 +1435,853 @@
    "libelle": "VOICE RECORDER",
    "origine": "image"
   },
+  "EVT_COM1_TRANSFER_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.349,
+   "v": 0.187,
+   "libelle": "radio VHF 1 : transfert ACTIVE/STANDBY",
+   "origine": "image"
+  },
+  "EVT_COM1_OUTER_SELECTOR": {
+   "vue": "pylone_arriere",
+   "u": 0.3891,
+   "v": 0.2176,
+   "libelle": "radio VHF 1 : bouton de fréquence",
+   "origine": "image"
+  },
+  "EVT_COM1_PNL_OFF_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.2948,
+   "v": 0.212,
+   "libelle": "radio VHF 1 : PNL OFF",
+   "origine": "image"
+  },
+  "EVT_COM1_HF_SENSOR_KNOB": {
+   "vue": "pylone_arriere",
+   "u": 0.2953,
+   "v": 0.2315,
+   "libelle": "radio VHF 1 : HF SENS",
+   "origine": "image"
+  },
+  "EVT_COM1_VHF1_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3177,
+   "v": 0.2176,
+   "libelle": "radio VHF 1 : sélection VHF 1",
+   "origine": "image"
+  },
+  "EVT_COM1_VHF2_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3365,
+   "v": 0.2176,
+   "libelle": "radio VHF 1 : sélection VHF 2",
+   "origine": "image"
+  },
+  "EVT_COM1_VHF3_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3563,
+   "v": 0.2176,
+   "libelle": "radio VHF 1 : sélection VHF 3",
+   "origine": "image"
+  },
+  "EVT_COM1_HF1_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3167,
+   "v": 0.2407,
+   "libelle": "radio VHF 1 : sélection HF1",
+   "origine": "image"
+  },
+  "EVT_COM1_AM_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3359,
+   "v": 0.2407,
+   "libelle": "radio VHF 1 : sélection AM",
+   "origine": "image"
+  },
+  "EVT_COM1_HF2_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3557,
+   "v": 0.2407,
+   "libelle": "radio VHF 1 : sélection HF2",
+   "origine": "image"
+  },
+  "EVT_COM1_TEST_SWICTH": {
+   "vue": "pylone_arriere",
+   "u": 0.3786,
+   "v": 0.2148,
+   "libelle": "radio VHF 1 : TEST",
+   "origine": "image"
+  },
+  "EVT_COM2_TRANSFER_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.6302,
+   "v": 0.1889,
+   "libelle": "radio VHF 2 : transfert ACTIVE/STANDBY",
+   "origine": "image"
+  },
+  "EVT_COM2_OUTER_SELECTOR": {
+   "vue": "pylone_arriere",
+   "u": 0.6823,
+   "v": 0.2222,
+   "libelle": "radio VHF 2 : bouton de fréquence",
+   "origine": "image"
+  },
+  "EVT_COM2_PNL_OFF_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.5781,
+   "v": 0.2148,
+   "libelle": "radio VHF 2 : PNL OFF",
+   "origine": "image"
+  },
+  "EVT_COM2_HF_SENSOR_KNOB": {
+   "vue": "pylone_arriere",
+   "u": 0.5807,
+   "v": 0.2333,
+   "libelle": "radio VHF 2 : HF SENS",
+   "origine": "image"
+  },
+  "EVT_COM2_VHF1_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.6026,
+   "v": 0.2194,
+   "libelle": "radio VHF 2 : sélection VHF 1",
+   "origine": "image"
+  },
+  "EVT_COM2_VHF2_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.6224,
+   "v": 0.2194,
+   "libelle": "radio VHF 2 : sélection VHF 2",
+   "origine": "image"
+  },
+  "EVT_COM2_VHF3_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.6427,
+   "v": 0.2194,
+   "libelle": "radio VHF 2 : sélection VHF 3",
+   "origine": "image"
+  },
+  "EVT_COM2_HF1_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.6042,
+   "v": 0.2426,
+   "libelle": "radio VHF 2 : sélection HF1",
+   "origine": "image"
+  },
+  "EVT_COM2_AM_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.6234,
+   "v": 0.2426,
+   "libelle": "radio VHF 2 : sélection AM",
+   "origine": "image"
+  },
+  "EVT_COM2_HF2_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.6438,
+   "v": 0.2426,
+   "libelle": "radio VHF 2 : sélection HF2",
+   "origine": "image"
+  },
+  "EVT_COM2_TEST_SWICTH": {
+   "vue": "pylone_arriere",
+   "u": 0.6615,
+   "v": 0.2148,
+   "libelle": "radio VHF 2 : TEST",
+   "origine": "image"
+  },
+  "CARGO_DetSelect[0]": {
+   "vue": "pylone_arriere",
+   "u": 0.4698,
+   "v": 0.1806,
+   "libelle": "CARGO FIRE : DET SELECT FWD",
+   "origine": "image"
+  },
+  "CARGO_DetSelect[1]": {
+   "vue": "pylone_arriere",
+   "u": 0.5,
+   "v": 0.1806,
+   "libelle": "CARGO FIRE : DET SELECT AFT",
+   "origine": "image"
+  },
+  "CARGO_ArmedSw[0]": {
+   "vue": "pylone_arriere",
+   "u": 0.4708,
+   "v": 0.2287,
+   "libelle": "CARGO FIRE : ARM FWD",
+   "origine": "image"
+  },
+  "CARGO_ArmedSw[1]": {
+   "vue": "pylone_arriere",
+   "u": 0.4995,
+   "v": 0.2287,
+   "libelle": "CARGO FIRE : ARM AFT",
+   "origine": "image"
+  },
+  "EVT_CARGO_FIRE_TEST_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.4427,
+   "v": 0.2315,
+   "libelle": "CARGO FIRE : TEST",
+   "origine": "image"
+  },
+  "EVT_CARGO_FIRE_DISC_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.5323,
+   "v": 0.2222,
+   "libelle": "CARGO FIRE : DISCH",
+   "origine": "image"
+  },
+  "EVT_MMR1_TRANSFER_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.2797,
+   "v": 0.2954,
+   "libelle": "radio NAV 1 : transfert ACT/STBY",
+   "origine": "image"
+  },
+  "EVT_MMR1_TEST_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.2792,
+   "v": 0.325,
+   "libelle": "radio NAV 1 : TEST",
+   "origine": "image"
+  },
+  "EVT_MMR1_MODE_DN_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.2943,
+   "v": 0.3444,
+   "libelle": "radio NAV 1 : MODE flèche bas",
+   "origine": "image"
+  },
+  "EVT_MMR1_MODE_UP_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3094,
+   "v": 0.3444,
+   "libelle": "radio NAV 1 : MODE flèche haut",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_1": {
+   "vue": "pylone_arriere",
+   "u": 0.3698,
+   "v": 0.2694,
+   "libelle": "radio NAV 1 : touche 1",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_2": {
+   "vue": "pylone_arriere",
+   "u": 0.3854,
+   "v": 0.2694,
+   "libelle": "radio NAV 1 : touche 2",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_3": {
+   "vue": "pylone_arriere",
+   "u": 0.3995,
+   "v": 0.2694,
+   "libelle": "radio NAV 1 : touche 3",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_4": {
+   "vue": "pylone_arriere",
+   "u": 0.3693,
+   "v": 0.2944,
+   "libelle": "radio NAV 1 : touche 4",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_5": {
+   "vue": "pylone_arriere",
+   "u": 0.3844,
+   "v": 0.2944,
+   "libelle": "radio NAV 1 : touche 5",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_6": {
+   "vue": "pylone_arriere",
+   "u": 0.399,
+   "v": 0.2944,
+   "libelle": "radio NAV 1 : touche 6",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_7": {
+   "vue": "pylone_arriere",
+   "u": 0.3693,
+   "v": 0.3194,
+   "libelle": "radio NAV 1 : touche 7",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_8": {
+   "vue": "pylone_arriere",
+   "u": 0.3833,
+   "v": 0.3194,
+   "libelle": "radio NAV 1 : touche 8",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_9": {
+   "vue": "pylone_arriere",
+   "u": 0.3984,
+   "v": 0.3194,
+   "libelle": "radio NAV 1 : touche 9",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_0": {
+   "vue": "pylone_arriere",
+   "u": 0.3828,
+   "v": 0.3454,
+   "libelle": "radio NAV 1 : touche 0",
+   "origine": "image"
+  },
+  "EVT_MMR1_KEYPAD_CLR": {
+   "vue": "pylone_arriere",
+   "u": 0.3979,
+   "v": 0.3454,
+   "libelle": "radio NAV 1 : CLR",
+   "origine": "image"
+  },
+  "EVT_MMR2_TRANSFER_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.5682,
+   "v": 0.2954,
+   "libelle": "radio NAV 2 : transfert ACT/STBY",
+   "origine": "image"
+  },
+  "EVT_MMR2_TEST_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.5698,
+   "v": 0.3278,
+   "libelle": "radio NAV 2 : TEST",
+   "origine": "image"
+  },
+  "EVT_MMR2_MODE_DN_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.587,
+   "v": 0.3472,
+   "libelle": "radio NAV 2 : MODE flèche bas",
+   "origine": "image"
+  },
+  "EVT_MMR2_MODE_UP_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.6026,
+   "v": 0.3472,
+   "libelle": "radio NAV 2 : MODE flèche haut",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_1": {
+   "vue": "pylone_arriere",
+   "u": 0.6589,
+   "v": 0.2713,
+   "libelle": "radio NAV 2 : touche 1",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_2": {
+   "vue": "pylone_arriere",
+   "u": 0.6734,
+   "v": 0.2713,
+   "libelle": "radio NAV 2 : touche 2",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_3": {
+   "vue": "pylone_arriere",
+   "u": 0.688,
+   "v": 0.2713,
+   "libelle": "radio NAV 2 : touche 3",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_4": {
+   "vue": "pylone_arriere",
+   "u": 0.6594,
+   "v": 0.2963,
+   "libelle": "radio NAV 2 : touche 4",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_5": {
+   "vue": "pylone_arriere",
+   "u": 0.6745,
+   "v": 0.2963,
+   "libelle": "radio NAV 2 : touche 5",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_6": {
+   "vue": "pylone_arriere",
+   "u": 0.6891,
+   "v": 0.2963,
+   "libelle": "radio NAV 2 : touche 6",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_7": {
+   "vue": "pylone_arriere",
+   "u": 0.6604,
+   "v": 0.3213,
+   "libelle": "radio NAV 2 : touche 7",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_8": {
+   "vue": "pylone_arriere",
+   "u": 0.675,
+   "v": 0.3213,
+   "libelle": "radio NAV 2 : touche 8",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_9": {
+   "vue": "pylone_arriere",
+   "u": 0.6901,
+   "v": 0.3213,
+   "libelle": "radio NAV 2 : touche 9",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_0": {
+   "vue": "pylone_arriere",
+   "u": 0.6766,
+   "v": 0.3472,
+   "libelle": "radio NAV 2 : touche 0",
+   "origine": "image"
+  },
+  "EVT_MMR2_KEYPAD_CLR": {
+   "vue": "pylone_arriere",
+   "u": 0.6917,
+   "v": 0.3472,
+   "libelle": "radio NAV 2 : CLR",
+   "origine": "image"
+  },
+  "EVT_WXR_L_TFR": {
+   "vue": "pylone_arriere",
+   "u": 0.4484,
+   "v": 0.2731,
+   "libelle": "radar météo (gauche) : TFR",
+   "origine": "image"
+  },
+  "EVT_WXR_L_WX": {
+   "vue": "pylone_arriere",
+   "u": 0.4688,
+   "v": 0.2731,
+   "libelle": "radar météo (gauche) : WX",
+   "origine": "image"
+  },
+  "EVT_WXR_L_WX_T": {
+   "vue": "pylone_arriere",
+   "u": 0.488,
+   "v": 0.2731,
+   "libelle": "radar météo (gauche) : WX+T",
+   "origine": "image"
+  },
+  "EVT_WXR_L_MAP": {
+   "vue": "pylone_arriere",
+   "u": 0.5083,
+   "v": 0.2731,
+   "libelle": "radar météo (gauche) : MAP",
+   "origine": "image"
+  },
+  "EVT_WXR_L_GC": {
+   "vue": "pylone_arriere",
+   "u": 0.5281,
+   "v": 0.2731,
+   "libelle": "radar météo (gauche) : GC",
+   "origine": "image"
+  },
+  "EVT_WXR_R_TFR": {
+   "vue": "pylone_arriere",
+   "u": 0.4484,
+   "v": 0.3398,
+   "libelle": "radar météo (droit) : TFR",
+   "origine": "image"
+  },
+  "EVT_WXR_R_WX": {
+   "vue": "pylone_arriere",
+   "u": 0.4688,
+   "v": 0.3398,
+   "libelle": "radar météo (droit) : WX",
+   "origine": "image"
+  },
+  "EVT_WXR_R_WX_T": {
+   "vue": "pylone_arriere",
+   "u": 0.488,
+   "v": 0.3398,
+   "libelle": "radar météo (droit) : WX+T",
+   "origine": "image"
+  },
+  "EVT_WXR_R_MAP": {
+   "vue": "pylone_arriere",
+   "u": 0.5083,
+   "v": 0.3398,
+   "libelle": "radar météo (droit) : MAP",
+   "origine": "image"
+  },
+  "EVT_WXR_R_GC": {
+   "vue": "pylone_arriere",
+   "u": 0.5281,
+   "v": 0.3398,
+   "libelle": "radar météo (droit) : GC",
+   "origine": "image"
+  },
+  "EVT_WXR_L_TILT_CONTROL": {
+   "vue": "pylone_arriere",
+   "u": 0.4411,
+   "v": 0.3009,
+   "libelle": "radar météo (gauche) : TILT / GAIN",
+   "origine": "image"
+  },
+  "EVT_WXR_R_TILT_CONTROL": {
+   "vue": "pylone_arriere",
+   "u": 0.5349,
+   "v": 0.2917,
+   "libelle": "radar météo (droit) : TILT / GAIN",
+   "origine": "image"
+  },
+  "EVT_WXR_AUTO": {
+   "vue": "pylone_arriere",
+   "u": 0.4688,
+   "v": 0.3074,
+   "libelle": "radar météo : AUTO",
+   "origine": "image"
+  },
+  "EVT_WXR_TEST": {
+   "vue": "pylone_arriere",
+   "u": 0.5083,
+   "v": 0.3065,
+   "libelle": "radar météo : TEST",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MIC_VHF1": {
+   "vue": "pylone_arriere",
+   "u": 0.2875,
+   "v": 0.3907,
+   "libelle": "audio commandant : micro VHF1",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MIC_VHF2": {
+   "vue": "pylone_arriere",
+   "u": 0.3026,
+   "v": 0.3907,
+   "libelle": "audio commandant : micro VHF2",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MIC_VHF3": {
+   "vue": "pylone_arriere",
+   "u": 0.3177,
+   "v": 0.3907,
+   "libelle": "audio commandant : micro VHF3",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MIC_HF1": {
+   "vue": "pylone_arriere",
+   "u": 0.3323,
+   "v": 0.3907,
+   "libelle": "audio commandant : micro HF1",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MIC_HF2": {
+   "vue": "pylone_arriere",
+   "u": 0.3474,
+   "v": 0.3907,
+   "libelle": "audio commandant : micro HF2",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MIC_FLT": {
+   "vue": "pylone_arriere",
+   "u": 0.3625,
+   "v": 0.3907,
+   "libelle": "audio commandant : micro FLT",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MIC_SVC": {
+   "vue": "pylone_arriere",
+   "u": 0.3776,
+   "v": 0.3907,
+   "libelle": "audio commandant : micro SVC",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MIC_PA": {
+   "vue": "pylone_arriere",
+   "u": 0.3922,
+   "v": 0.3907,
+   "libelle": "audio commandant : micro PA",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_VHF1": {
+   "vue": "pylone_arriere",
+   "u": 0.2812,
+   "v": 0.4306,
+   "libelle": "audio commandant : écoute VHF1",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_VHF2": {
+   "vue": "pylone_arriere",
+   "u": 0.2979,
+   "v": 0.4306,
+   "libelle": "audio commandant : écoute VHF2",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_VHF3": {
+   "vue": "pylone_arriere",
+   "u": 0.313,
+   "v": 0.4306,
+   "libelle": "audio commandant : écoute VHF3",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_HF1": {
+   "vue": "pylone_arriere",
+   "u": 0.3276,
+   "v": 0.4306,
+   "libelle": "audio commandant : écoute HF1",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_HF2": {
+   "vue": "pylone_arriere",
+   "u": 0.3422,
+   "v": 0.4306,
+   "libelle": "audio commandant : écoute HF2",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_FLT": {
+   "vue": "pylone_arriere",
+   "u": 0.3573,
+   "v": 0.4306,
+   "libelle": "audio commandant : écoute FLT",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_SVC": {
+   "vue": "pylone_arriere",
+   "u": 0.3724,
+   "v": 0.4306,
+   "libelle": "audio commandant : écoute SVC",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_PA": {
+   "vue": "pylone_arriere",
+   "u": 0.3865,
+   "v": 0.4306,
+   "libelle": "audio commandant : écoute PA",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_NAV1": {
+   "vue": "pylone_arriere",
+   "u": 0.2911,
+   "v": 0.4713,
+   "libelle": "audio commandant : écoute NAV1",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_NAV2": {
+   "vue": "pylone_arriere",
+   "u": 0.3073,
+   "v": 0.4713,
+   "libelle": "audio commandant : écoute NAV2",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_ADF1": {
+   "vue": "pylone_arriere",
+   "u": 0.324,
+   "v": 0.4713,
+   "libelle": "audio commandant : écoute ADF1",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_ADF2": {
+   "vue": "pylone_arriere",
+   "u": 0.3422,
+   "v": 0.4713,
+   "libelle": "audio commandant : écoute ADF2",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_MKR": {
+   "vue": "pylone_arriere",
+   "u": 0.3578,
+   "v": 0.4713,
+   "libelle": "audio commandant : écoute MKR",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_REC_SPKR": {
+   "vue": "pylone_arriere",
+   "u": 0.375,
+   "v": 0.4713,
+   "libelle": "audio commandant : écoute SPKR",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_RT_IC_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.2797,
+   "v": 0.525,
+   "libelle": "audio commandant : R/T – I/C",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_MASK_BOOM_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3073,
+   "v": 0.525,
+   "libelle": "audio commandant : MASK – BOOM",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_FILTER_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3333,
+   "v": 0.5296,
+   "libelle": "audio commandant : filtre V-B-R",
+   "origine": "image"
+  },
+  "EVT_ACP_CAPT_ALT_NORM_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3745,
+   "v": 0.525,
+   "libelle": "audio commandant : ALT – NORM",
+   "origine": "image"
+  },
+  "EVT_ADF_TRANSFER_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3297,
+   "v": 0.5963,
+   "libelle": "ADF : transfert ACTIVE/STANDBY",
+   "origine": "image"
+  },
+  "EVT_ADF_MODE_SELECTOR": {
+   "vue": "pylone_arriere",
+   "u": 0.3099,
+   "v": 0.6528,
+   "libelle": "ADF : sélecteur ADF/ANT",
+   "origine": "image"
+  },
+  "EVT_ADF_TONE_SWITCH": {
+   "vue": "pylone_arriere",
+   "u": 0.3458,
+   "v": 0.6528,
+   "libelle": "ADF : TONE",
+   "origine": "image"
+  },
+  "EVT_ADF_OUTER_SELECTOR": {
+   "vue": "pylone_arriere",
+   "u": 0.3786,
+   "v": 0.6528,
+   "libelle": "ADF : bouton de fréquence",
+   "origine": "image"
+  },
+  "XPDR_XpndrSelector_2": {
+   "vue": "pylone_arriere",
+   "u": 0.4302,
+   "v": 0.6472,
+   "libelle": "transpondeur : sélecteur XPNDR 1/2",
+   "origine": "image"
+  },
+  "XPDR_AltSourceSel_2": {
+   "vue": "pylone_arriere",
+   "u": 0.4302,
+   "v": 0.6796,
+   "libelle": "transpondeur : ALT SOURCE 1/2",
+   "origine": "image"
+  },
+  "XPDR_ModeSel": {
+   "vue": "pylone_arriere",
+   "u": 0.5292,
+   "v": 0.7148,
+   "libelle": "transpondeur : sélecteur de mode (STBY … TA/RA)",
+   "origine": "image"
+  },
+  "EVT_TCAS_IDENT": {
+   "vue": "pylone_arriere",
+   "u": 0.55,
+   "v": 0.688,
+   "libelle": "transpondeur : IDENT",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_1": {
+   "vue": "pylone_arriere",
+   "u": 0.4505,
+   "v": 0.6565,
+   "libelle": "transpondeur : touche 1",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_2": {
+   "vue": "pylone_arriere",
+   "u": 0.4667,
+   "v": 0.6565,
+   "libelle": "transpondeur : touche 2",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_3": {
+   "vue": "pylone_arriere",
+   "u": 0.4844,
+   "v": 0.6565,
+   "libelle": "transpondeur : touche 3",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_4": {
+   "vue": "pylone_arriere",
+   "u": 0.4495,
+   "v": 0.687,
+   "libelle": "transpondeur : touche 4",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_5": {
+   "vue": "pylone_arriere",
+   "u": 0.4667,
+   "v": 0.687,
+   "libelle": "transpondeur : touche 5",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_6": {
+   "vue": "pylone_arriere",
+   "u": 0.4844,
+   "v": 0.687,
+   "libelle": "transpondeur : touche 6",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_7": {
+   "vue": "pylone_arriere",
+   "u": 0.449,
+   "v": 0.7176,
+   "libelle": "transpondeur : touche 7",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_0": {
+   "vue": "pylone_arriere",
+   "u": 0.4667,
+   "v": 0.7176,
+   "libelle": "transpondeur : touche 0",
+   "origine": "image"
+  },
+  "EVT_XPDR_KEYPAD_CLR": {
+   "vue": "pylone_arriere",
+   "u": 0.4844,
+   "v": 0.7176,
+   "libelle": "transpondeur : CLR",
+   "origine": "image"
+  },
+  "LTS_PedFloodKnob": {
+   "vue": "pylone_arriere",
+   "u": 0.2797,
+   "v": 0.9306,
+   "libelle": "PEDESTAL FLOOD",
+   "origine": "image"
+  },
+  "LTS_PedPanelKnob": {
+   "vue": "pylone_arriere",
+   "u": 0.349,
+   "v": 0.9444,
+   "libelle": "PEDESTAL PANEL",
+   "origine": "image"
+  },
+  "EVT_FCTL_AILERON_TRIM": {
+   "vue": "pylone_arriere",
+   "u": 0.4411,
+   "v": 0.9324,
+   "libelle": "AILERON TRIM",
+   "origine": "image"
+  },
+  "EVT_FCTL_RUDDER_TRIM": {
+   "vue": "pylone_arriere",
+   "u": 0.5234,
+   "v": 0.9306,
+   "libelle": "RUDDER TRIM",
+   "origine": "image"
+  },
+  "TRIM_StabTrimSw_NORMAL": {
+   "vue": "pylone_arriere",
+   "u": 0.6052,
+   "v": 0.9398,
+   "libelle": "STAB TRIM OVRD/NORM",
+   "origine": "image"
+  },
+  "PED_FltDkDoorSel": {
+   "vue": "pylone_arriere",
+   "u": 0.7005,
+   "v": 0.9306,
+   "libelle": "FLT DK DOOR",
+   "origine": "image"
+  },
   "EVT_CONTROL_STAND_SPEED_BRAKE_LEVER": {
    "vue": "pylone",
    "u": 0.4437,
@@ -1602,20 +2462,6 @@
    "u": 0.712,
    "v": 0.1759,
    "libelle": "GPWS SYS TEST",
-   "origine": "image"
-  },
-  "EVT_COM1_TRANSFER_SWITCH": {
-   "vue": "pylone",
-   "u": 0.3839,
-   "v": 0.9787,
-   "libelle": "VHF 1 : transfert ACTIVE/STANDBY",
-   "origine": "image"
-  },
-  "EVT_COM2_TRANSFER_SWITCH": {
-   "vue": "pylone",
-   "u": 0.6917,
-   "v": 0.9787,
-   "libelle": "VHF 2 : transfert ACTIVE/STANDBY",
    "origine": "image"
   },
   "EVT_CDU_L_L1": {

@@ -9,7 +9,8 @@
   "panneau_sup_arriere": "pose_panneau_sup_arriere.json",
   "tableau_centre": "pose_tableau_centre.json",
   "pylone": "pose_pylone.json",
-  "cdu_gauche": "pose_cdu_gauche.json"
+  "cdu_gauche": "pose_cdu_gauche.json",
+  "pylone_arriere": "pose_pylone_arriere.json"
  },
  "sources": [
   {
@@ -40,6 +41,10 @@
   {
    "image": "panneau_sup_arriere",
    "vue": "panneau_sup_arriere"
+  },
+  {
+   "image": "pylone_arriere",
+   "vue": "pylone_arriere"
   },
   {
    "image": "pylone",

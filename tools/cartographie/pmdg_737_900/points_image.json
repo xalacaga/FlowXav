@@ -1080,5 +1080,733 @@
    828,
    827
   ]
+ ],
+ "pylone_arriere": [
+  [
+   "EVT_COM1_TRANSFER_SWITCH",
+   "radio VHF 1 : transfert ACTIVE/STANDBY",
+   670,
+   202
+  ],
+  [
+   "EVT_COM1_OUTER_SELECTOR",
+   "radio VHF 1 : bouton de fréquence",
+   747,
+   235
+  ],
+  [
+   "EVT_COM1_PNL_OFF_SWITCH",
+   "radio VHF 1 : PNL OFF",
+   566,
+   229
+  ],
+  [
+   "EVT_COM1_HF_SENSOR_KNOB",
+   "radio VHF 1 : HF SENS",
+   567,
+   250
+  ],
+  [
+   "EVT_COM1_VHF1_SWITCH",
+   "radio VHF 1 : sélection VHF 1",
+   610,
+   235
+  ],
+  [
+   "EVT_COM1_VHF2_SWITCH",
+   "radio VHF 1 : sélection VHF 2",
+   646,
+   235
+  ],
+  [
+   "EVT_COM1_VHF3_SWITCH",
+   "radio VHF 1 : sélection VHF 3",
+   684,
+   235
+  ],
+  [
+   "EVT_COM1_HF1_SWITCH",
+   "radio VHF 1 : sélection HF1",
+   608,
+   260
+  ],
+  [
+   "EVT_COM1_AM_SWITCH",
+   "radio VHF 1 : sélection AM",
+   645,
+   260
+  ],
+  [
+   "EVT_COM1_HF2_SWITCH",
+   "radio VHF 1 : sélection HF2",
+   683,
+   260
+  ],
+  [
+   "EVT_COM1_TEST_SWICTH",
+   "radio VHF 1 : TEST",
+   727,
+   232
+  ],
+  [
+   "EVT_COM2_TRANSFER_SWITCH",
+   "radio VHF 2 : transfert ACTIVE/STANDBY",
+   1210,
+   204
+  ],
+  [
+   "EVT_COM2_OUTER_SELECTOR",
+   "radio VHF 2 : bouton de fréquence",
+   1310,
+   240
+  ],
+  [
+   "EVT_COM2_PNL_OFF_SWITCH",
+   "radio VHF 2 : PNL OFF",
+   1110,
+   232
+  ],
+  [
+   "EVT_COM2_HF_SENSOR_KNOB",
+   "radio VHF 2 : HF SENS",
+   1115,
+   252
+  ],
+  [
+   "EVT_COM2_VHF1_SWITCH",
+   "radio VHF 2 : sélection VHF 1",
+   1157,
+   237
+  ],
+  [
+   "EVT_COM2_VHF2_SWITCH",
+   "radio VHF 2 : sélection VHF 2",
+   1195,
+   237
+  ],
+  [
+   "EVT_COM2_VHF3_SWITCH",
+   "radio VHF 2 : sélection VHF 3",
+   1234,
+   237
+  ],
+  [
+   "EVT_COM2_HF1_SWITCH",
+   "radio VHF 2 : sélection HF1",
+   1160,
+   262
+  ],
+  [
+   "EVT_COM2_AM_SWITCH",
+   "radio VHF 2 : sélection AM",
+   1197,
+   262
+  ],
+  [
+   "EVT_COM2_HF2_SWITCH",
+   "radio VHF 2 : sélection HF2",
+   1236,
+   262
+  ],
+  [
+   "EVT_COM2_TEST_SWICTH",
+   "radio VHF 2 : TEST",
+   1270,
+   232
+  ],
+  [
+   "CARGO_DetSelect[0]",
+   "CARGO FIRE : DET SELECT FWD",
+   902,
+   195
+  ],
+  [
+   "CARGO_DetSelect[1]",
+   "CARGO FIRE : DET SELECT AFT",
+   960,
+   195
+  ],
+  [
+   "CARGO_ArmedSw[0]",
+   "CARGO FIRE : ARM FWD",
+   904,
+   247
+  ],
+  [
+   "CARGO_ArmedSw[1]",
+   "CARGO FIRE : ARM AFT",
+   959,
+   247
+  ],
+  [
+   "EVT_CARGO_FIRE_TEST_SWITCH",
+   "CARGO FIRE : TEST",
+   850,
+   250
+  ],
+  [
+   "EVT_CARGO_FIRE_DISC_SWITCH",
+   "CARGO FIRE : DISCH",
+   1022,
+   240
+  ],
+  [
+   "EVT_MMR1_TRANSFER_SWITCH",
+   "radio NAV 1 : transfert ACT/STBY",
+   537,
+   319
+  ],
+  [
+   "EVT_MMR1_TEST_SWITCH",
+   "radio NAV 1 : TEST",
+   536,
+   351
+  ],
+  [
+   "EVT_MMR1_MODE_DN_SWITCH",
+   "radio NAV 1 : MODE flèche bas",
+   565,
+   372
+  ],
+  [
+   "EVT_MMR1_MODE_UP_SWITCH",
+   "radio NAV 1 : MODE flèche haut",
+   594,
+   372
+  ],
+  [
+   "EVT_MMR1_KEYPAD_1",
+   "radio NAV 1 : touche 1",
+   710,
+   291
+  ],
+  [
+   "EVT_MMR1_KEYPAD_2",
+   "radio NAV 1 : touche 2",
+   740,
+   291
+  ],
+  [
+   "EVT_MMR1_KEYPAD_3",
+   "radio NAV 1 : touche 3",
+   767,
+   291
+  ],
+  [
+   "EVT_MMR1_KEYPAD_4",
+   "radio NAV 1 : touche 4",
+   709,
+   318
+  ],
+  [
+   "EVT_MMR1_KEYPAD_5",
+   "radio NAV 1 : touche 5",
+   738,
+   318
+  ],
+  [
+   "EVT_MMR1_KEYPAD_6",
+   "radio NAV 1 : touche 6",
+   766,
+   318
+  ],
+  [
+   "EVT_MMR1_KEYPAD_7",
+   "radio NAV 1 : touche 7",
+   709,
+   345
+  ],
+  [
+   "EVT_MMR1_KEYPAD_8",
+   "radio NAV 1 : touche 8",
+   736,
+   345
+  ],
+  [
+   "EVT_MMR1_KEYPAD_9",
+   "radio NAV 1 : touche 9",
+   765,
+   345
+  ],
+  [
+   "EVT_MMR1_KEYPAD_0",
+   "radio NAV 1 : touche 0",
+   735,
+   373
+  ],
+  [
+   "EVT_MMR1_KEYPAD_CLR",
+   "radio NAV 1 : CLR",
+   764,
+   373
+  ],
+  [
+   "EVT_MMR2_TRANSFER_SWITCH",
+   "radio NAV 2 : transfert ACT/STBY",
+   1091,
+   319
+  ],
+  [
+   "EVT_MMR2_TEST_SWITCH",
+   "radio NAV 2 : TEST",
+   1094,
+   354
+  ],
+  [
+   "EVT_MMR2_MODE_DN_SWITCH",
+   "radio NAV 2 : MODE flèche bas",
+   1127,
+   375
+  ],
+  [
+   "EVT_MMR2_MODE_UP_SWITCH",
+   "radio NAV 2 : MODE flèche haut",
+   1157,
+   375
+  ],
+  [
+   "EVT_MMR2_KEYPAD_1",
+   "radio NAV 2 : touche 1",
+   1265,
+   293
+  ],
+  [
+   "EVT_MMR2_KEYPAD_2",
+   "radio NAV 2 : touche 2",
+   1293,
+   293
+  ],
+  [
+   "EVT_MMR2_KEYPAD_3",
+   "radio NAV 2 : touche 3",
+   1321,
+   293
+  ],
+  [
+   "EVT_MMR2_KEYPAD_4",
+   "radio NAV 2 : touche 4",
+   1266,
+   320
+  ],
+  [
+   "EVT_MMR2_KEYPAD_5",
+   "radio NAV 2 : touche 5",
+   1295,
+   320
+  ],
+  [
+   "EVT_MMR2_KEYPAD_6",
+   "radio NAV 2 : touche 6",
+   1323,
+   320
+  ],
+  [
+   "EVT_MMR2_KEYPAD_7",
+   "radio NAV 2 : touche 7",
+   1268,
+   347
+  ],
+  [
+   "EVT_MMR2_KEYPAD_8",
+   "radio NAV 2 : touche 8",
+   1296,
+   347
+  ],
+  [
+   "EVT_MMR2_KEYPAD_9",
+   "radio NAV 2 : touche 9",
+   1325,
+   347
+  ],
+  [
+   "EVT_MMR2_KEYPAD_0",
+   "radio NAV 2 : touche 0",
+   1299,
+   375
+  ],
+  [
+   "EVT_MMR2_KEYPAD_CLR",
+   "radio NAV 2 : CLR",
+   1328,
+   375
+  ],
+  [
+   "EVT_WXR_L_TFR",
+   "radar météo (gauche) : TFR",
+   861,
+   295
+  ],
+  [
+   "EVT_WXR_L_WX",
+   "radar météo (gauche) : WX",
+   900,
+   295
+  ],
+  [
+   "EVT_WXR_L_WX_T",
+   "radar météo (gauche) : WX+T",
+   937,
+   295
+  ],
+  [
+   "EVT_WXR_L_MAP",
+   "radar météo (gauche) : MAP",
+   976,
+   295
+  ],
+  [
+   "EVT_WXR_L_GC",
+   "radar météo (gauche) : GC",
+   1014,
+   295
+  ],
+  [
+   "EVT_WXR_R_TFR",
+   "radar météo (droit) : TFR",
+   861,
+   367
+  ],
+  [
+   "EVT_WXR_R_WX",
+   "radar météo (droit) : WX",
+   900,
+   367
+  ],
+  [
+   "EVT_WXR_R_WX_T",
+   "radar météo (droit) : WX+T",
+   937,
+   367
+  ],
+  [
+   "EVT_WXR_R_MAP",
+   "radar météo (droit) : MAP",
+   976,
+   367
+  ],
+  [
+   "EVT_WXR_R_GC",
+   "radar météo (droit) : GC",
+   1014,
+   367
+  ],
+  [
+   "EVT_WXR_L_TILT_CONTROL",
+   "radar météo (gauche) : TILT / GAIN",
+   847,
+   325
+  ],
+  [
+   "EVT_WXR_R_TILT_CONTROL",
+   "radar météo (droit) : TILT / GAIN",
+   1027,
+   315
+  ],
+  [
+   "EVT_WXR_AUTO",
+   "radar météo : AUTO",
+   900,
+   332
+  ],
+  [
+   "EVT_WXR_TEST",
+   "radar météo : TEST",
+   976,
+   331
+  ],
+  [
+   "EVT_ACP_CAPT_MIC_VHF1",
+   "audio commandant : micro VHF1",
+   552,
+   422
+  ],
+  [
+   "EVT_ACP_CAPT_MIC_VHF2",
+   "audio commandant : micro VHF2",
+   581,
+   422
+  ],
+  [
+   "EVT_ACP_CAPT_MIC_VHF3",
+   "audio commandant : micro VHF3",
+   610,
+   422
+  ],
+  [
+   "EVT_ACP_CAPT_MIC_HF1",
+   "audio commandant : micro HF1",
+   638,
+   422
+  ],
+  [
+   "EVT_ACP_CAPT_MIC_HF2",
+   "audio commandant : micro HF2",
+   667,
+   422
+  ],
+  [
+   "EVT_ACP_CAPT_MIC_FLT",
+   "audio commandant : micro FLT",
+   696,
+   422
+  ],
+  [
+   "EVT_ACP_CAPT_MIC_SVC",
+   "audio commandant : micro SVC",
+   725,
+   422
+  ],
+  [
+   "EVT_ACP_CAPT_MIC_PA",
+   "audio commandant : micro PA",
+   753,
+   422
+  ],
+  [
+   "EVT_ACP_CAPT_REC_VHF1",
+   "audio commandant : écoute VHF1",
+   540,
+   465
+  ],
+  [
+   "EVT_ACP_CAPT_REC_VHF2",
+   "audio commandant : écoute VHF2",
+   572,
+   465
+  ],
+  [
+   "EVT_ACP_CAPT_REC_VHF3",
+   "audio commandant : écoute VHF3",
+   601,
+   465
+  ],
+  [
+   "EVT_ACP_CAPT_REC_HF1",
+   "audio commandant : écoute HF1",
+   629,
+   465
+  ],
+  [
+   "EVT_ACP_CAPT_REC_HF2",
+   "audio commandant : écoute HF2",
+   657,
+   465
+  ],
+  [
+   "EVT_ACP_CAPT_REC_FLT",
+   "audio commandant : écoute FLT",
+   686,
+   465
+  ],
+  [
+   "EVT_ACP_CAPT_REC_SVC",
+   "audio commandant : écoute SVC",
+   715,
+   465
+  ],
+  [
+   "EVT_ACP_CAPT_REC_PA",
+   "audio commandant : écoute PA",
+   742,
+   465
+  ],
+  [
+   "EVT_ACP_CAPT_REC_NAV1",
+   "audio commandant : écoute NAV1",
+   559,
+   509
+  ],
+  [
+   "EVT_ACP_CAPT_REC_NAV2",
+   "audio commandant : écoute NAV2",
+   590,
+   509
+  ],
+  [
+   "EVT_ACP_CAPT_REC_ADF1",
+   "audio commandant : écoute ADF1",
+   622,
+   509
+  ],
+  [
+   "EVT_ACP_CAPT_REC_ADF2",
+   "audio commandant : écoute ADF2",
+   657,
+   509
+  ],
+  [
+   "EVT_ACP_CAPT_REC_MKR",
+   "audio commandant : écoute MKR",
+   687,
+   509
+  ],
+  [
+   "EVT_ACP_CAPT_REC_SPKR",
+   "audio commandant : écoute SPKR",
+   720,
+   509
+  ],
+  [
+   "EVT_ACP_CAPT_RT_IC_SWITCH",
+   "audio commandant : R/T – I/C",
+   537,
+   567
+  ],
+  [
+   "EVT_ACP_CAPT_MASK_BOOM_SWITCH",
+   "audio commandant : MASK – BOOM",
+   590,
+   567
+  ],
+  [
+   "EVT_ACP_CAPT_FILTER_SWITCH",
+   "audio commandant : filtre V-B-R",
+   640,
+   572
+  ],
+  [
+   "EVT_ACP_CAPT_ALT_NORM_SWITCH",
+   "audio commandant : ALT – NORM",
+   719,
+   567
+  ],
+  [
+   "EVT_ADF_TRANSFER_SWITCH",
+   "ADF : transfert ACTIVE/STANDBY",
+   633,
+   644
+  ],
+  [
+   "EVT_ADF_MODE_SELECTOR",
+   "ADF : sélecteur ADF/ANT",
+   595,
+   705
+  ],
+  [
+   "EVT_ADF_TONE_SWITCH",
+   "ADF : TONE",
+   664,
+   705
+  ],
+  [
+   "EVT_ADF_OUTER_SELECTOR",
+   "ADF : bouton de fréquence",
+   727,
+   705
+  ],
+  [
+   "XPDR_XpndrSelector_2",
+   "transpondeur : sélecteur XPNDR 1/2",
+   826,
+   699
+  ],
+  [
+   "XPDR_AltSourceSel_2",
+   "transpondeur : ALT SOURCE 1/2",
+   826,
+   734
+  ],
+  [
+   "XPDR_ModeSel",
+   "transpondeur : sélecteur de mode (STBY … TA/RA)",
+   1016,
+   772
+  ],
+  [
+   "EVT_TCAS_IDENT",
+   "transpondeur : IDENT",
+   1056,
+   743
+  ],
+  [
+   "EVT_XPDR_KEYPAD_1",
+   "transpondeur : touche 1",
+   865,
+   709
+  ],
+  [
+   "EVT_XPDR_KEYPAD_2",
+   "transpondeur : touche 2",
+   896,
+   709
+  ],
+  [
+   "EVT_XPDR_KEYPAD_3",
+   "transpondeur : touche 3",
+   930,
+   709
+  ],
+  [
+   "EVT_XPDR_KEYPAD_4",
+   "transpondeur : touche 4",
+   863,
+   742
+  ],
+  [
+   "EVT_XPDR_KEYPAD_5",
+   "transpondeur : touche 5",
+   896,
+   742
+  ],
+  [
+   "EVT_XPDR_KEYPAD_6",
+   "transpondeur : touche 6",
+   930,
+   742
+  ],
+  [
+   "EVT_XPDR_KEYPAD_7",
+   "transpondeur : touche 7",
+   862,
+   775
+  ],
+  [
+   "EVT_XPDR_KEYPAD_0",
+   "transpondeur : touche 0",
+   896,
+   775
+  ],
+  [
+   "EVT_XPDR_KEYPAD_CLR",
+   "transpondeur : CLR",
+   930,
+   775
+  ],
+  [
+   "LTS_PedFloodKnob",
+   "PEDESTAL FLOOD",
+   537,
+   1005
+  ],
+  [
+   "LTS_PedPanelKnob",
+   "PEDESTAL PANEL",
+   670,
+   1020
+  ],
+  [
+   "EVT_FCTL_AILERON_TRIM",
+   "AILERON TRIM",
+   847,
+   1007
+  ],
+  [
+   "EVT_FCTL_RUDDER_TRIM",
+   "RUDDER TRIM",
+   1005,
+   1005
+  ],
+  [
+   "TRIM_StabTrimSw_NORMAL",
+   "STAB TRIM OVRD/NORM",
+   1162,
+   1015
+  ],
+  [
+   "PED_FltDkDoorSel",
+   "FLT DK DOOR",
+   1345,
+   1005
+  ]
  ]
 }

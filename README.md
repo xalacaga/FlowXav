@@ -27,7 +27,7 @@ second écran. FlowXav montre, vous manœuvrez.
 
 | Avion | État | Carte des commandes |
 |---|---|---|
-| PMDG 737-900 (MSFS 2024) | SDK PMDG | 289 commandes : panneau supérieur, panneau supérieur arrière (IRS), tableau central (MCP, EFIS), pylône, CDU gauche |
+| PMDG 737-900 (MSFS 2024) | SDK PMDG | 408 commandes : panneau supérieur, panneau supérieur arrière (IRS), tableau central (MCP, EFIS), pylône, pylône arrière (radios, transpondeur, audio), CDU gauche |
 
 D'autres avions, Boeing comme Airbus, viendront en ajoutant leur profil.
 Pour le PMDG 737, la procédure livrée est pour l'instant une **démonstration**

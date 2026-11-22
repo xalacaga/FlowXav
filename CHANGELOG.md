@@ -7,6 +7,6 @@
 - Step-by-step cockpit guidance: the camera shows the control, an orange ring blinks on it over Microsoft Flight Simulator, and the step validates itself when the aircraft reaches the expected state.
 - "Show me": search any mapped control and FlowXav shows it for a few seconds.
 - Automatic connection to MSFS 2024 and aircraft recognition from its title.
-- PMDG 737-900 profile: 289 controls mapped across six views (overhead, aft overhead, centre panel, pedestal, left CDU close-up), with state read through the PMDG SDK.
+- PMDG 737-900 profile: 408 controls mapped across seven views (overhead, aft overhead, centre panel, pedestal, aft pedestal, left CDU close-up), with state read through the PMDG SDK.
 - First power-up demo procedure for the PMDG 737-900.
 - Interface in French and English.
