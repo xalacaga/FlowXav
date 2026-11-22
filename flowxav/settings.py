@@ -6,6 +6,7 @@ journalisé : il peut contenir des identifiants personnels.
 
 from __future__ import annotations
 
+import copy
 import json
 import os
 import tempfile
@@ -18,7 +19,25 @@ FILE = "reglages.json"
 _LOCK = threading.Lock()
 
 
+_CACHE: dict[str, Any] = {"stamp": None, "data": {}}
+
+
 def load() -> dict[str, Any]:
+    """Réglages complets ; relus seulement si le fichier a changé (le guidage les consulte souvent)."""
+    path = user_data_path(FILE)
+    try:
+        stat = path.stat()
+        stamp = (str(path), stat.st_mtime_ns, stat.st_size)
+    except OSError:
+        return {}
+    if _CACHE["stamp"] == stamp:
+        return copy.deepcopy(_CACHE["data"])
+    data = _read()
+    _CACHE.update(stamp=stamp, data=data)
+    return copy.deepcopy(data)
+
+
+def _read() -> dict[str, Any]:
     try:
         data = json.loads(user_data_path(FILE).read_text(encoding="utf-8"))
         return data if isinstance(data, dict) else {}

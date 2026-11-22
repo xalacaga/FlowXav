@@ -56,6 +56,15 @@
    "explication": {
     "fr": "Tapez le code OACI de l'aéroport de départ (par exemple LFPG), puis L2. Ses coordonnées s'affichent à droite.",
     "en": "Type the departure airport ICAO code (for example LFPG), then L2. Its coordinates appear on the right."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "{origine}",
+     "en": "{origine}"
+    }
+   },
+   "action": {
+    "saisie": "{origine}"
    }
   },
   {
@@ -104,6 +113,15 @@
    "explication": {
     "fr": "Tapez le code OACI de départ puis L1.",
     "en": "Type the departure ICAO code then L1."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "{origine}",
+     "en": "{origine}"
+    }
+   },
+   "action": {
+    "saisie": "{origine}"
    }
   },
   {
@@ -116,6 +134,15 @@
    "explication": {
     "fr": "Tapez le code OACI d'arrivée puis R1.",
     "en": "Type the destination ICAO code then R1."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "{destination}",
+     "en": "{destination}"
+    }
+   },
+   "action": {
+    "saisie": "{destination}"
    }
   },
   {
@@ -128,6 +155,15 @@
    "explication": {
     "fr": "Tapez votre numéro de vol puis R2, ou passez avec « Fait ».",
     "en": "Type your flight number then R2, or skip with \"Done\"."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "{vol}",
+     "en": "{vol}"
+    }
+   },
+   "action": {
+    "saisie": "{vol}"
    }
   },
   {
@@ -194,6 +230,12 @@
    },
    "cible_cdu": {
     "texte": "{piste_depart}"
+   },
+   "valeur": {
+    "texte": {
+     "fr": "Piste {piste_depart}",
+     "en": "Runway {piste_depart}"
+    }
    }
   },
   {
@@ -209,6 +251,12 @@
    },
    "cible_cdu": {
     "texte": "{sid_ident}"
+   },
+   "valeur": {
+    "texte": {
+     "fr": "SID {sid}",
+     "en": "SID {sid}"
+    }
    }
   },
   {
@@ -281,6 +329,9 @@
    "explication": {
     "fr": "Raccourci du PMDG : un premier appui sur L3 met la bonne masse dans le bloc-notes, un second l'entre.",
     "en": "PMDG shortcut: a first press on L3 puts the correct weight in the scratchpad, a second one enters it."
+   },
+   "action": {
+    "appuis": 2
    }
   },
   {
@@ -293,6 +344,15 @@
    "explication": {
     "fr": "Tapez la réserve de carburant en milliers (par exemple 4.0) puis L4.",
     "en": "Type the fuel reserve in thousands (for example 4.0) then L4."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "RESERVES : {reserve}",
+     "en": "RESERVES: {reserve}"
+    }
+   },
+   "action": {
+    "saisie": "{reserve}"
    }
   },
   {
@@ -305,6 +365,15 @@
    "explication": {
     "fr": "Tapez l'indice de coût (par exemple 30) puis L5 : plus il est bas, plus le vol est économe.",
     "en": "Type the cost index (for example 30) then L5: the lower, the more economical."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "COST INDEX : {cost_index}",
+     "en": "COST INDEX: {cost_index}"
+    }
+   },
+   "action": {
+    "saisie": "{cost_index}"
    }
   },
   {
@@ -321,6 +390,15 @@
    "explication": {
     "fr": "Tapez l'altitude de croisière (par exemple 350 pour le FL350) puis R1.",
     "en": "Type the cruise altitude (for example 350 for FL350) then R1."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "CRZ ALT : {crz_fmc}  ({niveau})",
+     "en": "CRZ ALT: {crz_fmc}  ({niveau})"
+    }
+   },
+   "action": {
+    "saisie": "{crz_fmc}"
    }
   },
   {
@@ -373,6 +451,9 @@
    "explication": {
     "fr": "Tapez 5 puis L1 : volets 5, le cas le plus courant.",
     "en": "Type 5 then L1: flaps 5, the most common setting."
+   },
+   "action": {
+    "saisie": "5"
    }
   },
   {
@@ -385,6 +466,9 @@
    "explication": {
     "fr": "Raccourci du PMDG : L3 une fois (le centrage arrive dans le bloc-notes), puis une seconde fois. Le FMC affiche le trim de décollage : notez-le, il faudra le régler avant le roulage.",
     "en": "PMDG shortcut: L3 once (the CG goes to the scratchpad), then again. The FMC shows the takeoff trim: note it, it must be set before taxi."
+   },
+   "action": {
+    "appuis": 2
    }
   },
   {

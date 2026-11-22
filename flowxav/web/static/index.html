@@ -59,6 +59,9 @@
             <p class="step-phase" id="phase-titre"></p>
           </div>
           <div class="head-tools">
+            <label class="switch" data-i18n-title="auto_title">
+              <input type="checkbox" id="auto"><span class="track"></span><span data-i18n="auto_label"></span>
+            </label>
             <div class="zoom" role="group" data-i18n-title="zoom_title">
               <button class="icon-btn" id="zoom-moins" type="button" aria-label="−">−</button>
               <button class="icon-btn" id="zoom-centre" type="button" data-i18n="recenter"></button>
@@ -72,6 +75,7 @@
         <article class="step-card" id="carte-etape">
           <span class="control-chip" id="etape-commande"></span>
           <h1 id="etape-titre"></h1>
+          <p class="target-value" id="etape-cible" hidden><span data-i18n="your_value"></span><strong></strong></p>
           <p class="step-text" id="etape-explication"></p>
           <div class="alert" id="alertes" role="alert" hidden></div>
           <div class="countdown" id="attente" hidden>
@@ -80,9 +84,11 @@
             <p class="countdown-hint" id="attente-conseil"></p>
           </div>
           <p class="step-status" id="etape-statut"></p>
+          <p class="action-note" id="action-note" hidden></p>
           <div class="step-actions">
             <button class="btn btn-ghost" id="precedente" type="button"><span aria-hidden="true">←</span> <span data-i18n="previous"></span></button>
             <button class="btn btn-primary btn-xl grow" id="fait" type="button"><span data-i18n="done"></span><kbd data-i18n="key_space"></kbd></button>
+            <button class="btn btn-magic" id="faire" type="button"><span aria-hidden="true">⚡</span> <span data-i18n="do_it"></span><kbd>F</kbd></button>
             <button class="btn btn-primary btn-xl grow" id="enchainer" type="button" hidden><span data-i18n="next_procedure"></span><kbd>↵</kbd></button>
             <button class="btn btn-ghost" id="suivante" type="button"><span data-i18n="next"></span> <span aria-hidden="true">→</span></button>
           </div>
@@ -140,6 +146,22 @@
           </details>
         </div>
       </section>
+      <section class="panel" id="panneau-ecran">
+        <header class="panel-head">
+          <h2 data-i18n="sc_title"></h2>
+          <span class="badge ok" id="sc-badge" hidden></span>
+        </header>
+        <p class="muted small" data-i18n="sc_hint"></p>
+        <button class="btn btn-soft full" id="sc-bouton" type="button"></button>
+        <div class="pairing-info" id="sc-info" hidden>
+          <p class="muted small" data-i18n="sc_open"></p>
+          <p class="big-url" id="sc-url"></p>
+          <p class="muted small" data-i18n="sc_code"></p>
+          <p class="big-code" id="sc-code"></p>
+          <p class="muted small" data-i18n="sc_firewall"></p>
+        </div>
+        <p class="note" id="sc-statut" hidden></p>
+      </section>
     </aside>
   </main>
 
@@ -154,6 +176,34 @@
       <p class="palette-hint" id="palette-titre" data-i18n="showme_hint"></p>
       <ul class="palette-list" id="commandes" role="listbox"></ul>
     </div>
+  </div>
+
+  <!-- Contrat de licence de l'éditeur de l'avion (lu dans son installation, jamais livré avec FlowXav) -->
+  <div class="palette-backdrop" id="licence" hidden>
+    <div class="palette licence" role="dialog" aria-modal="true" aria-labelledby="licence-titre">
+      <p class="eyebrow" id="licence-editeur"></p>
+      <h2 id="licence-titre" data-i18n="lic_title"></h2>
+      <p class="muted small" data-i18n="lic_hint"></p>
+      <pre class="licence-text" id="licence-texte" tabindex="0"></pre>
+      <p class="note error" id="licence-absent" data-i18n="lic_missing" hidden></p>
+      <label class="check"><input type="checkbox" id="licence-case"> <span data-i18n="lic_check"></span></label>
+      <div class="row">
+        <button class="btn btn-ghost grow" id="licence-plus-tard" type="button" data-i18n="lic_later"></button>
+        <button class="btn btn-primary grow" id="licence-accepter" type="button" data-i18n="lic_accept" disabled></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second écran : appairage d'un appareil du réseau local -->
+  <div class="palette-backdrop" id="appairage" hidden>
+    <form class="palette pairing" id="appairage-form" autocomplete="off">
+      <p class="eyebrow" data-i18n="sc_title"></p>
+      <h2 data-i18n="pair_title"></h2>
+      <p class="muted small" data-i18n="pair_hint"></p>
+      <input id="appairage-code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000" aria-label="Code">
+      <button class="btn btn-primary btn-xl full" type="submit" data-i18n="pair_button"></button>
+      <p class="note error" id="appairage-erreur" hidden></p>
+    </form>
   </div>
 
   <div class="toast" id="toast" role="status" hidden></div>

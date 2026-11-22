@@ -190,7 +190,8 @@ function journeyItem(group, status, number, suggestion) {
   const node = el("span", "journey-node", status === "fait" ? "✓" : String(number));
   const body = el("div", "journey-body");
   body.append(el("h3", "", pick(main.titre)));
-  body.append(el("p", "", group.length > 1 ? t("variants_hint") : t("steps_count", { n: main.etapes })));
+  const names = group.map((p) => pick(p.variante)).filter(Boolean).join(t("variants_or"));
+  body.append(el("p", "", group.length > 1 ? t("variants_hint", { names }) : t("steps_count", { n: main.etapes })));
   const side = el("div", "journey-side");
   if (!main.demonstration) side.append(el("span", `tag ${status}`, t(`tag_${status}`)));
   const buttons = el("div", "variants");
@@ -239,6 +240,8 @@ function renderStep(guide) {
   $("etape-commande").hidden = !step.commande;
   $("etape-commande").textContent = step.commande;
   $("etape-titre").textContent = step.titre;
+  $("etape-cible").hidden = !step.cible;
+  $("etape-cible").querySelector("strong").textContent = step.cible || "";
   $("etape-explication").textContent = step.explication;
   const following = nextProcedure(guide);
   const status = $("etape-statut");
@@ -254,6 +257,14 @@ function renderStep(guide) {
   const chain = guide.termine && following;
   $("enchainer").hidden = !chain;
   $("fait").hidden = $("suivante").hidden = Boolean(chain);
+  $("faire").hidden = Boolean(chain) || !step.faisable;
+  $("faire").disabled = step.action === "en_cours";
+  $("auto").checked = Boolean(guide.auto);
+  const note = $("action-note");
+  const actionText = { en_cours: t("do_running"), fait: t("do_done"), echec: t("do_failed") }[step.action] || "";
+  note.hidden = !actionText;
+  note.textContent = actionText;
+  note.className = "action-note" + (step.action === "echec" ? " error" : "");
 
   const alerts = guide.alertes || [];
   $("alertes").hidden = alerts.length === 0;
@@ -285,6 +296,14 @@ function renderWait(wait) {
 function clock(seconds) {
   const s = Math.max(0, Math.round(seconds));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+async function doStep() {
+  const { ok, data } = await post("/api/guide/faire", {});
+  if (ok && data && data.ok === false) {
+    const key = `do_why_${data.raison}`;
+    toast(window.FLOWXAV_I18N.fr[key] ? t(key) : t("do_why_au_pilote"));
+  }
 }
 
 async function chainNext() {
@@ -466,6 +485,7 @@ function onKey(event) {
     else if (!$("fait").disabled) api("/api/guide/fait", {});
   } else if (event.key === "+" || event.key === "=") api("/api/camera/zoom", { pas: 2 });
   else if (event.key === "-") api("/api/camera/zoom", { pas: -2 });
+  else if ((event.key === "f" || event.key === "F") && !$("faire").hidden && !$("faire").disabled) doStep();
   else if (event.key === "0") api("/api/camera/recentrer", {});
   else if (event.key === "ArrowRight" && !$("suivante").disabled) api("/api/guide/suivante", {});
   else if (event.key === "ArrowLeft" && !$("precedente").disabled) api("/api/guide/precedente", {});
@@ -473,8 +493,82 @@ function onKey(event) {
 
 // ------------------------------------------------------------------ démarrage
 async function poll() {
-  try { render(await api("/api/etat")); } catch { /* service en cours d'arrêt */ }
+  try {
+    const response = await fetch("/api/etat");
+    if (response.status === 401) showPairing();          // second écran pas encore appairé
+    else if (response.ok) {
+      const state = await response.json();
+      document.body.classList.toggle("distant", Boolean(state.distant));
+      render(state);
+    }
+  } catch { /* service en cours d'arrêt */ }
   setTimeout(poll, 400);
+}
+
+// ------------------------------------------------------------------ contrat de licence de l'éditeur
+let licenceAsked = "";
+async function checkLicence() {
+  const profile = currentProfile();
+  if (!profile || document.body.classList.contains("distant") || licenceAsked === profile.id) return;
+  let status;
+  try { status = await api(`/api/licence/${profile.id}`); } catch { return; }
+  if (!status.requise || status.acceptee) return;
+  licenceAsked = profile.id;
+  $("licence-editeur").textContent = status.editeur;
+  $("licence-texte").hidden = !status.texte;
+  $("licence-texte").textContent = status.texte || "";
+  $("licence-absent").hidden = Boolean(status.trouve);
+  $("licence-case").checked = false;
+  $("licence-accepter").disabled = true;
+  $("licence").hidden = false;
+}
+async function acceptLicence() {
+  const { ok } = await post("/api/licence/accepter", { profil: $("profil").value });
+  if (ok) { $("licence").hidden = true; toast(t("lic_done")); }
+}
+
+// ------------------------------------------------------------------ second écran
+function showPairing() {
+  if (!$("appairage").hidden) return;
+  $("appairage").hidden = false;
+  setTimeout(() => $("appairage-code").focus(), 0);
+}
+async function pair(event) {
+  event.preventDefault();
+  const { ok } = await post("/api/appairage", { code: $("appairage-code").value.trim() });
+  if (ok) window.location.reload();
+  else {
+    $("appairage-erreur").hidden = false;
+    $("appairage-erreur").textContent = t("pair_refused");
+    $("appairage-code").value = "";
+  }
+}
+function renderScreen(status) {
+  const active = Boolean(status && status.actif);
+  $("sc-bouton").textContent = active ? t("sc_off") : t("sc_on");
+  $("sc-info").hidden = !active;
+  $("sc-badge").hidden = !active;
+  if (!active) return;
+  $("sc-url").textContent = status.url;
+  $("sc-code").textContent = status.code;
+  $("sc-badge").textContent = t("sc_devices", { n: status.appareils || 0 });
+}
+async function refreshScreen() {
+  if (document.body.classList.contains("distant")) return;
+  try { renderScreen(await api("/api/ecran")); } catch { /* service local indisponible */ }
+}
+async function toggleScreen() {
+  const active = !$("sc-info").hidden;
+  $("sc-bouton").disabled = true;
+  const { ok, data, status } = await post("/api/ecran", { actif: !active });
+  $("sc-bouton").disabled = false;
+  if (!ok) {
+    const code = (data.detail || {}).code;
+    note("sc-statut", window.FLOWXAV_I18N.fr[`sc_err_${code}`] ? t(`sc_err_${code}`) : t("dp_err_autre", { detail: code || status }), "error");
+    return;
+  }
+  note("sc-statut", "");
+  renderScreen(data);
 }
 
 async function init() {
@@ -486,18 +580,28 @@ async function init() {
     store("flowxav.langue", lang);
     translate();
   });
-  profiles = await api("/api/profils");
+  try {
+    profiles = await api("/api/profils");
+  } catch {
+    // Second écran pas encore appairé : seul l'écran d'appairage est utile.
+    translate();
+    $("appairage-form").addEventListener("submit", pair);
+    showPairing();
+    return;
+  }
   fillProfiles();
   try { $("sb-identifiant").value = (await api("/api/simbrief")).identifiant || ""; } catch { /* réglages indisponibles */ }
   translate();
 
-  $("profil").addEventListener("change", () => { journeyKey = ""; loadControls(); renderResetButtons(); if (lastState) render(lastState); });
+  $("profil").addEventListener("change", () => { journeyKey = ""; loadControls(); renderResetButtons(); checkLicence(); if (lastState) render(lastState); });
   $("hero-demarrer").addEventListener("click", () => startProcedure($("hero-demarrer").dataset.procedure));
   $("fait").addEventListener("click", () => api("/api/guide/fait", {}));
   $("suivante").addEventListener("click", () => api("/api/guide/suivante", {}));
   $("precedente").addEventListener("click", () => api("/api/guide/precedente", {}));
   $("arreter").addEventListener("click", () => { journeyKey = ""; api("/api/guide/arreter", {}); });
   $("enchainer").addEventListener("click", chainNext);
+  $("faire").addEventListener("click", doStep);
+  $("auto").addEventListener("change", (event) => api("/api/guide/auto", { actif: event.target.checked }));
   $("zoom-plus").addEventListener("click", () => api("/api/camera/zoom", { pas: 2 }));
   $("zoom-moins").addEventListener("click", () => api("/api/camera/zoom", { pas: -2 }));
   $("zoom-centre").addEventListener("click", () => api("/api/camera/recentrer", {}));
@@ -512,6 +616,14 @@ async function init() {
   $("sb-modifier").addEventListener("click", () => { renderSimbrief(savedFlight(), true); $("sb-identifiant").focus(); });
 
   document.addEventListener("keydown", onKey);
+  $("appairage-form").addEventListener("submit", pair);
+  $("sc-bouton").addEventListener("click", toggleScreen);
+  $("licence-case").addEventListener("change", (event) => { $("licence-accepter").disabled = !event.target.checked; });
+  $("licence-accepter").addEventListener("click", acceptLicence);
+  $("licence-plus-tard").addEventListener("click", () => { $("licence").hidden = true; toast(t("lic_later_note")); });
+  checkLicence();
+  refreshScreen();
+  setInterval(refreshScreen, 3000);
   poll();
 }
 

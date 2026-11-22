@@ -476,6 +476,15 @@
    "explication": {
     "fr": "Sur le panneau de pressurisation, tournez la molette FLT ALT jusqu'à votre altitude de croisière (par exemple 35000) : le 737 ne la reçoit pas du FMC. Puis « Fait ».",
     "en": "On the pressurisation panel, turn the FLT ALT knob to your cruise altitude (for example 35000): the 737 does not get it from the FMC. Then \"Done\"."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "FLT ALT : {altitude_croisiere} ft",
+     "en": "FLT ALT: {altitude_croisiere} ft"
+    },
+    "cle": "AIR_FltAltWindow",
+    "egal": "{altitude_croisiere}",
+    "tolerance": 100
    }
   },
   {
@@ -488,6 +497,15 @@
    "explication": {
     "fr": "Tournez la molette LAND ALT jusqu'à l'altitude de l'aéroport de destination, en pieds. Puis « Fait ».",
     "en": "Turn the LAND ALT knob to the destination airport elevation, in feet. Then \"Done\"."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "LAND ALT : {elevation_destination} ft ({destination})",
+     "en": "LAND ALT: {elevation_destination} ft ({destination})"
+    },
+    "cle": "AIR_LandAltWindow",
+    "egal": "{elevation_destination}",
+    "tolerance": 60
    }
   },
   {

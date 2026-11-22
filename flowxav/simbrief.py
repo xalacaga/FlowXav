@@ -123,6 +123,22 @@ def _thousands(value: Any) -> str:
         return ""
 
 
+def _qnh(metar: str) -> str:
+    """Calage altimétrique lu dans le METAR : « Q1018 » → « 1018 hPa », « A2992 » → « 29.92 inHg »."""
+    found = re.search(r"\bQ(\d{4})\b", metar)
+    if found:
+        return f"{int(found.group(1))} hPa"
+    found = re.search(r"\bA(\d{4})\b", metar)
+    return f"{int(found.group(1)) / 100:.2f} inHg" if found else ""
+
+
+def _feet(value: Any) -> str:
+    try:
+        return str(round(float(_text(value))))
+    except ValueError:
+        return ""
+
+
 def _section(ofp: dict[str, Any], key: str) -> dict[str, Any]:
     value = ofp.get(key)
     return value if isinstance(value, dict) else {}
@@ -152,6 +168,10 @@ def summary(ofp: dict[str, Any]) -> dict[str, Any]:
         "sid": sid,
         "sid_ident": _text(general.get("sid_ident")) or sid.split(" ")[0],
         "altitude_transition": _text(origin.get("trans_alt")).lstrip("0") or _text(origin.get("trans_alt")),
+        "crz_fmc": str(int(altitude) // 100) if altitude.isdigit() else "",
+        "qnh": _qnh(_text(origin.get("metar"))),
+        "elevation_origine": _feet(origin.get("elevation")),
+        "elevation_destination": _feet(dest.get("elevation")),
         "unites": units,
         "zfw": _thousands(weights.get("est_zfw")),
         "reserve": _thousands(fuel.get("reserve")),

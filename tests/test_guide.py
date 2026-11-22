@@ -228,3 +228,29 @@ def test_flight_phase_memory_is_reset_for_a_new_flight():
     simulator.reset_flight()
     parked["FLOWXAV_AIRBORNE_SEEN"] = simulator._airborne_seen
     assert _raw_flight_phase(parked) == "parking" and not simulator._descent_seen
+
+
+def test_flight_values_fill_steps_and_validate_them(monkeypatch, tmp_path):
+    """Valeurs de CE vol : plan SimBrief + FMC en direct ; validation automatique quand elles sont connues."""
+    from flowxav import settings
+    from flowxav.guide import fill, flight_values, is_manual, satisfied, value_check
+    monkeypatch.setenv("FLOWXAV_DATA_DIR", str(tmp_path))
+    settings.update("simbrief", {"dernier_plan": {"piste_depart": "32L", "qnh": "1018 hPa", "altitude_croisiere": "34000"}})
+    context = flight_values({"FMC_V2": 162, "FMC_V1": 0})
+    assert context["v2"] == 162 and "v1" not in context and context["cap_piste"] == 320
+    assert fill("V2 = {v2} kt", context) == "V2 = 162 kt" and fill("{inconnu}", context) is None
+
+    speed = {"id": "s", "commande": "MCP_IASMach", "valeur": {"cle": "MCP_IASMach", "egal": "{v2}", "tolerance": 0.5}}
+    key, condition = value_check(speed, context)
+    assert key == "MCP_IASMach" and satisfied(condition, 162.0) and not satisfied(condition, 151.0)
+    assert not is_manual(speed, context) and is_manual(speed, {})          # V2 inconnue : « Fait »
+
+    heading = {"id": "h", "valeur": {"cle": "MCP_Heading", "egal": "{cap_piste}", "tolerance": 8, "angle": True}}
+    assert satisfied(value_check(heading, {"cap_piste": 360})[1], 3)        # 360° et 003° sont voisins
+
+
+def test_simbrief_reads_qnh_from_metar():
+    from flowxav.simbrief import _qnh
+    assert _qnh("LFBO 221630Z 30012KT CAVOK 12/04 Q1018 NOSIG") == "1018 hPa"
+    assert _qnh("KJFK 221651Z 31014KT 10SM FEW250 08/M06 A2992") == "29.92 inHg"
+    assert _qnh("") == ""

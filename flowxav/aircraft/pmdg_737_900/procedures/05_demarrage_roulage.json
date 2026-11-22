@@ -81,6 +81,15 @@
    "explication": {
     "fr": "Tournez la molette IAS/MACH jusqu'à V2, la troisième vitesse de TAKEOFF REF (ligne V2, en bas à droite), et non V1. C'est la vitesse visée en montée initiale. Puis « Fait ».",
     "en": "Turn the IAS/MACH knob to V2, the third speed on TAKEOFF REF (V2 line, bottom right), not V1. It is the initial climb target speed. Then \"Done\"."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "V2 = {v2} kt",
+     "en": "V2 = {v2} kt"
+    },
+    "cle": "MCP_IASMach",
+    "egal": "{v2}",
+    "tolerance": 0.5
    }
   },
   {
@@ -93,6 +102,16 @@
    "explication": {
     "fr": "Tournez la molette HEADING jusqu'au cap de la piste. Puis « Fait ».",
     "en": "Turn the HEADING knob to the runway heading. Then \"Done\"."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "Piste {piste_depart} : cap ≈ {cap_piste}°",
+     "en": "Runway {piste_depart}: heading ≈ {cap_piste}°"
+    },
+    "cle": "MCP_Heading",
+    "egal": "{cap_piste}",
+    "tolerance": 8,
+    "angle": true
    }
   },
   {
@@ -149,6 +168,12 @@
    "explication": {
     "fr": "Sur l'EFIS gauche, affichez le QNH du terrain avec la molette BARO (le sélecteur IN/HPA choisit l'unité). Puis « Fait ».",
     "en": "On the left EFIS, set the airfield QNH with the BARO knob (the IN/HPA selector picks the unit). Then \"Done\"."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "QNH {origine} : {qnh}",
+     "en": "{origine} QNH: {qnh}"
+    }
    }
   },
   {
@@ -557,6 +582,12 @@
    "explication": {
     "fr": "Sortez les volets sur la valeur entrée dans le FMC (5 en général). Puis « Fait ».",
     "en": "Extend the flaps to the setting entered in the FMC (usually 5). Then \"Done\"."
+   },
+   "valeur": {
+    "texte": {
+     "fr": "Volets {volets}",
+     "en": "Flaps {volets}"
+    }
    }
   },
   {

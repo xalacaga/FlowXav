@@ -17,7 +17,7 @@ import time
 from dataclasses import dataclass
 from typing import Any
 
-from flowxav import settings
+from flowxav import actions, settings
 from flowxav.aircraft import Profile
 from flowxav.overlay import Overlay
 from flowxav.sim.camera import CameraDirector
@@ -44,20 +44,82 @@ def satisfied(expected: dict[str, Any], value: Any) -> bool:
         return False
     if "max" in expected and value > expected["max"]:
         return False
+    if "proche" in expected:
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            return False
+        gap = abs(float(value) - expected["proche"])
+        if expected.get("angle"):
+            gap = min(gap % 360, 360 - gap % 360)          # 359° et 001° sont voisins
+        return gap <= expected.get("tolerance", 0) + 1e-6
     return True
 
 
-def is_manual(step: dict[str, Any]) -> bool:
-    """Étape validée par « Fait » : sans condition, confirmation demandée, ou commande EVT_… sans « verifier »."""
-    if step.get("confirmation") or "attendu" not in step:
+# Valeurs du vol en direct (données FMC publiées par l'avion) ; le plan SimBrief complète.
+LIVE_VALUES = {"v1": "FMC_V1", "vr": "FMC_VR", "v2": "FMC_V2", "volets": "FMC_TakeoffFlaps"}
+
+
+def flight_values(values: dict[str, Any]) -> dict[str, Any]:
+    """Valeurs de CE vol pour les étapes : plan SimBrief retenu + données FMC en direct."""
+    context = {k: v for k, v in settings.section("simbrief").get("dernier_plan", {}).items() if v not in ("", None)}
+    for name, key in LIVE_VALUES.items():
+        value = values.get(key)
+        if isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0:
+            context[name] = int(value)
+    runway = str(context.get("piste_depart", ""))
+    digits = "".join(ch for ch in runway if ch.isdigit())
+    if digits and 1 <= int(digits) <= 36:
+        context["cap_piste"] = int(digits) * 10            # cap approché de la piste (32L → 320°)
+    return context
+
+
+def fill(template: str, context: dict[str, Any]) -> str | None:
+    """Remplace {nom} par la valeur du vol ; None si une valeur manque."""
+    try:
+        return template.format_map(context)
+    except (KeyError, IndexError, ValueError):
+        return None
+
+
+def value_check(step: dict[str, Any], context: dict[str, Any]) -> tuple[str, dict[str, Any]] | None:
+    """(champ, condition) qui valide l'étape : « attendu » fixe, ou « valeur » du vol si elle est connue."""
+    if "attendu" in step:
+        key = step.get("verifier") or step.get("commande")
+        return (key, step["attendu"]) if key else None
+    target = step.get("valeur", {})
+    if not target.get("cle") or "egal" not in target:
+        return None
+    raw = fill(str(target["egal"]), context)
+    try:
+        expected = float(raw) if raw is not None else None
+    except ValueError:
+        expected = None
+    if expected is None:
+        return None
+    tolerance = float(target.get("tolerance", 0))
+    return target["cle"], {"proche": expected, "tolerance": tolerance, "angle": bool(target.get("angle"))}
+
+
+def is_manual(step: dict[str, Any], context: dict[str, Any] | None = None) -> bool:
+    """Étape validée par « Fait » : confirmation demandée, rien à contrôler, ou commande EVT_… sans « verifier ».
+
+    Une étape à « valeur » du vol se contrôle seule quand la valeur est connue (plan SimBrief, FMC),
+    sinon elle redevient manuelle.
+    """
+    if step.get("confirmation"):
         return True
-    return str(step.get("commande", "")).startswith("EVT_") and "verifier" not in step
+    if "attendu" in step:
+        return str(step.get("commande", "")).startswith("EVT_") and "verifier" not in step
+    if step.get("valeur", {}).get("cle"):
+        return context is not None and value_check(step, context) is None
+    return True
 
 
-def step_satisfied(step: dict[str, Any], values: dict[str, Any]) -> bool:
+def step_satisfied(step: dict[str, Any], values: dict[str, Any], context: dict[str, Any] | None = None) -> bool:
     """L'état de l'avion montre déjà cette étape faite (jamais vrai pour une étape manuelle)."""
-    key = step.get("verifier") or step.get("commande")
-    return not is_manual(step) and bool(key) and satisfied(step["attendu"], values.get(key))
+    if is_manual(step):
+        return False
+    check = value_check(step, context if context is not None else flight_values(values))
+    return bool(check) and satisfied(check[1], values.get(check[0]))
 
 
 def resume_index(procedure: dict[str, Any], values: dict[str, Any]) -> int:
@@ -190,6 +252,8 @@ class Session:
     wait_started: float | None = None   # début constaté de l'attente de l'étape (compte à rebours)
     shown_control: str | None = None    # commande où l'anneau est posé (peut suivre l'écran du CDU)
     camera_until: float | None = None   # caméra brève : instant où la vue est rendue au pilote
+    action: str = ""                    # « Fais-le » : "", "en_cours", "fait", "echec"
+    auto_done_index: int = -1           # mode automatique : étape déjà lancée (pas deux fois)
 
 
 class Guide:
@@ -202,6 +266,8 @@ class Guide:
         self._lock = threading.RLock()
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._run, name="flowxav-guide", daemon=True)
+        self.auto = False               # mode automatique : FlowXav fait lui-même les étapes faisables
+        self.action_client_factory = None   # client SimConnect des actions (remplaçable en test)
 
     def start_thread(self) -> None:
         self._thread.start()
@@ -225,9 +291,82 @@ class Guide:
         """
         with self._lock:
             session = self._session
-            if session and not session.finished and session.done_at is None                     and is_manual(session.procedure["etapes"][session.index]):
+            if session and not session.finished and session.done_at is None \
+                    and self._manual(session.profile, session.procedure["etapes"][session.index]):
                 self._session.done_at = time.monotonic()
                 self.overlay.mark_done()
+
+    def set_auto(self, active: bool) -> None:
+        with self._lock:
+            self.auto = bool(active)
+            if self._session:
+                self._session.auto_done_index = -1
+        LOGGER.info("Mode automatique %s", "activé" if active else "désactivé")
+
+    def _plan(self, session: Session, step: dict[str, Any]) -> actions.Plan:
+        values = self.simulator.snapshot().values
+        return actions.plan_step(session.profile, step, flight_values(values), values,
+                                 session.shown_control or step.get("commande"))
+
+    def do_step(self) -> dict[str, Any]:
+        """« Fais-le pour moi » : FlowXav manœuvre la commande de l'étape en cours."""
+        with self._lock:
+            session = self._session
+            if not session or session.finished or session.done_at is not None or session.action == "en_cours":
+                return {"ok": False, "raison": "rien_a_faire"}
+            step = session.procedure["etapes"][session.index]
+            try:
+                plan = self._plan(session, step)
+            except actions.NotActionable as error:
+                return {"ok": False, "raison": error.reason}
+            session.action = "en_cours"
+            index = session.index
+        threading.Thread(target=self._perform, args=(session, index, step, plan),
+                         name="flowxav-action", daemon=True).start()
+        return {"ok": True}
+
+    def _perform(self, session: Session, index: int, step: dict[str, Any], plan: actions.Plan) -> None:
+        from flowxav.sim.simconnect import SimConnectClient, SimConnectError
+        factory = self.action_client_factory or (lambda: SimConnectClient("FlowXav actions"))
+        try:
+            with factory() as client:
+                actions.execute(client, session.profile, plan)
+                if plan.verifies and not self._wait_done(session, index, 4.0) and self._retry_inverted(session, plan):
+                    actions.execute(client, session.profile, self._inverted_plan(plan))
+                    self._wait_done(session, index, 4.0)
+        except (SimConnectError, OSError) as error:
+            LOGGER.warning("Action impossible : %s", error)
+        with self._lock:
+            if self._session is not session or session.index != index:
+                return
+            if not plan.verifies and session.done_at is None:
+                session.done_at = time.monotonic()       # bouton ou touche sans état lisible : envoyé = fait
+                self.overlay.mark_done()
+            session.action = "fait" if session.done_at is not None else "echec"
+            LOGGER.info("Étape %s : action %s", step["id"], session.action)
+
+    def _wait_done(self, session: Session, index: int, timeout_s: float) -> bool:
+        deadline = time.monotonic() + timeout_s
+        while time.monotonic() < deadline:
+            with self._lock:
+                if self._session is not session or session.index != index or session.done_at is not None:
+                    return True
+            time.sleep(0.2)
+        return False
+
+    @staticmethod
+    def _retry_inverted(session: Session, plan: actions.Plan) -> bool:
+        """Interrupteur booléen resté à l'opposé : sa position SDK est inversée, on le retient et on corrige."""
+        if plan.field and plan.value in (0, 1) and not plan.field.startswith(("MCP_IAS", "MCP_Heading")):
+            actions.remember_inversion(session.profile, plan.field)
+            return True
+        return False
+
+    @staticmethod
+    def _inverted_plan(plan: actions.Plan) -> actions.Plan:
+        sends = [actions.Send(s.event, 1 - s.parameter, s.pause_s) if s.parameter == plan.value and "GUARD" not in s.event
+                 else s for s in plan.sends]
+        return actions.Plan(sends, plan.verifies, plan.field, 1 - plan.value)
 
     def go(self, delta: int) -> None:
         with self._lock:
@@ -279,17 +418,36 @@ class Guide:
             return {
                 "actif": True, "profil": session.profile.id, "procedure": session.procedure["id"],
                 "titre_procedure": text(session.procedure["titre"], language),
-                "index": session.index, "total": len(steps), "termine": session.finished,
+                "index": session.index, "total": len(steps), "termine": session.finished, "auto": self.auto,
                 "etape": {"id": step["id"], "titre": text(step["titre"], language),
                           "explication": text(step.get("explication"), language),
                           "commande": (session.profile.control(session.shown_control or step.get("commande")).label
                                        if session.shown_control or step.get("commande") else ""),
                           "manuelle": self._manual(session.profile, step),
+                          "cible": self._target_text(step, language),
+                          "faisable": self._actionable(session, step),
+                          "action": session.action,
                           "validee": session.done_at is not None},
                 "suivantes": [text(s["titre"], language) for s in steps[session.index + 1:session.index + 4]],
                 "attente": self._wait_status(session, step, language),
                 "alertes": self._alerts(step, language) if session.done_at is None and not session.finished else [],
             }
+
+    def _actionable(self, session: Session, step: dict[str, Any]) -> bool:
+        if session.done_at is not None or session.finished:
+            return False
+        try:
+            self._plan(session, step)
+            return True
+        except actions.NotActionable:
+            return False
+
+    def _target_text(self, step: dict[str, Any], language: str) -> str:
+        """Valeur de CE vol à afficher sur l'étape (« V2 = 162 kt »), vide si elle n'est pas connue."""
+        template = step.get("valeur", {}).get("texte")
+        if not template:
+            return ""
+        return fill(text(template, language), flight_values(self.simulator.snapshot().values)) or ""
 
     def _alerts(self, step: dict[str, Any], language: str) -> list[str]:
         """Messages des alertes de l'étape dont la condition est vraie dans l'avion (ex. APU FAULT)."""
@@ -308,7 +466,7 @@ class Guide:
 
     # -------------------------------------------------------------- boucle
     def _manual(self, profile: Profile, step: dict[str, Any]) -> bool:
-        return is_manual(step)
+        return is_manual(step, flight_values(self.simulator.snapshot().values))
 
     def _run(self) -> None:
         while not self._stop.is_set():
@@ -334,7 +492,8 @@ class Guide:
             if session.shown_index != session.index and session.done_at is None:
                 # Étapes déjà faites dans l'avion : on les passe sans s'y arrêter.
                 values = self.simulator.snapshot().values
-                while session.index != session.pinned and step_satisfied(steps[session.index], values):
+                context = flight_values(values)
+                while session.index != session.pinned and step_satisfied(steps[session.index], values, context):
                     LOGGER.info("Étape %s déjà faite", steps[session.index]["id"])
                     if session.index + 1 >= len(steps):
                         session.finished = True
@@ -359,7 +518,16 @@ class Guide:
                 session.wait_started = None
                 session.shown_control = key
                 session.shown_index = session.index
-                if control:
+                session.action = ""
+                auto = self.auto and session.auto_done_index != session.index and self._actionable(session, step)
+                if auto:
+                    # Mode automatique : FlowXav fait l'étape lui-même, sans prendre la caméra.
+                    session.auto_done_index = session.index
+                    self.overlay.hide()
+                    self.camera.release()
+                    threading.Thread(target=self.do_step, name="flowxav-auto", daemon=True).start()
+                    control = None
+                elif control:
                     view = session.profile.view(control.view)
                     self.camera.show(view)
                     self.overlay.show(control.u, control.v, text(step["titre"], session.language), view, self._current_pose)
@@ -374,8 +542,8 @@ class Guide:
                 if wait and session.wait_started is None and satisfied(wait["debut"]["attendu"], values.get(wait["debut"]["cle"])):
                     session.wait_started = now
                     LOGGER.info("Attente de l'étape %s commencée", step["id"])
-                value = values.get(step.get("verifier") or step.get("commande"))
-                if satisfied(step["attendu"], value):
+                check = value_check(step, flight_values(values))
+                if check and satisfied(check[1], values.get(check[0])):
                     session.held_since = session.held_since or now
                     if now - session.held_since >= HOLD_S:
                         session.done_at = now

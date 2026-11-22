@@ -16,20 +16,62 @@
  },
  "suivi_vol": {
   "simvars": [
-   ["SIM ON GROUND", "Bool"],
-   ["GROUND VELOCITY", "Knots"],
-   ["PLANE ALT ABOVE GROUND", "Feet"],
-   ["INDICATED ALTITUDE", "Feet"],
-   ["VERTICAL SPEED", "Feet per minute"],
-   ["AIRSPEED INDICATED", "Knots"],
-   ["GEAR HANDLE POSITION", "Bool"],
-   ["FLAPS HANDLE INDEX", "Number"],
-   ["SPOILERS ARMED", "Bool"],
-   ["SPOILERS HANDLE POSITION", "Percent"],
-   ["AUTOPILOT MASTER", "Bool"],
-   ["BRAKE PARKING POSITION", "Bool"],
-   ["GENERAL ENG COMBUSTION:1", "Bool"],
-   ["GENERAL ENG COMBUSTION:2", "Bool"]
+   [
+    "SIM ON GROUND",
+    "Bool"
+   ],
+   [
+    "GROUND VELOCITY",
+    "Knots"
+   ],
+   [
+    "PLANE ALT ABOVE GROUND",
+    "Feet"
+   ],
+   [
+    "INDICATED ALTITUDE",
+    "Feet"
+   ],
+   [
+    "VERTICAL SPEED",
+    "Feet per minute"
+   ],
+   [
+    "AIRSPEED INDICATED",
+    "Knots"
+   ],
+   [
+    "GEAR HANDLE POSITION",
+    "Bool"
+   ],
+   [
+    "FLAPS HANDLE INDEX",
+    "Number"
+   ],
+   [
+    "SPOILERS ARMED",
+    "Bool"
+   ],
+   [
+    "SPOILERS HANDLE POSITION",
+    "Percent"
+   ],
+   [
+    "AUTOPILOT MASTER",
+    "Bool"
+   ],
+   [
+    "BRAKE PARKING POSITION",
+    "Bool"
+   ],
+   [
+    "GENERAL ENG COMBUSTION:1",
+    "Bool"
+   ],
+   [
+    "GENERAL ENG COMBUSTION:2",
+    "Bool"
+   ]
   ]
  },
  "cdu": {
@@ -259,6 +301,208 @@
      "en": "Cold & Dark + GPU"
     }
    }
+  ]
+ },
+ "actions": {
+  "evenements": "pmdg_ng3_events.json",
+  "zone_commande": "PMDG_NG3_Control",
+  "boutons": [
+   "EVT_CDU_L_",
+   "EVT_MCP_",
+   "EVT_EFIS_CPT_",
+   "EVT_CONTROL_STAND_PARK_BRAKE_LEVER"
+  ],
+  "commandes": {
+   "ELEC_BatSelector": {
+    "evenement": "EVT_OH_ELEC_BATTERY_SWITCH",
+    "garde": "EVT_OH_ELEC_BATTERY_GUARD"
+   },
+   "ELEC_StandbyPowerSelector": {
+    "evenement": "EVT_OH_ELEC_STBY_PWR_SWITCH",
+    "garde": "EVT_OH_ELEC_STBY_PWR_GUARD"
+   },
+   "ELEC_BusTransSw_AUTO": {
+    "evenement": "EVT_OH_ELEC_BUS_TRANSFER_SWITCH",
+    "garde": "EVT_OH_ELEC_BUS_TRANSFER_GUARD"
+   },
+   "ELEC_CabUtilSw": {
+    "evenement": "EVT_OH_ELEC_CAB_UTIL"
+   },
+   "ELEC_IFEPassSeatSw": {
+    "evenement": "EVT_OH_ELEC_IFE"
+   },
+   "APU_Selector": {
+    "evenement": "EVT_OH_LIGHTS_APU_START",
+    "valeur_si_verifier": 2
+   },
+   "ENG_StartSelector[0]": {
+    "evenement": "EVT_OH_LIGHTS_L_ENGINE_START"
+   },
+   "ENG_StartSelector[1]": {
+    "evenement": "EVT_OH_LIGHTS_R_ENGINE_START"
+   },
+   "IRS_ModeSelector[0]": {
+    "evenement": "EVT_IRU_MSU_LEFT"
+   },
+   "IRS_ModeSelector[1]": {
+    "evenement": "EVT_IRU_MSU_RIGHT"
+   },
+   "FUEL_PumpFwdSw[0]": {
+    "evenement": "EVT_OH_FUEL_PUMP_1_FORWARD"
+   },
+   "FUEL_PumpAftSw[0]": {
+    "evenement": "EVT_OH_FUEL_PUMP_1_AFT"
+   },
+   "FUEL_PumpFwdSw[1]": {
+    "evenement": "EVT_OH_FUEL_PUMP_2_FORWARD"
+   },
+   "FUEL_PumpAftSw[1]": {
+    "evenement": "EVT_OH_FUEL_PUMP_2_AFT"
+   },
+   "FUEL_CrossFeedSw": {
+    "evenement": "EVT_OH_FUEL_CROSSFEED"
+   },
+   "HYD_PumpSw_eng[0]": {
+    "evenement": "EVT_OH_HYD_ENG1"
+   },
+   "HYD_PumpSw_eng[1]": {
+    "evenement": "EVT_OH_HYD_ENG2"
+   },
+   "HYD_PumpSw_elec[0]": {
+    "evenement": "EVT_OH_HYD_ELEC2"
+   },
+   "HYD_PumpSw_elec[1]": {
+    "evenement": "EVT_OH_HYD_ELEC1"
+   },
+   "FCTL_AltnFlaps_Sw_ARM": {
+    "evenement": "EVT_OH_ALT_FLAPS_MASTER_SWITCH",
+    "garde": "EVT_OH_ALT_FLAPS_MASTER_GUARD"
+   },
+   "FCTL_Spoiler_Sw[0]": {
+    "evenement": "EVT_OH_SPOILER_A_SWITCH",
+    "garde": "EVT_OH_SPOILER_A_GUARD"
+   },
+   "FCTL_Spoiler_Sw[1]": {
+    "evenement": "EVT_OH_SPOILER_B_SWITCH",
+    "garde": "EVT_OH_SPOILER_B_GUARD"
+   },
+   "FCTL_YawDamper_Sw": {
+    "evenement": "EVT_OH_YAW_DAMPER"
+   },
+   "TRIM_StabTrimMainElecSw_NORMAL": {
+    "evenement": "EVT_CONTROL_STAND_STABTRIM_ELEC_SWITCH",
+    "garde": "EVT_CONTROL_STAND_STABTRIM_ELEC_SWITCH_GUARD"
+   },
+   "TRIM_StabTrimAutoPilotSw_NORMAL": {
+    "evenement": "EVT_CONTROL_STAND_STABTRIM_AP_SWITCH",
+    "garde": "EVT_CONTROL_STAND_STABTRIM_AP_SWITCH_GUARD"
+   },
+   "AIR_BleedAirSwitch[0]": {
+    "evenement": "EVT_OH_BLEED_ENG_1_SWITCH"
+   },
+   "AIR_BleedAirSwitch[1]": {
+    "evenement": "EVT_OH_BLEED_ENG_2_SWITCH"
+   },
+   "AIR_APUBleedAirSwitch": {
+    "evenement": "EVT_OH_BLEED_APU_SWITCH"
+   },
+   "AIR_IsolationValveSwitch": {
+    "evenement": "EVT_OH_BLEED_ISOLATION_VALVE_SWITCH"
+   },
+   "AIR_PackSwitch[0]": {
+    "evenement": "EVT_OH_BLEED_PACK_L_SWITCH"
+   },
+   "AIR_PackSwitch[1]": {
+    "evenement": "EVT_OH_BLEED_PACK_R_SWITCH"
+   },
+   "AIR_RecircFanSwitch[0]": {
+    "evenement": "EVT_OH_BLEED_RECIRC_FAN_L_SWITCH"
+   },
+   "AIR_RecircFanSwitch[1]": {
+    "evenement": "EVT_OH_BLEED_RECIRC_FAN_R_SWITCH"
+   },
+   "AIR_PressurizationModeSelector": {
+    "evenement": "EVT_OH_PRESS_SELECTOR"
+   },
+   "AIR_FltAltWindow": {
+    "evenement": "EVT_OH_PRESS_FLT_ALT_SET",
+    "regle": "valeur"
+   },
+   "AIR_LandAltWindow": {
+    "evenement": "EVT_OH_PRESS_LAND_ALT_SET",
+    "regle": "valeur"
+   },
+   "ICE_WindowHeatSw[0]": {
+    "evenement": "EVT_OH_ICE_WINDOW_HEAT_1"
+   },
+   "ICE_WindowHeatSw[1]": {
+    "evenement": "EVT_OH_ICE_WINDOW_HEAT_2"
+   },
+   "ICE_WindowHeatSw[2]": {
+    "evenement": "EVT_OH_ICE_WINDOW_HEAT_3"
+   },
+   "ICE_WindowHeatSw[3]": {
+    "evenement": "EVT_OH_ICE_WINDOW_HEAT_4"
+   },
+   "LTS_PositionSw": {
+    "evenement": "EVT_OH_LIGHTS_POS_STROBE"
+   },
+   "LTS_AntiCollisionSw": {
+    "evenement": "EVT_OH_LIGHTS_ANT_COL"
+   },
+   "LTS_TaxiSw": {
+    "evenement": "EVT_OH_LIGHTS_TAXI"
+   },
+   "LTS_LandingLtFixedSw[0]": {
+    "evenement": "EVT_OH_LIGHTS_L_FIXED"
+   },
+   "LTS_LandingLtFixedSw[1]": {
+    "evenement": "EVT_OH_LIGHTS_R_FIXED"
+   },
+   "LTS_EmerExitSelector": {
+    "evenement": "EVT_OH_EMER_EXIT_LIGHT_SWITCH",
+    "garde": "EVT_OH_EMER_EXIT_LIGHT_GUARD"
+   },
+   "COMM_NoSmokingSelector": {
+    "evenement": "EVT_OH_NO_SMOKING_LIGHT_SWITCH"
+   },
+   "COMM_FastenBeltsSelector": {
+    "evenement": "EVT_OH_FASTEN_BELTS_LIGHT_SWITCH"
+   },
+   "MCP_FDSw[0]": {
+    "evenement": "EVT_MCP_FD_SWITCH_L"
+   },
+   "MCP_FDSw[1]": {
+    "evenement": "EVT_MCP_FD_SWITCH_R"
+   },
+   "MCP_ATArmSw": {
+    "evenement": "EVT_MCP_AT_ARM_SWITCH"
+   },
+   "MCP_IASMach": {
+    "evenement": "EVT_MCP_IAS_SET",
+    "regle": "valeur"
+   },
+   "MCP_Heading": {
+    "evenement": "EVT_MCP_HDG_SET",
+    "regle": "valeur"
+   },
+   "MCP_Altitude": {
+    "evenement": "EVT_MCP_ALT_SET",
+    "regle": "valeur"
+   },
+   "MAIN_AutobrakeSelector": {
+    "evenement": "EVT_MPM_AUTOBRAKE_SELECTOR"
+   },
+   "XPDR_ModeSel": {
+    "evenement": "EVT_TCAS_MODE"
+   }
+  }
+ },
+ "licence": {
+  "editeur": "PMDG",
+  "fichier": "Documentation/END-USER SOFTWARE LICENSE AGREEMENT.txt",
+  "paquets": [
+   "pmdg-aircraft-739"
   ]
  },
  "notes": [
