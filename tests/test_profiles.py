@@ -40,17 +40,23 @@ def test_procedures_reference_mapped_controls(profile):
             assert step["titre"]["fr"] and step["titre"]["en"]
 
 
-def test_pmdg_layout_matches_flight_validated_size():
+def pmdg_source():
+    """Source PMDG, tirée du SDK de l'avion installé ; test sauté si l'avion n'est pas installé ici."""
     profile = load_profile("pmdg_737_900")
-    source = profile.source
-    assert isinstance(source, PmdgClientData)
+    if not isinstance(profile.source, PmdgClientData):
+        pytest.skip("PMDG 737-900 non installé : tables du SDK indisponibles")
+    return profile
+
+
+def test_pmdg_layout_matches_flight_validated_size():
+    source = pmdg_source().source
     assert source.size == 916                     # relevé en vol sur le 737-900 BW
     assert source.fields["AircraftModel"][1] == "unsigned short"
 
 
 def test_pmdg_procedure_controls_have_state_fields():
     """Une étape validée par l'état doit viser un champ que la source sait lire."""
-    profile = load_profile("pmdg_737_900")
+    profile = pmdg_source()
     readable = set(profile.source.decode(bytes(profile.source.size)))
     readable.update(name for name, _unit in profile.data.get("suivi_vol", {}).get("simvars", []))
     for procedure in profile.procedures():
@@ -65,16 +71,37 @@ def test_detection_by_title():
     assert detect("Airbus A320neo Asobo") is None
 
 
-def test_layout_file_is_valid_json():
-    path = aircraft_root() / "pmdg_737_900" / "pmdg_ng3_layout.json"
-    data = json.loads(path.read_text(encoding="utf-8"))
-    offsets = [offset for offset, _type, _count in data["champs"].values()]
-    assert offsets == sorted(offsets)
+def test_no_publisher_file_is_shipped_with_the_profile():
+    """Contrat PMDG § 1.n/1.p : ni en-tête du SDK ni table qui en est tirée dans le dépôt."""
+    folder = aircraft_root() / "pmdg_737_900"
+    assert not list(folder.glob("pmdg_ng3_*.json")) and not list(folder.rglob("*.h"))
+
+
+def test_sdk_tables_are_generated_from_a_header(tmp_path, monkeypatch):
+    """Génération au premier lancement, sur un en-tête synthétique (aucun fichier de l'éditeur)."""
+    from flowxav import packages, sdk
+    header = tmp_path / "MSFS" / "Community" / "pmdg-aircraft-739" / "Documentation" / "SDK"
+    header.mkdir(parents=True)
+    (header / "PMDG_NG3_SDK.h").write_text(
+        "#define EVT_A (THIRD_PARTY_EVENT_ID_MIN + 1)\n#define EVT_B EVT_A\n"
+        "struct PMDG_NG3_Data\n{\n bool X; // commentaire\n unsigned short Y[2];\n float Z;\n char reserved[3];\n};\n",
+        encoding="latin-1")
+    monkeypatch.setenv("FLOWXAV_DATA_DIR", str(tmp_path / "data"))
+    monkeypatch.setattr(packages, "packages_roots", lambda: [tmp_path / "MSFS"])
+    sdk.forget()
+    try:
+        tables = sdk.tables(load_profile("pmdg_737_900"))
+        assert tables["evenements"] == {"EVT_A": 0x11001, "EVT_B": 0x11001}
+        assert tables["disposition"]["champs"] == {"X": [0, "bool", 1], "Y": [2, "unsigned short", 2], "Z": [8, "float", 1]}
+        assert tables["disposition"]["taille"] == 16
+        assert (tmp_path / "data" / "sdk" / "pmdg_737_900.json").is_file()       # gardées en cache
+    finally:
+        sdk.forget()
 
 
 def test_waits_and_alerts_read_known_fields():
     """Compte à rebours et alertes d'étape : leurs champs doivent exister dans l'état de l'avion."""
-    profile = load_profile("pmdg_737_900")
+    profile = pmdg_source()
     readable = set(profile.source.decode(bytes(profile.source.size)))
     for procedure in profile.procedures():
         for step in procedure["etapes"]:

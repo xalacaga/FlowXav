@@ -52,7 +52,7 @@ if missing:
 binaries = [(str(sdk_simconnect), "SimConnect")] + webview_binaries
 datas = [
     (str(project_root / "flowxav" / "web" / "static"), "flowxav/web/static"),
-    # Profils d'avion : identité, carte des commandes, procédures, disposition des données.
+    # Profils d'avion : identité, carte des commandes, procédures (tables du SDK : générées chez l'utilisateur).
     (str(project_root / "flowxav" / "aircraft"), "flowxav/aircraft"),
     (str(project_root / "assets" / "flowxav.ico"), "assets"),
 ] + webview_datas

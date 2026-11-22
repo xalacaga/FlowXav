@@ -30,3 +30,7 @@ installer/assets/MicrosoftEdgeWebView2Setup.exe
 # Captures du cockpit : images des produits des éditeurs, gardées en local (snap_view.py les régénère)
 tools/cartographie/*/captures/
 .audit_pytest_cache/
+
+# Tables tirées du SDK PMDG : générées chez l'utilisateur, jamais versionnées (contrat PMDG § 1.n, 1.p)
+pmdg_ng3_*.json
+*_SDK.h

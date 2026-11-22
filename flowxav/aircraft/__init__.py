@@ -75,9 +75,15 @@ def _validate_profile(data: dict[str, Any], profile_id: str) -> None:
     if not isinstance(state, dict) or state.get("source") not in {"pmdg_ng3", "simvars"}:
         raise ProfileDataError(f"Source d'état invalide : {profile_id}")
     if state["source"] == "pmdg_ng3":
-        layout = state.get("disposition")
-        if not isinstance(layout, str) or Path(layout).name != layout or not layout.endswith(".json"):
-            raise ProfileDataError(f"Disposition PMDG invalide : {profile_id}")
+        layout, sdk = state.get("disposition"), data.get("sdk")
+        if layout is not None:
+            if not isinstance(layout, str) or Path(layout).name != layout or not layout.endswith(".json"):
+                raise ProfileDataError(f"Disposition PMDG invalide : {profile_id}")
+        elif not (isinstance(sdk, dict) and isinstance(sdk.get("paquets"), list) and sdk["paquets"]
+                  and all(isinstance(p, str) and p and Path(p).name == p for p in sdk["paquets"])
+                  and isinstance(sdk.get("entete"), str) and ".." not in Path(sdk["entete"]).parts
+                  and isinstance(sdk.get("structure"), str) and sdk["structure"].isidentifier()):
+            raise ProfileDataError(f"SDK PMDG invalide : {profile_id}")
         _text(state.get("zone"), f"{profile_id}.etat.zone")
     elif not isinstance(state.get("variables"), list):
         raise ProfileDataError(f"Variables SimConnect invalides : {profile_id}")
@@ -175,7 +181,7 @@ class Profile:
     @cached_property
     def source(self):
         from flowxav.state import make_source
-        return make_source(self.data["etat"], self.folder)
+        return make_source(self.data["etat"], self.folder, self)
 
     def view(self, name: str) -> Pose:
         return Pose.from_dict(self.carte["vues"][name])

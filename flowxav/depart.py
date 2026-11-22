@@ -97,6 +97,10 @@ def reset(client, profile, state: str | None = None, settle_s: float = 6.0) -> d
     state = state or config["etat_pmdg"]
     if state not in allowed:
         raise DepartError("etat_inconnu")
-    lines = load_panel_state(PmdgCdu(client, config.get("cdu", "PMDG_NG3_CDU_0")), state)
+    from flowxav.actions import events_of
+    events = events_of(profile)
+    if not events:
+        raise DepartError("sdk_absent")
+    lines = load_panel_state(PmdgCdu(client, config.get("cdu", "PMDG_NG3_CDU_0"), events), state)
     time.sleep(settle_s)                      # l'avion bascule et ses systèmes s'éteignent
     return {"etat": state, "ecran": text_of(lines), "verifications": verify(client, profile)}

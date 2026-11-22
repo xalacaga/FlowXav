@@ -16,7 +16,8 @@ flowxav/
   aircraft/<id>/    un dossier par avion : profile.json, carte.json, procedures/*.json
   web/static/       interface sans dépendance (HTML/CSS/JS), textes dans i18n.js
 tools/
-  generate_pmdg_layout.py  disposition d'une zone PMDG depuis l'en-tête du SDK
+  generate_pmdg_layout.py  diagnostic : disposition d'une zone PMDG depuis l'en-tête du SDK
+  generate_pmdg_events.py  diagnostic : table des événements de commande PMDG
   cartographie/            relevé des vues et des commandes d'un cockpit
 tests/              tests reproductibles, sans simulateur
 ```
@@ -44,7 +45,13 @@ Ajouter un avion revient à ajouter un dossier dans `flowxav/aircraft/`.
 1. Créez `flowxav/aircraft/<id>/profile.json` avec le nom, le constructeur,
    la règle de reconnaissance (`titre_contient`, à comparer avec le titre
    réel que donne la SimVar `TITLE`) et la source d'état (`pmdg_ng3` ou
-   `simvars`).
+   `simvars`). Pour un avion PMDG, la section `sdk` nomme le paquet de l'avion,
+   le chemin de l'en-tête du SDK et la structure d'état : FlowXav tire la
+   disposition et la table des événements de cet en-tête **chez l'utilisateur**,
+   au premier lancement (`flowxav/sdk.py`, cache dans les données locales).
+   Aucun fichier de l'éditeur ni table qui en est tirée ne va dans le dépôt
+   (contrat PMDG § 1.n et 1.p) ; la section `licence` fait afficher et accepter
+   son contrat avant toute manœuvre de l'avion (§ 1.t).
 2. Relevez les vues et les commandes (voir plus bas), puis générez
    `carte.json` avec `tools/cartographie/build_map.py <id>`.
 3. Écrivez les procédures dans `procedures/*.json`. Chaque étape nomme une

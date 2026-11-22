@@ -21,10 +21,7 @@ SCREEN_SIZE = COLUMNS * ROWS * 3 + 1
 THIRD_PARTY_EVENT_ID_MIN = 69632
 MOUSE_LEFT_SINGLE, MOUSE_LEFT_RELEASE = 0x20000000, 0x00020000
 
-# Numéros PMDG_NG3_SDK.h (EVT_CDU_L_* = THIRD_PARTY_EVENT_ID_MIN + n).
-KEYS_LEFT = {**{f"L{i}": 533 + i for i in range(1, 7)}, **{f"R{i}": 539 + i for i in range(1, 7)},
-             "INIT_REF": 546, "RTE": 547, "MENU": 551, "LEGS": 552, "DEP_ARR": 553, "EXEC": 556,
-             "PREV_PAGE": 559, "NEXT_PAGE": 560, "CLR": 602}
+KEYS_PREFIX = "EVT_CDU_L_"      # touches du CDU gauche ; numéros tirés du SDK de l'avion (flowxav.sdk)
 
 
 def decode_screen(raw: bytes) -> tuple[bool, list[str]]:
@@ -94,14 +91,15 @@ def _locate(line: str, wanted: str, whole_word: bool) -> int | None:
 
 
 class PmdgCdu:
-    def __init__(self, client, area: str = "PMDG_NG3_CDU_0", keys: dict[str, int] | None = None) -> None:
-        self.client, self.area, self.keys = client, area, keys or KEYS_LEFT
+    def __init__(self, client, area: str = "PMDG_NG3_CDU_0", events: dict[str, int] | None = None,
+                 prefix: str = KEYS_PREFIX) -> None:
+        self.client, self.area, self.events, self.prefix = client, area, events or {}, prefix
 
     def screen(self) -> tuple[bool, list[str]]:
         return decode_screen(self.client.read_client_data(self.area, SCREEN_SIZE))
 
     def press(self, key: str) -> None:
-        event = f"#{THIRD_PARTY_EVENT_ID_MIN + self.keys[key]}"
+        event = f"#{self.events[self.prefix + key]}"
         self.client.transmit_event(event, MOUSE_LEFT_SINGLE)
         time.sleep(0.05)
         self.client.transmit_event(event, MOUSE_LEFT_RELEASE)

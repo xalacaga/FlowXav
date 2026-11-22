@@ -12,33 +12,13 @@ Tant que le contrat n'est pas accepté, FlowXav peut guider mais ne manœuvre ri
 from __future__ import annotations
 
 import hashlib
-import os
-import re
 from pathlib import Path
 from typing import Any
 
 from flowxav import settings
+from flowxav.packages import find_file, packages_roots
 
 MAX_BYTES = 512 * 1024
-USER_CFG = (
-    r"%LOCALAPPDATA%\Packages\Microsoft.Limitless_8wekyb3d8bbwe\LocalCache\UserCfg.opt",   # MSFS 2024, Microsoft Store
-    r"%APPDATA%\Microsoft Flight Simulator 2024\UserCfg.opt",                                # MSFS 2024, Steam
-)
-
-
-def packages_roots() -> list[Path]:
-    """Dossiers des paquets MSFS (InstalledPackagesPath de UserCfg.opt)."""
-    roots = []
-    for candidate in USER_CFG:
-        path = Path(os.path.expandvars(candidate))
-        try:
-            content = path.read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            continue
-        found = re.search(r'^\s*InstalledPackagesPath\s+"([^"]+)"', content, re.M)
-        if found and Path(found.group(1)).is_dir():
-            roots.append(Path(found.group(1)))
-    return roots
 
 
 _FOUND: dict[tuple, Path | None] = {}
@@ -55,17 +35,7 @@ def find_text(config: dict[str, Any], roots: list[Path] | None = None) -> Path |
 
 
 def _search(config: dict[str, Any], roots: list[Path]) -> Path | None:
-    """Cherche dans Community*, Official*\\<boutique> de chaque dossier de paquets."""
-    for root in roots:
-        folders = [p for p in root.glob("Community*") if p.is_dir()]
-        folders += [store for official in root.glob("Official*") if official.is_dir()
-                    for store in official.iterdir() if store.is_dir()]
-        for folder in folders:
-            for package in config.get("paquets", []):
-                path = folder / package / config["fichier"]
-                if path.is_file():
-                    return path
-    return None
+    return find_file(config.get("paquets", []), config["fichier"], roots)
 
 
 def read(path: Path) -> str:

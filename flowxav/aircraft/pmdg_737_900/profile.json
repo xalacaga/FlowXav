@@ -11,8 +11,26 @@
  "etat": {
   "source": "pmdg_ng3",
   "zone": "PMDG_NG3_Data",
-  "disposition": "pmdg_ng3_layout.json",
-  "aide": "Activez la diffusion du SDK PMDG : dans le fichier 737_Options.ini de l'avion (dossier LocalState\\WASM\\MSFS2024\\pmdg-aircraft-739\\work), ajoutez une section [SDK] avec EnableDataBroadcast=1, puis rechargez l'avion."
+  "aide": "Activez la diffusion du SDK PMDG : dans le fichier 737_Options.ini de l'avion (dossier LocalState\\WASM\\MSFS2024\\pmdg-aircraft-739\\work), ajoutez une section [SDK] avec EnableDataBroadcast=1, puis rechargez l'avion.",
+  "aide_sdk": "installez le PMDG 737-900 (son dossier Documentation\\SDK contient PMDG_NG3_SDK.h), puis relancez FlowXav."
+ },
+ "sdk": {
+  "paquets": [
+   "pmdg-aircraft-739"
+  ],
+  "entete": "Documentation/SDK/PMDG_NG3_SDK.h",
+  "structure": "PMDG_NG3_Data"
+ },
+ "licence": {
+  "editeur": "PMDG",
+  "fichier": "Documentation/END-USER SOFTWARE LICENSE AGREEMENT.txt",
+  "paquets": [
+   "pmdg-aircraft-739"
+  ]
+ },
+ "cdu": {
+  "zone": "PMDG_NG3_CDU_0",
+  "touches": "EVT_CDU_L_"
  },
  "suivi_vol": {
   "simvars": [
@@ -73,10 +91,6 @@
     "Bool"
    ]
   ]
- },
- "cdu": {
-  "zone": "PMDG_NG3_CDU_0",
-  "touches": "EVT_CDU_L_"
  },
  "plan_de_vol": {
   "format": "pmdg_rte",
@@ -304,7 +318,6 @@
   ]
  },
  "actions": {
-  "evenements": "pmdg_ng3_events.json",
   "zone_commande": "PMDG_NG3_Control",
   "boutons": [
    "EVT_CDU_L_",
@@ -497,13 +510,6 @@
     "evenement": "EVT_TCAS_MODE"
    }
   }
- },
- "licence": {
-  "editeur": "PMDG",
-  "fichier": "Documentation/END-USER SOFTWARE LICENSE AGREEMENT.txt",
-  "paquets": [
-   "pmdg-aircraft-739"
-  ]
  },
  "notes": [
   "Carte relevée sur une fenêtre MSFS 1920 × 1080 : les points sont en proportion de la zone client.",

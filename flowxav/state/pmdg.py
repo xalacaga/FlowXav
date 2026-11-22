@@ -1,9 +1,9 @@
 """État des avions PMDG par leur SDK : une zone ClientData décrite par une disposition.
 
-La disposition (nom, décalage, type, nombre) est générée une fois depuis
-l'en-tête C du SDK livré avec l'avion (tools/generate_pmdg_layout.py) et
-voyage avec FlowXav. La diffusion doit être activée dans le fichier d'options
-de l'avion (`[SDK]` puis `EnableDataBroadcast=1`).
+La disposition (nom, décalage, type, nombre) est tirée de l'en-tête C du SDK
+livré avec l'avion, chez l'utilisateur, au premier lancement (flowxav.sdk) :
+FlowXav ne livre aucun fichier de l'éditeur. La diffusion doit être activée
+dans le fichier d'options de l'avion (`[SDK]` puis `EnableDataBroadcast=1`).
 """
 
 from __future__ import annotations
@@ -19,11 +19,12 @@ MAX_LAYOUT_BYTES = 1024 * 1024
 
 
 class PmdgClientData:
-    def __init__(self, layout_path: Path, area: str, help_text: str = "") -> None:
-        path = Path(layout_path)
-        if path.stat().st_size > MAX_LAYOUT_BYTES:
-            raise ValueError("Disposition PMDG trop volumineuse.")
-        layout = json.loads(path.read_text(encoding="utf-8"))
+    def __init__(self, layout: dict[str, Any] | Path, area: str, help_text: str = "") -> None:
+        if not isinstance(layout, dict):
+            path = Path(layout)
+            if path.stat().st_size > MAX_LAYOUT_BYTES:
+                raise ValueError("Disposition PMDG trop volumineuse.")
+            layout = json.loads(path.read_text(encoding="utf-8"))
         size, fields = layout.get("taille"), layout.get("champs")
         if not isinstance(size, int) or isinstance(size, bool) or not 0 < size <= MAX_LAYOUT_BYTES:
             raise ValueError("Taille de disposition PMDG invalide.")

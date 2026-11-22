@@ -13,12 +13,9 @@ interrupteurs à ressort sans position lisible (GEN, APU GEN, GRD PWR), étapes 
 
 from __future__ import annotations
 
-import json
 import logging
 import time
 from dataclasses import dataclass
-from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
 from flowxav import settings
@@ -53,14 +50,13 @@ class Plan:
     value: int | None = None
 
 
-@lru_cache(maxsize=8)
-def _events(path: str) -> dict[str, int]:
-    return json.loads(Path(path).read_text(encoding="utf-8"))["evenements"]
-
-
 def events_of(profile) -> dict[str, int]:
-    config = profile.data.get("actions", {})
-    return _events(str(profile.folder / config["evenements"])) if config.get("evenements") else {}
+    """Événements de commande tirés du SDK de l'avion installé chez l'utilisateur (flowxav.sdk)."""
+    from flowxav import sdk
+    try:
+        return sdk.tables(profile)["evenements"]
+    except (sdk.SdkMissing, ValueError, OSError):
+        return {}
 
 
 def _position(expected: dict[str, Any]) -> int | None:
@@ -103,6 +99,8 @@ def plan_step(profile, step: dict[str, Any], context: dict[str, Any], values: di
     if not licence.accepted(profile):
         raise NotActionable("licence")             # contrat de l'éditeur non accepté : on ne pilote pas l'avion
     events = events_of(profile)
+    if not events:
+        raise NotActionable("sdk_absent")
     command = key or step.get("commande")
     if not command or step.get("sans_cible"):
         raise NotActionable("sans_commande")

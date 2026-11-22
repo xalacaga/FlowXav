@@ -28,8 +28,9 @@ def raw(lines, powered=True):
     return bytes(data)
 
 
-KEYS = {THIRD_PARTY_EVENT_ID_MIN + n: name for name, n in
-        {"MENU": 551, "NEXT_PAGE": 560, "R4": 543, "R2": 541, "L1": 534, "L5": 538, "EXEC": 556}.items()}
+OFFSETS = {"MENU": 551, "NEXT_PAGE": 560, "R4": 543, "R2": 541, "L1": 534, "L5": 538, "EXEC": 556}
+KEYS = {THIRD_PARTY_EVENT_ID_MIN + n: name for name, n in OFFSETS.items()}
+EVENTS = {f"EVT_CDU_L_{name}": THIRD_PARTY_EVENT_ID_MIN + n for name, n in OFFSETS.items()}   # table tirée du SDK
 
 
 class FakeCdu:
@@ -61,7 +62,7 @@ def test_find_key_reads_sides_and_lines():
 def test_load_panel_state_walks_the_cdu_pages():
     from flowxav.state.pmdg_cdu import PmdgCdu
     client = FakeCdu()
-    lines = depart.load_panel_state(PmdgCdu(client), "COLDDARK")
+    lines = depart.load_panel_state(PmdgCdu(client, events=EVENTS), "COLDDARK")
     assert client.pressed == ["MENU", "R4", "R2", "NEXT_PAGE", "L1", "EXEC"]
     assert "PANEL STATE LOADED" in lines[13]
 
@@ -69,7 +70,7 @@ def test_load_panel_state_walks_the_cdu_pages():
 def test_unpowered_cdu_is_reported():
     from flowxav.state.pmdg_cdu import PmdgCdu
     with pytest.raises(depart.DepartError) as error:
-        depart.load_panel_state(PmdgCdu(FakeCdu(powered=False)), "COLDDARK")
+        depart.load_panel_state(PmdgCdu(FakeCdu(powered=False), events=EVENTS), "COLDDARK")
     assert error.value.code == "cdu_eteint"
 
 
@@ -86,6 +87,8 @@ def test_start_state_checks_flag_throttle_and_brake():
 
 def test_profile_start_checks_read_known_fields():
     profile = load_profile("pmdg_737_900")
+    if not profile.source.size:
+        pytest.skip("PMDG 737-900 non installé : tables du SDK indisponibles")
     readable = set(profile.source.decode(bytes(profile.source.size)))
     for item in profile.data["depart"]["verifications"]:
         assert "simvar" in item or item["cle"] in readable, item["id"]
