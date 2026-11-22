@@ -53,6 +53,10 @@
   {
    "image": "cdu_gauche",
    "vue": "cdu_gauche"
+  },
+  {
+   "image": "panneau_sup",
+   "vue": "panneau_sup"
   }
  ],
  "exclus": [
@@ -172,5 +176,9 @@
   "MAIN_FuelFlowSelector": "FUEL FLOW (RATE/USED/RESET)",
   "MAIN_AutobrakeSelector": "AUTO BRAKE",
   "MAIN_SpdRefSelector": "SPD REF"
- }
+ },
+ "par_cote": [
+  "EFIS_MinsSelBARO",
+  "EFIS_BaroSelHPA"
+ ]
 }

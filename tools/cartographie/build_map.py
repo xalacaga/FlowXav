@@ -21,6 +21,14 @@ config = json.loads((folder / "sources.json").read_text(encoding="utf-8"))
 pattern = re.compile(r"\[\s*([\d.]+)s\] (\S+): .* clic \S+ à \(([\d.]+), ([\d.]+)\)")
 
 
+def same_side(key: str, u: float) -> bool:
+    """Commandes couplées gauche/droite (un clic d'un côté change [0] ET [1]) : chaque indice garde son côté."""
+    base, _, index = key.partition("[")
+    if base not in config.get("par_cote", []) or not index:
+        return True
+    return u < 0.5 if index.startswith("0") else u >= 0.5
+
+
 def keep(key: str) -> bool:
     # Un voyant qui change par conséquence se rattache au clic suivant : jamais fiable.
     return "annun" not in key and key not in config.get("exclus", [])
@@ -43,7 +51,7 @@ for source in config["sources"]:
         limit = source.get("avant_s")
         for line in (folder / "seances" / source["seance"]).read_text(encoding="utf-8").splitlines():
             m = pattern.match(line)
-            if m and (limit is None or float(m.group(1)) < limit) and keep(m.group(2)):
+            if m and (limit is None or float(m.group(1)) < limit) and keep(m.group(2))                     and same_side(m.group(2), float(m.group(3))):
                 found.setdefault(m.group(2), []).append((float(m.group(3)), float(m.group(4))))
     for key, pts in found.items():
         if key not in controls:

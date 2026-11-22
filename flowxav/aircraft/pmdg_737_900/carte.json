@@ -667,16 +667,9 @@
   },
   "EFIS_MinsSelBARO[0]": {
    "vue": "tableau_centre",
-   "u": 0.4845,
-   "v": 0.5975,
+   "u": 0.147,
+   "v": 0.601,
    "libelle": "EFIS gauche : MINS RADIO/BARO",
-   "origine": "clics"
-  },
-  "EFIS_MinsSelBARO[1]": {
-   "vue": "tableau_centre",
-   "u": 0.4845,
-   "v": 0.5975,
-   "libelle": "EFIS droit : MINS RADIO/BARO",
    "origine": "clics"
   },
   "EFIS_VORADFSel1[0]": {
@@ -702,16 +695,9 @@
   },
   "EFIS_BaroSelHPA[0]": {
    "vue": "tableau_centre",
-   "u": 0.565,
-   "v": 0.594,
+   "u": 0.233,
+   "v": 0.596,
    "libelle": "EFIS gauche : BARO IN/HPA",
-   "origine": "clics"
-  },
-  "EFIS_BaroSelHPA[1]": {
-   "vue": "tableau_centre",
-   "u": 0.565,
-   "v": 0.594,
-   "libelle": "EFIS droit : BARO IN/HPA",
    "origine": "clics"
   },
   "EFIS_VORADFSel2[0]": {
@@ -789,6 +775,20 @@
    "u": 0.8155,
    "v": 0.626,
    "libelle": "EFIS droit : VOR/ADF 1",
+   "origine": "clics"
+  },
+  "EFIS_MinsSelBARO[1]": {
+   "vue": "tableau_centre",
+   "u": 0.822,
+   "v": 0.594,
+   "libelle": "EFIS droit : MINS RADIO/BARO",
+   "origine": "clics"
+  },
+  "EFIS_BaroSelHPA[1]": {
+   "vue": "tableau_centre",
+   "u": 0.8975,
+   "v": 0.592,
+   "libelle": "EFIS droit : BARO IN/HPA",
    "origine": "clics"
   },
   "EFIS_VORADFSel2[1]": {
@@ -2952,6 +2952,13 @@
    "u": 0.4313,
    "v": 0.7657,
    "libelle": "CDU gauche +/-",
+   "origine": "image"
+  },
+  "ELEC_GenSw[0]": {
+   "vue": "panneau_sup",
+   "u": 0.4068,
+   "v": 0.7852,
+   "libelle": "GEN 1",
    "origine": "image"
   }
  }
