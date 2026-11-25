@@ -79,7 +79,8 @@ def test_start_state_checks_flag_throttle_and_brake():
     pmdg = {"MAIN_GearLever": 2, "ELEC_BatSelector": 0, "APU_Selector": 0,
             "IRS_ModeSelector[0]": 0, "IRS_ModeSelector[1]": 0, "ENG_StartSelector[0]": 1, "ENG_StartSelector[1]": 1}
     simvars = {"GENERAL ENG THROTTLE LEVER POSITION:1": 99.0, "GENERAL ENG THROTTLE LEVER POSITION:2": 0.0,
-               "BRAKE PARKING POSITION": 0.0, "FLAPS HANDLE INDEX": 0.0, "SPOILERS HANDLE POSITION": 0.0}
+               "BRAKE PARKING POSITION": 0.0, "FLAPS HANDLE INDEX": 0.0, "SPOILERS HANDLE POSITION": 0.0,
+               "L:NGXWheelChocks": 1.0}
     results = {r["id"]: r["ok"] for r in depart.check(config, pmdg, simvars)}
     assert not results["manette_1"] and results["manette_2"] and not results["frein_parc"]
     assert all(ok for key, ok in results.items() if key not in ("manette_1", "frein_parc"))

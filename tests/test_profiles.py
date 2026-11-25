@@ -6,6 +6,7 @@ import math
 import pytest
 
 from flowxav.aircraft import aircraft_root, detect, list_profiles, load_profile
+from flowxav.simulator import ground_values
 from flowxav.state.pmdg import PmdgClientData
 
 
@@ -59,6 +60,8 @@ def test_pmdg_procedure_controls_have_state_fields():
     profile = pmdg_source()
     readable = set(profile.source.decode(bytes(profile.source.size)))
     readable.update(name for name, _unit in profile.data.get("suivi_vol", {}).get("simvars", []))
+    doors = profile.data.get("sol", {}).get("portes", [])
+    readable.update(ground_values(profile.data.get("sol", {}), {name: 0.0 for name in doors}))
     for procedure in profile.procedures():
         for step in procedure["etapes"]:
             if "attendu" in step:

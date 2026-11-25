@@ -1,5 +1,7 @@
 """API locale : profils, commandes, démarrage du guidage — avec un simulateur factice."""
 
+import re
+
 from fastapi.testclient import TestClient
 
 from flowxav.server import create_app
@@ -67,4 +69,8 @@ def test_static_files_are_always_revalidated():
     """Un ancien app.js en cache avec un nouvel index.html casserait l'interface."""
     with make_client() as client:
         assert client.get("/static/app.js").headers["Cache-Control"] == "no-cache"
-        assert client.get("/").headers["Cache-Control"] == "no-store"
+        index = client.get("/")
+        assert index.headers["Cache-Control"] == "no-store"
+        # Adresse liée au contenu : un ancien app.js resté « frais » en cache n'est jamais réutilisé.
+        assert re.search(r'src="/static/app\.js\?v=[0-9a-f]{12}"', index.text)
+        assert re.search(r'href="/static/app\.css\?v=[0-9a-f]{12}"', index.text)

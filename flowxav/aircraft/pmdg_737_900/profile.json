@@ -89,6 +89,54 @@
    [
     "GENERAL ENG COMBUSTION:2",
     "Bool"
+   ],
+   [
+    "L:NGXWheelChocks",
+    "Number"
+   ],
+   [
+    "L:FwdLeftCabinDoor",
+    "Number"
+   ],
+   [
+    "L:FwdRightCabinDoor",
+    "Number"
+   ],
+   [
+    "L:AftLeftCabinDoor",
+    "Number"
+   ],
+   [
+    "L:AftRightCabinDoor",
+    "Number"
+   ],
+   [
+    "L:FwdLwrCargoDoor",
+    "Number"
+   ],
+   [
+    "L:AftLwrCargoDoor",
+    "Number"
+   ],
+   [
+    "L:MainCargoDoor",
+    "Number"
+   ],
+   [
+    "L:EEDoor",
+    "Number"
+   ],
+   [
+    "L:FSDT_GSX_COUATL_STARTED",
+    "Number"
+   ],
+   [
+    "L:FSDT_GSX_DEPARTURE_STATE",
+    "Number"
+   ],
+   [
+    "PUSHBACK STATE",
+    "Enum"
    ]
   ]
  },
@@ -156,6 +204,24 @@
     "conseil": {
      "fr": "Serrez le frein de parc (levier PARKING BRAKE, ou Ctrl + point).",
      "en": "Set the parking brake (PARKING BRAKE lever, or Ctrl + period)."
+    }
+   },
+   {
+    "id": "cales",
+    "simvar": [
+     "L:NGXWheelChocks",
+     "Number"
+    ],
+    "attendu": {
+     "egal": 1
+    },
+    "libelle": {
+     "fr": "Cales posées",
+     "en": "Wheel chocks in place"
+    },
+    "conseil": {
+     "fr": "Posez les cales : tablette > Ground Connections > Set Chocks.",
+     "en": "Set the chocks: tablet > Ground Connections > Set Chocks."
     }
    },
    {
@@ -508,6 +574,18 @@
    },
    "XPDR_ModeSel": {
     "evenement": "EVT_TCAS_MODE"
+   },
+   "LTS_RunwayTurnoffSw[0]": {
+    "evenement": "EVT_OH_LIGHTS_L_TURNOFF"
+   },
+   "LTS_RunwayTurnoffSw[1]": {
+    "evenement": "EVT_OH_LIGHTS_R_TURNOFF"
+   },
+   "LTS_LogoSw": {
+    "evenement": "EVT_OH_LIGHTS_LOGO"
+   },
+   "LTS_WingSw": {
+    "evenement": "EVT_OH_LIGHTS_WING"
    }
   }
  },
@@ -515,6 +593,19 @@
   "Carte relevée sur une fenêtre MSFS 1920 × 1080 : les points sont en proportion de la zone client.",
   "ELEC_BatSelector : 0 OFF, 1 BAT, 2 ON (interrupteur à trois positions sur le -900 BW).",
   "ELEC_GrdPwrSw et ELEC_APUGenSw sont à ressort : valider sur les barres (ELEC_BusPowered) ou les voyants.",
-  "Pas de champ SDK pour les leviers carburant, le frein de parc ni le levier des volets : valider par FUEL_annunENG_VALVE_CLOSED, PED_annunParkingBrake, MAIN_TEFlapsNeedle."
- ]
+  "Pas de champ SDK pour les leviers carburant, le frein de parc ni le levier des volets : valider par FUEL_annunENG_VALVE_CLOSED, PED_annunParkingBrake, MAIN_TEFlapsNeedle.",
+  "État sol lu dans les variables L: de l'avion (pas dans le SDK), vérifié sur la tablette le 2026-11-25 : L:NGXWheelChocks 1 posées / 0 retirées ; portes 0 fermée … 100 ouverte ; GPU demandé → L:GPU_S_Hose_NGXu et L:7X7X_Ground_Power_Light_NotInUse à 1 (L:NGXGPU ne bouge pas)."
+ ],
+ "sol": {
+  "portes": [
+   "L:FwdLeftCabinDoor",
+   "L:FwdRightCabinDoor",
+   "L:AftLeftCabinDoor",
+   "L:AftRightCabinDoor",
+   "L:FwdLwrCargoDoor",
+   "L:AftLwrCargoDoor",
+   "L:MainCargoDoor",
+   "L:EEDoor"
+  ]
+ }
 }

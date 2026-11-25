@@ -63,6 +63,18 @@ def flight_phase(values: dict[str, Any]) -> str:
     return str(values.get("FLOWXAV_PHASE") or _raw_flight_phase(values))
 
 
+def ground_values(config: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
+    """Valeurs sol calculées : FLOWXAV_PORTES_OUVERTES = nombre de portes ou soutes ouvertes.
+
+    `config["portes"]` liste les variables d'ouverture (0 fermée … 100 ouverte). Rien
+    n'est calculé si l'une manque : une porte non lue ne doit pas passer pour fermée.
+    """
+    doors = config.get("portes", [])
+    if not doors or any(values.get(name) is None for name in doors):
+        return {}
+    return {"FLOWXAV_PORTES_OUVERTES": sum(1 for name in doors if float(values[name]) > 2)}
+
+
 class FlightPhaseTracker:
     """Évite qu'une turbulence ou un palier bref change la procédure proposée."""
 
@@ -204,6 +216,7 @@ class Simulator:
                 try:
                     values = profile.source.read(client)
                     values.update(self._read_flight_tracking(client, profile))
+                    values.update(ground_values(profile.data.get("sol", {}), values))
                     if values.get("SIM ON GROUND") is not None and float(values["SIM ON GROUND"]) < 0.5:
                         self._airborne_seen = True
                     if (self._airborne_seen and float(values.get("VERTICAL SPEED", 0)) < -300

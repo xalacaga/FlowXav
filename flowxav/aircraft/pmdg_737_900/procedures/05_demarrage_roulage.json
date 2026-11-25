@@ -2,12 +2,12 @@
  "id": "demarrage_roulage",
  "phase": 4,
  "titre": {
-  "fr": "4. Avant démarrage, démarrage et roulage",
-  "en": "4. Before start, engine start and taxi"
+  "fr": "4. Avant démarrage, repoussage, démarrage et roulage",
+  "en": "4. Before start, pushback, engine start and taxi"
  },
  "description": {
-  "fr": "Après le FMC : réglages du MCP et des radios, démarrage du moteur 2 puis du moteur 1 avec l'air de l'APU, puis préparation au roulage.",
-  "en": "After the FMC: MCP and radio settings, engine 2 then engine 1 start with APU air, then taxi preparation."
+  "fr": "Après le FMC : réglages du MCP et des radios, APU, groupe de parc débranché, portes fermées, cales retirées, repoussage moteurs éteints (avec ou sans GSX), puis démarrage du moteur 2 et du moteur 1 avec l'air de l'APU, et préparation au roulage.",
+  "en": "After the FMC: MCP and radio settings, APU, ground power disconnected, doors closed, chocks removed, pushback with engines off (with or without GSX), then engine 2 and engine 1 start with APU air, and taxi preparation."
  },
  "etapes": [
   {
@@ -231,21 +231,6 @@
    }
   },
   {
-   "id": "anti_collision",
-   "commande": "LTS_AntiCollisionSw",
-   "attendu": {
-    "egal": true
-   },
-   "titre": {
-    "fr": "ANTI COLLISION sur ON",
-    "en": "ANTI COLLISION to ON"
-   },
-   "explication": {
-    "fr": "Le feu rouge anticollision prévient le personnel au sol que les moteurs vont démarrer.",
-    "en": "The red beacon warns ground staff the engines are about to start."
-   }
-  },
-  {
    "id": "apu_running",
    "commande": "APU_Selector",
    "verifier": "APU_EGTNeedle",
@@ -289,6 +274,189 @@
      }
     }
    ]
+  },
+  {
+   "id": "gpu_off",
+   "commande": "ELEC_GrdPwrSw",
+   "verifier": "ELEC_annunGRD_POWER_AVAILABLE",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "Groupe de parc débranché",
+    "en": "Ground power disconnected"
+   },
+   "explication": {
+    "fr": "Si vous êtes sur groupe de parc : l'APU tourne, mettez APU GEN sur ON pour qu'il reprenne les barres, puis faites débrancher le GPU (tablette > Ground Connections > Ground Power, ou menu GSX). L'étape se valide quand le voyant bleu GRD POWER AVAILABLE s'éteint, et se passe toute seule sans GPU.",
+    "en": "If you are on ground power: the APU is running, set APU GEN ON so it takes over the buses, then have the GPU disconnected (tablet > Ground Connections > Ground Power, or the GSX menu). The step validates when the blue GRD POWER AVAILABLE light goes out, and is skipped without a GPU."
+   }
+  },
+  {
+   "id": "portes_fermees",
+   "sans_cible": true,
+   "verifier": "FLOWXAV_PORTES_OUVERTES",
+   "attendu": {
+    "egal": 0
+   },
+   "titre": {
+    "fr": "Portes et soutes fermées",
+    "en": "Doors and holds closed"
+   },
+   "explication": {
+    "fr": "Embarquement et chargement terminés : fermez toutes les portes passagers, de service et de soute (tablette > Door Management, ou GSX en fin d'embarquement). L'étape se valide quand plus aucune porte n'est ouverte.",
+    "en": "Boarding and loading complete: close all passenger, service and cargo doors (tablet > Door Management, or GSX at the end of boarding). The step validates when no door is open any more."
+   }
+  },
+  {
+   "id": "cales_retirees",
+   "sans_cible": true,
+   "verifier": "L:NGXWheelChocks",
+   "attendu": {
+    "egal": 0
+   },
+   "titre": {
+    "fr": "Cales retirées",
+    "en": "Wheel chocks removed"
+   },
+   "explication": {
+    "fr": "Frein de parc serré, faites retirer les cales (tablette > Ground Connections > Remove Chocks). Avec GSX, le personnel au sol les retire au moment du repoussage.",
+    "en": "Parking brake set, have the chocks removed (tablet > Ground Connections > Remove Chocks). With GSX, the ground crew removes them for the pushback."
+   }
+  },
+  {
+   "id": "anti_collision",
+   "commande": "LTS_AntiCollisionSw",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "ANTI COLLISION sur ON",
+    "en": "ANTI COLLISION to ON"
+   },
+   "explication": {
+    "fr": "Le feu rouge anticollision prévient le personnel au sol que les moteurs vont démarrer.",
+    "en": "The red beacon warns ground staff the engines are about to start."
+   }
+  },
+  {
+   "id": "repoussage_gsx_demande",
+   "si": {
+    "cle": "L:FSDT_GSX_COUATL_STARTED",
+    "attendu": {
+     "egal": 1
+    }
+   },
+   "sans_cible": true,
+   "verifier": "L:FSDT_GSX_DEPARTURE_STATE",
+   "attendu": {
+    "min": 4
+   },
+   "titre": {
+    "fr": "Repoussage : demandez-le à GSX",
+    "en": "Pushback: request it from GSX"
+   },
+   "explication": {
+    "fr": "Moteurs éteints. Ouvrez le menu GSX (icône de la barre d'outils MSFS), « Request Pushback », puis choisissez la direction. L'étape se valide dès que GSX a pris la demande.",
+    "en": "Engines off. Open the GSX menu (MSFS toolbar icon), \"Request Pushback\", then choose the direction. The step validates as soon as GSX has taken the request."
+   }
+  },
+  {
+   "id": "repoussage_demande",
+   "si": {
+    "cle": "L:FSDT_GSX_COUATL_STARTED",
+    "attendu": {
+     "different": 1
+    }
+   },
+   "sans_cible": true,
+   "verifier": "PUSHBACK STATE",
+   "attendu": {
+    "different": 3
+   },
+   "titre": {
+    "fr": "Repoussage : demandez le tracteur",
+    "en": "Pushback: request the tug"
+   },
+   "explication": {
+    "fr": "Moteurs éteints. Sans GSX, demandez le repoussage au simulateur (tablette > Ground Service Vehicles, ou commande de repoussage MSFS). L'étape se valide quand le repoussage commence ; sinon « Suivante ».",
+    "en": "Engines off. Without GSX, request the pushback from the simulator (tablet > Ground Service Vehicles, or the MSFS pushback command). The step validates when the pushback starts; otherwise \"Next\"."
+   }
+  },
+  {
+   "id": "repoussage_frein_desserre",
+   "commande": "EVT_CONTROL_STAND_PARK_BRAKE_LEVER",
+   "verifier": "PED_annunParkingBrake",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "Tracteur attelé : frein de parc desserré",
+    "en": "Tug connected: parking brake released"
+   },
+   "explication": {
+    "fr": "Quand le personnel au sol le demande (« release parking brake »), desserrez le frein de parc : le voyant rouge s'éteint et le repoussage commence. Ne touchez pas aux freins pendant le repoussage.",
+    "en": "When the ground crew asks for it (\"release parking brake\"), release the parking brake: the red light goes out and the pushback starts. Keep off the brakes during the pushback."
+   }
+  },
+  {
+   "id": "repoussage_gsx_fin",
+   "si": {
+    "cle": "L:FSDT_GSX_COUATL_STARTED",
+    "attendu": {
+     "egal": 1
+    }
+   },
+   "sans_cible": true,
+   "verifier": "L:FSDT_GSX_DEPARTURE_STATE",
+   "attendu": {
+    "min": 6
+   },
+   "titre": {
+    "fr": "Attendre la fin du repoussage",
+    "en": "Wait for the end of the pushback"
+   },
+   "explication": {
+    "fr": "Laissez GSX repousser l'avion. L'étape se valide quand GSX annonce le repoussage terminé.",
+    "en": "Let GSX push the aircraft back. The step validates when GSX reports the pushback complete."
+   }
+  },
+  {
+   "id": "repoussage_fin",
+   "si": {
+    "cle": "L:FSDT_GSX_COUATL_STARTED",
+    "attendu": {
+     "different": 1
+    }
+   },
+   "sans_cible": true,
+   "verifier": "PUSHBACK STATE",
+   "attendu": {
+    "egal": 3
+   },
+   "titre": {
+    "fr": "Attendre la fin du repoussage",
+    "en": "Wait for the end of the pushback"
+   },
+   "explication": {
+    "fr": "L'étape se valide quand le tracteur a lâché l'avion.",
+    "en": "The step validates when the tug has released the aircraft."
+   }
+  },
+  {
+   "id": "repoussage_frein_serre",
+   "commande": "EVT_CONTROL_STAND_PARK_BRAKE_LEVER",
+   "verifier": "PED_annunParkingBrake",
+   "attendu": {
+    "egal": true
+   },
+   "titre": {
+    "fr": "Repoussage terminé : frein de parc serré",
+    "en": "Pushback complete: parking brake set"
+   },
+   "explication": {
+    "fr": "Avion arrêté, serrez le frein de parc (le voyant rouge s'allume). Le tracteur peut être dételé ; la mise en route peut commencer.",
+    "en": "Aircraft stopped, set the parking brake (the red light comes on). The tug can be disconnected; engine start can begin."
+   }
   },
   {
    "id": "apu_bleed_start",
@@ -631,22 +799,6 @@
    "explication": {
     "fr": "Le transpondeur émet votre code et votre altitude pendant le roulage (TA/RA au plus tard à l'alignement sur la piste).",
     "en": "The transponder sends your code and altitude while taxiing (TA/RA at the latest when lining up)."
-   }
-  },
-  {
-   "id": "gpu_off",
-   "commande": "ELEC_GrdPwrSw",
-   "verifier": "ELEC_annunGRD_POWER_AVAILABLE",
-   "attendu": {
-    "egal": false
-   },
-   "titre": {
-    "fr": "Groupe de parc débranché",
-    "en": "Ground power disconnected"
-   },
-   "explication": {
-    "fr": "Si vous étiez sur groupe de parc : les génératrices moteurs ont pris le relais, faites débrancher le GPU par le CDU (MENU > FS ACTIONS > GROUND CONNECTIONS). L'étape se valide quand le voyant bleu GRD POWER AVAILABLE s'éteint, et se passe toute seule sans GPU.",
-    "en": "If you were on ground power: the engine generators have taken over, have the GPU disconnected through the CDU (MENU > FS ACTIONS > GROUND CONNECTIONS). The step validates when the blue GRD POWER AVAILABLE light goes out, and is skipped without a GPU."
    }
   },
   {

@@ -190,6 +190,7 @@ def test_flight_phase_suggests_full_flight_and_both_approach_variants():
     after_landing.update({
         "SPOILERS HANDLE POSITION": 0, "FLAPS HANDLE INDEX": 0, "MAIN_AutobrakeSelector": 1,
         "LTS_LandingLtFixedSw[0]": False, "LTS_LandingLtFixedSw[1]": False, "LTS_TaxiSw": True,
+        "LTS_RunwayTurnoffSw[0]": False, "LTS_RunwayTurnoffSw[1]": False, "LTS_PositionSw": 0,
         "APU_EGTNeedle": 200, "BRAKE PARKING POSITION": 1,
     })
     assert suggest(procedures, after_landing) == "fin_vol"
@@ -254,3 +255,26 @@ def test_simbrief_reads_qnh_from_metar():
     assert _qnh("LFBO 221630Z 30012KT CAVOK 12/04 Q1018 NOSIG") == "1018 hPa"
     assert _qnh("KJFK 221651Z 31014KT 10SM FEW250 08/M06 A2992") == "29.92 inHg"
     assert _qnh("") == ""
+
+
+def test_step_with_si_is_skipped_when_it_does_not_apply():
+    """Repoussage GSX ou sans GSX : l'étape de l'autre cas est passée d'elle-même."""
+    from flowxav.guide import step_satisfied
+
+    gsx_step = {"id": "push", "si": {"cle": "L:FSDT_GSX_COUATL_STARTED", "attendu": {"egal": 1}},
+                "sans_cible": True, "verifier": "L:FSDT_GSX_DEPARTURE_STATE", "attendu": {"min": 4}}
+    assert step_satisfied(gsx_step, {"L:FSDT_GSX_COUATL_STARTED": 0.0, "L:FSDT_GSX_DEPARTURE_STATE": 1.0})
+    assert not step_satisfied(gsx_step, {"L:FSDT_GSX_COUATL_STARTED": 1.0, "L:FSDT_GSX_DEPARTURE_STATE": 1.0})
+    assert step_satisfied(gsx_step, {"L:FSDT_GSX_COUATL_STARTED": 1.0, "L:FSDT_GSX_DEPARTURE_STATE": 4.0})
+    manual = {"id": "m", "si": {"cle": "X", "attendu": {"egal": 1}}, "titre": {"fr": "x"}}
+    assert step_satisfied(manual, {"X": 0}) and not step_satisfied(manual, {"X": 1})
+
+
+def test_pushback_comes_before_engine_start_with_ground_items_cleared():
+    """Le repoussage se fait moteurs éteints, après GPU, portes et cales."""
+    procedure = next(p for p in load_profile("pmdg_737_900").procedures() if p["id"] == "demarrage_roulage")
+    order = [s["id"] for s in procedure["etapes"]]
+    for before, after in [("apu_running", "gpu_off"), ("gpu_off", "portes_fermees"),
+                          ("portes_fermees", "cales_retirees"), ("cales_retirees", "repoussage_gsx_demande"),
+                          ("repoussage_frein_serre", "eng2_grd")]:
+        assert order.index(before) < order.index(after), (before, after)

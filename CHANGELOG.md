@@ -6,6 +6,9 @@
 
 - Step-by-step cockpit guidance: the camera shows the control, an orange ring blinks on it over Microsoft Flight Simulator, and the step validates itself when the aircraft reaches the expected state.
 - The camera is yours as soon as you move: FlowXav first places the view facing the panel, then gives the camera back to MSFS the moment you press the right or middle mouse button or turn the wheel over MSFS. You then look around and zoom with your usual MSFS controls; the ring follows the control from wherever you look, and an arrow at the screen edge points to it when it is out of view.
+- Ground state read from the aircraft: wheel chocks, every passenger, service and cargo door, and GSX Pro. New steps validate by themselves so nothing is forgotten before moving: doors and holds closed, chocks removed (and set again at the end of the flight); "Check start state" also checks the chocks.
+- Pushback with engines off, before engine start: with GSX Pro (request in GSX, release the parking brake when the tug is connected, wait for the end, set the parking brake) or without GSX (simulator pushback). Steps that only apply with or without GSX are skipped by themselves.
+- Exterior lights through the whole flight: strobes, landing, runway turnoff lights and TCAS TA/RA when lining up; turnoff lights off and on with the landing lights in climb and descent; turnoff lights off and strobes to steady after landing; position lights off at the end of the flight. "Do it" also handles the runway turnoff, logo and wing lights.
 - "Show me": search any mapped control and FlowXav shows it for a few seconds.
 - Automatic connection to MSFS 2024 and aircraft recognition from its title.
 - PMDG 737-900 profile: 409 controls mapped across seven views (overhead, aft overhead, centre panel, pedestal, aft pedestal, left CDU close-up), with state read through the PMDG SDK.
@@ -36,7 +39,7 @@
 
 ### Fixed
 
-- The window could stay empty after an update (no journey, no connection): the interface scripts are now always revalidated instead of being reused from the WebView cache.
+- The window could stay empty after an update (no journey, no connection): the interface files now carry a fingerprint of their content in their address, so the WebView can never reuse an outdated copy.
 
 ### Security
 

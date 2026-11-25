@@ -92,6 +92,51 @@
    }
   },
   {
+   "id": "turnoff_off_l",
+   "commande": "LTS_RunwayTurnoffSw[0]",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "RWY TURNOFF gauche OFF",
+    "en": "Left RWY TURNOFF OFF"
+   },
+   "explication": {
+    "fr": "Piste dégagée : feux de dégagement coupés.",
+    "en": "Runway vacated: turnoff lights off."
+   }
+  },
+  {
+   "id": "turnoff_off_r",
+   "commande": "LTS_RunwayTurnoffSw[1]",
+   "attendu": {
+    "egal": false
+   },
+   "titre": {
+    "fr": "RWY TURNOFF droit OFF",
+    "en": "Right RWY TURNOFF OFF"
+   },
+   "explication": {
+    "fr": "Le second feu de dégagement.",
+    "en": "The second turnoff light."
+   }
+  },
+  {
+   "id": "strobe_off",
+   "commande": "LTS_PositionSw",
+   "attendu": {
+    "egal": 0
+   },
+   "titre": {
+    "fr": "POSITION sur STEADY",
+    "en": "POSITION to STEADY"
+   },
+   "explication": {
+    "fr": "Piste dégagée : coupez les feux à éclats, gardez les feux de position.",
+    "en": "Runway vacated: switch off the strobes, keep the position lights."
+   }
+  },
+  {
    "id": "taxi_on",
    "commande": "LTS_TaxiSw",
    "attendu": {

@@ -114,8 +114,19 @@ def is_manual(step: dict[str, Any], context: dict[str, Any] | None = None) -> bo
     return True
 
 
+def applicable(step: dict[str, Any], values: dict[str, Any]) -> bool:
+    """« si » : {"cle", "attendu"} — l'étape ne concerne que ce cas (par exemple GSX en marche)."""
+    condition = step.get("si")
+    return condition is None or satisfied(condition["attendu"], values.get(condition["cle"]))
+
+
 def step_satisfied(step: dict[str, Any], values: dict[str, Any], context: dict[str, Any] | None = None) -> bool:
-    """L'état de l'avion montre déjà cette étape faite (jamais vrai pour une étape manuelle)."""
+    """L'état de l'avion montre déjà cette étape faite (jamais vrai pour une étape manuelle).
+
+    Une étape qui ne s'applique pas (« si » non rempli) compte comme faite : elle est passée.
+    """
+    if not applicable(step, values):
+        return True
     if is_manual(step):
         return False
     check = value_check(step, context if context is not None else flight_values(values))

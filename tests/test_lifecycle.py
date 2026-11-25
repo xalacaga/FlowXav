@@ -229,3 +229,12 @@ def test_flight_phase_waits_before_changing_and_uses_fmc_cruise_altitude():
     cruise = dict(climb, **{"INDICATED ALTITUDE": 34900, "VERTICAL SPEED": 0})
     assert tracker.update(cruise, 20) == "montee"
     assert tracker.update(cruise, 26) == "croisiere"       # changement stable pendant cinq secondes
+
+
+def test_open_doors_are_counted_only_when_every_door_was_read():
+    from flowxav.simulator import ground_values
+
+    config = {"portes": ["L:A", "L:B"]}
+    assert ground_values(config, {"L:A": 0.0, "L:B": 100.0}) == {"FLOWXAV_PORTES_OUVERTES": 1}
+    assert ground_values(config, {"L:A": 0.0, "L:B": 1.0}) == {"FLOWXAV_PORTES_OUVERTES": 0}
+    assert ground_values(config, {"L:A": 0.0}) == {}              # porte non lue : jamais « fermée » par défaut

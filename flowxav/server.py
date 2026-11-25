@@ -7,14 +7,16 @@ cookie de session dédié, et ni identifiant SimBrief ni remise à zéro de l'av
 
 from __future__ import annotations
 
+import hashlib
 import logging
+import re
 import secrets
 from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -31,6 +33,25 @@ HOST = "127.0.0.1"
 DEFAULT_PORT = 8790
 LAST_PORT = 8799
 STATIC = resource_path("flowxav", "web", "static")
+
+
+def versioned_index() -> str:
+    """index.html dont chaque /static/fichier porte l'empreinte de son contenu (?v=…).
+
+    Une WebView peut garder un ancien app.js en cache et le juger encore frais :
+    avec une adresse qui change à chaque modification, elle charge toujours le bon.
+    """
+    def stamp(match: re.Match) -> str:
+        path = STATIC / match.group(2)
+        try:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+        except OSError:
+            return match.group(0)
+        return f'{match.group(1)}/static/{match.group(2)}?v={digest}"'
+    html = (STATIC / "index.html").read_text(encoding="utf-8")
+    return re.sub(r'((?:src|href)=")/static/([A-Za-z0-9_.-]+)"', stamp, html)
+
+
 SESSION_COOKIE = "flowxav_session"
 REMOTE_COOKIE = "flowxav_ecran"
 SAFE_HOSTS = {"127.0.0.1", "localhost"}
@@ -323,8 +344,8 @@ def create_app(simulator: Simulator | None = None, guide: Guide | None = None, r
             return response
 
     @app.get("/")
-    def index() -> FileResponse:
-        response = FileResponse(STATIC / "index.html")
+    def index() -> HTMLResponse:
+        response = HTMLResponse(versioned_index())
         if local:
             response.set_cookie(SESSION_COOKIE, app.state.session_token, httponly=True, samesite="strict",
                                 path="/api", max_age=86400)
