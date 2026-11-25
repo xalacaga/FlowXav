@@ -1,7 +1,7 @@
 """Projection d'un point de la vue de référence dans la vue actuelle de la caméra.
 
-FlowXav ne tient pas la caméra : le pilote regarde où il veut, depuis son
-propre œil (souvent sa place, alors que les vues de référence sont relevées
+Une fois la caméra rendue, le pilote regarde où il veut, depuis son propre
+œil (souvent sa place, alors que les vues de référence sont relevées
 près de l'axe). La commande est placée dans l'espace le long du rayon (u, v)
 de la vue de référence, à `distance` mètres de son œil, puis reprojetée depuis
 l'œil actuel. Tant que l'œil ne bouge pas, la distance ne compte pas (simple

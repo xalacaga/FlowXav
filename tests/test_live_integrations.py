@@ -75,7 +75,7 @@ def test_live_msfs_disconnect_then_reconnect():
 @pytest.mark.skipif(not enabled("FLOWXAV_TEST_CAMERA_OVERLAY"),
                     reason="test visuel : activer FLOWXAV_TEST_CAMERA_OVERLAY=1")
 def test_live_camera_overlay_lifecycle():
-    """Suit la vue actuelle (sans la prendre) et affiche un anneau central deux secondes, puis libère tout."""
+    """Cadre la vue actuelle et affiche un anneau central deux secondes, puis libère tout."""
     from flowxav.overlay import Overlay
     from flowxav.sim.camera import CameraDirector
 

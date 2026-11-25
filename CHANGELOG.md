@@ -4,8 +4,8 @@
 
 ### Added
 
-- Step-by-step cockpit guidance: an orange ring blinks on the control over Microsoft Flight Simulator, and the step validates itself when the aircraft reaches the expected state.
-- The camera always stays yours: FlowXav never takes the MSFS view, even while it shows a control. Look around and zoom with your usual MSFS controls (mouse, keys, TrackIR, custom views); the ring follows the control from wherever you look, and an arrow at the screen edge points to it when it is out of view.
+- Step-by-step cockpit guidance: the camera shows the control, an orange ring blinks on it over Microsoft Flight Simulator, and the step validates itself when the aircraft reaches the expected state.
+- The camera is yours as soon as you move: FlowXav first places the view facing the panel, then gives the camera back to MSFS the moment you press the right or middle mouse button or turn the wheel over MSFS. You then look around and zoom with your usual MSFS controls; the ring follows the control from wherever you look, and an arrow at the screen edge points to it when it is out of view.
 - "Show me": search any mapped control and FlowXav shows it for a few seconds.
 - Automatic connection to MSFS 2024 and aircraft recognition from its title.
 - PMDG 737-900 profile: 409 controls mapped across seven views (overhead, aft overhead, centre panel, pedestal, aft pedestal, left CDU close-up), with state read through the PMDG SDK.

@@ -5,8 +5,8 @@ clics (WS_EX_LAYERED | WS_EX_TRANSPARENT) et ne prend jamais le focus. Elle
 couvre la zone client de MSFS et tourne dans son propre fil : les appels
 publics sont sûrs depuis n'importe quel fil.
 
-FlowXav ne prend jamais la caméra : l'utilisateur regarde librement et
-l'anneau est recalculé à chaque image depuis la vue réelle de MSFS. Hors
+FlowXav cadre d'abord la commande puis rend la caméra dès que l'utilisateur
+regarde ailleurs : l'anneau est recalculé à chaque image depuis la vue réelle. Hors
 champ, une flèche au bord de l'écran indique de quel côté regarder.
 
 Limites connues : plein écran fenêtré ou fenêtré uniquement (pas de plein

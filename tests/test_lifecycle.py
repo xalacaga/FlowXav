@@ -25,35 +25,63 @@ def eventually(predicate, timeout: float = 1.0) -> None:
     assert predicate()
 
 
-class FakeCameraClient:
-    """Seule la lecture existe : toute tentative de prendre la caméra ferait échouer le test."""
-
+class FakeLookInput:
     def __init__(self):
+        self.on_look = None
         self.closed = False
-        self.reads = 0
-        self.pose = Pose((-0.5, 1.5, 15.0), 10, 20, 0, 0.9)
 
-    def camera_get(self, timeout_s=3.0):
-        self.reads += 1
-        return self.pose
+    def start(self):
+        pass
 
     def close(self):
         self.closed = True
 
 
-def test_camera_only_follows_the_view_and_never_takes_it():
-    client = FakeCameraClient()
-    camera = CameraDirector(client_factory=lambda: client)
-    assert camera.current_pose() is None
-    camera.show(Pose((0, 0, 0), 0, 0, 0, 0.8))
-    eventually(lambda: camera.current_pose() == client.pose)
+class FakeCameraClient:
+    def __init__(self):
+        self.acquired = self.released = self.closed = False
+        self.set_count = self.reads = 0
+        self.pose = Pose((-0.5, 1.5, 15.0), 10, 20, 0, 0.9)
+
+    def camera_acquire(self):
+        self.acquired, self.released = True, False
+
+    def camera_set(self, _pose):
+        self.set_count += 1
+
+    def camera_release(self):
+        self.released = True
+
+    def camera_get(self, timeout_s=3.0):
+        self.reads += 1
+        return self.pose
+
+    def messages(self):
+        return iter(())
+
+    def close(self):
+        self.closed = True
+
+
+def test_camera_frames_first_then_gives_the_view_back_when_the_user_looks():
+    client, look = FakeCameraClient(), FakeLookInput()
+    camera = CameraDirector(client_factory=lambda: client, look_input=look)
+    reference = Pose((0, 0, 0), 0, 0, 0, 0.8)
+    camera.show(reference)
+    eventually(lambda: client.acquired and client.set_count > 0)
+    assert camera.current_pose() == reference                   # cadré face au panneau
+    look.on_look()                                              # clic droit / molette au-dessus de MSFS
+    eventually(lambda: client.released and camera.current_pose() == client.pose)
+    sets = client.set_count
+    time.sleep(0.1)
+    assert client.set_count == sets                             # la vue n'est plus imposée
+    camera.show(reference)                                      # commande suivante : on recadre
+    eventually(lambda: not client.released and client.set_count > sets)
     camera.release()
+    eventually(lambda: client.released)
     assert camera.current_pose() is None
-    reads = client.reads
-    time.sleep(0.15)
-    assert client.reads <= reads + 1                            # plus de lecture une fois libéré
     camera.close()
-    assert client.closed
+    assert client.closed and look.closed
     assert camera._thread is not None and not camera._thread.is_alive()
 
 
