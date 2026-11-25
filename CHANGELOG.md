@@ -4,8 +4,8 @@
 
 ### Added
 
-- Step-by-step cockpit guidance: the camera shows the control, an orange ring blinks on it over Microsoft Flight Simulator, and the step validates itself when the aircraft reaches the expected state.
-- Free look while a control is shown: hold the right mouse button and drag to look around, right button + wheel to zoom; the ring stays on the control, and an arrow at the screen edge points to it when it is out of view.
+- Step-by-step cockpit guidance: an orange ring blinks on the control over Microsoft Flight Simulator, and the step validates itself when the aircraft reaches the expected state.
+- The camera always stays yours: FlowXav never takes the MSFS view, even while it shows a control. Look around and zoom with your usual MSFS controls (mouse, keys, TrackIR, custom views); the ring follows the control from wherever you look, and an arrow at the screen edge points to it when it is out of view.
 - "Show me": search any mapped control and FlowXav shows it for a few seconds.
 - Automatic connection to MSFS 2024 and aircraft recognition from its title.
 - PMDG 737-900 profile: 409 controls mapped across seven views (overhead, aft overhead, centre panel, pedestal, aft pedestal, left CDU close-up), with state read through the PMDG SDK.
@@ -21,7 +21,6 @@
 - Modern on-screen marker: a thin ring with a centre dot and a fading sonar wave, a small dark label pill in a lighter font, and a thin chevron at the screen edge when the control is out of view.
 - "Done" only validates manual steps; steps checked against the aircraft wait for its real state ("Next" still skips on purpose).
 - Ground power option: phase 1 comes in two variants, on APU or on ground power (GPU); "Reset to Cold & Dark + GPU" loads the PMDG COLDDARKGPU state; procedure 4 starts the APU before the engines and has the GPU disconnected before taxi, both skipped by themselves when already done.
-- View zoom from FlowXav: − / + / Recenter buttons on the step card, + − 0 keys, and Ctrl + wheel over MSFS (right-drag still looks around).
 - The ring follows the CDU screen: a step can target a text on the screen (LOAD, the SimBrief runway or SID) and the ring moves to the key facing it. New FMC step: LOAD the uplinked SimBrief route.
 - The on-screen label sits beside the ring and fades after 4 seconds, so it never hides neighbouring controls.
 - Your flight values on the steps: the SimBrief plan (cruise level, cost index, runway, SID, reserves, QNH from the METAR, destination elevation) and live FMC data (V2, takeoff flaps) are shown on each step; MCP speed and heading, FLT ALT and LAND ALT validate themselves when set to your flight's value.

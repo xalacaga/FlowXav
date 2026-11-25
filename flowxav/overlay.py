@@ -5,8 +5,8 @@ clics (WS_EX_LAYERED | WS_EX_TRANSPARENT) et ne prend jamais le focus. Elle
 couvre la zone client de MSFS et tourne dans son propre fil : les appels
 publics sont sûrs depuis n'importe quel fil.
 
-Si l'utilisateur tourne la vue ou zoome (regard libre), l'anneau est recalculé
-à chaque image depuis la direction de la commande : il reste dessus. Hors
+FlowXav ne prend jamais la caméra : l'utilisateur regarde librement et
+l'anneau est recalculé à chaque image depuis la vue réelle de MSFS. Hors
 champ, une flèche au bord de l'écran indique de quel côté regarder.
 
 Limites connues : plein écran fenêtré ou fenêtré uniquement (pas de plein
@@ -24,7 +24,7 @@ import time
 from dataclasses import dataclass
 from typing import Callable
 
-from flowxav.sim.projection import direction, project
+from flowxav.sim.projection import DEFAULT_DISTANCE_M, anchor, project, toward
 from flowxav.sim.simconnect import Pose
 from flowxav.sim.window import msfs_client_rect
 
@@ -63,20 +63,21 @@ class Target:
     done: bool = False
     reference: Pose | None = None                       # vue où (u, v) a été relevé
     current: Callable[[], Pose | None] | None = None    # vue affichée maintenant
-    vector: tuple[float, float, float] | None = None
+    distance: float = DEFAULT_DISTANCE_M                # œil de référence → commande, en mètres
+    point: tuple[float, float, float] | None = None
     shown_at: float = 0.0
     done_at: float = 0.0
 
-    def screen(self, aspect: float) -> tuple[float, float, bool]:
-        """Position actuelle de la commande à l'écran (u, v, visible)."""
+    def screen(self, aspect: float) -> tuple[float, float, bool] | None:
+        """Position actuelle de la commande à l'écran (u, v, visible), None tant que la vue est inconnue."""
         if self.reference is None or self.current is None:
             return self.u, self.v, True
         pose = self.current()
         if pose is None:
-            return self.u, self.v, True
-        if self.vector is None:
-            self.vector = direction(self.reference, self.u, self.v, aspect)
-        return project(pose, self.vector, aspect)
+            return None
+        if self.point is None:
+            self.point = anchor(self.reference, self.u, self.v, aspect, self.distance)
+        return project(pose, toward(pose, self.point), aspect)
 
 
 class Overlay:
@@ -87,9 +88,9 @@ class Overlay:
 
     # -------------------------------------------------------------- API publique (tout fil)
     def show(self, u: float, v: float, label: str, reference: Pose | None = None,
-             current: Callable[[], Pose | None] | None = None) -> None:
+             current: Callable[[], Pose | None] | None = None, distance: float = DEFAULT_DISTANCE_M) -> None:
         self._ensure_started()
-        self._commands.put(("show", Target(u, v, label, reference=reference, current=current)))
+        self._commands.put(("show", Target(u, v, label, reference=reference, current=current, distance=distance)))
 
     def mark_done(self) -> None:
         self._commands.put(("done", None))
@@ -176,7 +177,15 @@ class Overlay:
                 if area:
                     colour = DONE if target.done else WAITING
                     text = target.label + ("  ✓" if target.done else "")
-                    u, v, visible = target.screen(area[2] / area[3])
+                    position = target.screen(area[2] / area[3])
+                    if position is None:
+                        # Vue de MSFS pas encore lue : rien plutôt qu'un anneau au mauvais endroit.
+                        for item in (ring, ping, dot):
+                            canvas.coords(item, 0, 0, 0, 0)
+                        canvas.coords(arrow, 0, 0, 0, 0, 0, 0)
+                        root.after(33, tick)
+                        return
+                    u, v, visible = position
                     cx, cy = u * area[2], v * area[3]
                     hide = (0, 0, 0, 0)
 

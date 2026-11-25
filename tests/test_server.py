@@ -55,9 +55,9 @@ def test_local_api_rejects_csrf_rebinding_and_invalid_payloads():
         assert client.get("/api/status", headers={"Host": "flowxav.attacker.example"}).status_code == 400
         client.get("/")
         assert client.post("/api/guide/arreter", headers={"Origin": "https://attacker.example"}).status_code == 403
-        assert client.post("/api/camera/zoom", content='{"pas":NaN}',
+        assert client.post("/api/guide/auto", content='{"actif":NaN}',
                            headers={"Content-Type": "application/json"}).status_code == 422
-        assert client.post("/api/camera/zoom", json={"pas": 1, "inattendu": True}).status_code == 422
-        assert client.post("/api/camera/zoom", content=b" " * (64 * 1024 + 1),
+        assert client.post("/api/guide/auto", json={"actif": True, "inattendu": True}).status_code == 422
+        assert client.post("/api/guide/auto", content=b" " * (64 * 1024 + 1),
                            headers={"Content-Type": "application/json"}).status_code == 413
         assert client.post("/api/guide/arreter", headers={"Origin": "http://127.0.0.1"}).status_code == 200

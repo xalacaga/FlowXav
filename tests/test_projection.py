@@ -1,11 +1,11 @@
-"""Anneau qui suit la commande quand l'utilisateur tourne la vue ou zoome."""
+"""Anneau qui suit la commande pendant que l'utilisateur regarde librement dans MSFS."""
 
 from dataclasses import replace
 
 import pytest
 
-from flowxav.sim.freelook import FreeLook
-from flowxav.sim.projection import direction, project
+from flowxav.overlay import Target
+from flowxav.sim.projection import anchor, direction, project, toward
 from flowxav.sim.simconnect import Pose
 
 ASPECT = 1920 / 1080
@@ -44,15 +44,19 @@ def test_off_screen_and_behind_are_pinned_to_the_right_edge():
     assert not visible
 
 
-def test_freelook_drag_and_zoom():
-    look = FreeLook()
-    look.reset(0.9)
-    look.drag(100, -50, 1080)
-    offsets = look.offsets()
-    assert offsets.heading > 0 and offsets.pitch < 0          # main à droite et vers le haut
-    look.wheel(3)
-    assert look.offsets().zoom < 1                              # molette avant : zoom
-    look.wheel(-100)
-    assert 0.9 * look.offsets().zoom <= 1.6                     # champ de vision borné
-    look.reset(0.9)
-    assert look.offsets().heading == 0 and look.offsets().zoom == 1
+def test_point_seen_from_another_eye():
+    """Vue relevée près de l'axe, pilote assis à gauche : la commande reste au même endroit de l'espace."""
+    point = anchor(REF, 0.5, 0.5, ASPECT, distance=0.7)
+    assert project(REF, toward(REF, point), ASPECT)[:2] == pytest.approx((0.5, 0.5), abs=1e-9)
+    seat = replace(REF, position=(REF.position[0] - 0.5, *REF.position[1:]))
+    u, v, visible = project(seat, toward(seat, point), ASPECT)
+    assert visible and u > 0.5 and v == pytest.approx(0.5, abs=0.05)   # depuis la gauche, elle est à droite
+
+
+def test_ring_waits_for_the_real_view():
+    pose = {"value": None}
+    target = Target(0.4, 0.6, "BAT", reference=REF, current=lambda: pose["value"])
+    assert target.screen(ASPECT) is None                        # vue pas encore lue : pas d'anneau au hasard
+    pose["value"] = REF
+    u, v, visible = target.screen(ASPECT)
+    assert visible and (u, v) == pytest.approx((0.4, 0.6), abs=1e-9)

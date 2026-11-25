@@ -483,10 +483,7 @@ function onKey(event) {
     event.preventDefault();
     if (!$("enchainer").hidden) chainNext();
     else if (!$("fait").disabled) api("/api/guide/fait", {});
-  } else if (event.key === "+" || event.key === "=") api("/api/camera/zoom", { pas: 2 });
-  else if (event.key === "-") api("/api/camera/zoom", { pas: -2 });
-  else if ((event.key === "f" || event.key === "F") && !$("faire").hidden && !$("faire").disabled) doStep();
-  else if (event.key === "0") api("/api/camera/recentrer", {});
+  } else if ((event.key === "f" || event.key === "F") && !$("faire").hidden && !$("faire").disabled) doStep();
   else if (event.key === "ArrowRight" && !$("suivante").disabled) api("/api/guide/suivante", {});
   else if (event.key === "ArrowLeft" && !$("precedente").disabled) api("/api/guide/precedente", {});
 }
@@ -602,9 +599,6 @@ async function init() {
   $("enchainer").addEventListener("click", chainNext);
   $("faire").addEventListener("click", doStep);
   $("auto").addEventListener("change", (event) => api("/api/guide/auto", { actif: event.target.checked }));
-  $("zoom-plus").addEventListener("click", () => api("/api/camera/zoom", { pas: 2 }));
-  $("zoom-moins").addEventListener("click", () => api("/api/camera/zoom", { pas: -2 }));
-  $("zoom-centre").addEventListener("click", () => api("/api/camera/recentrer", {}));
 
   $("ouvrir-palette").addEventListener("click", openPalette);
   $("palette").addEventListener("click", (event) => { if (event.target === $("palette")) closePalette(); });

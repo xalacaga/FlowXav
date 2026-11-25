@@ -156,10 +156,6 @@ select.compact {
 /* ------------------------------------------------------------------ étape en cours */
 .step-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin: 0 4px 10px; }
 .head-tools { display: flex; align-items: center; gap: 10px; }
-.zoom { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface-2); }
-.icon-btn { background: none; border: 0; padding: 6px 12px; font-size: 14px; color: var(--muted); min-width: 34px; }
-.icon-btn:hover { color: var(--text); background: rgba(255, 255, 255, .05); }
-.icon-btn + .icon-btn { border-left: 1px solid var(--line); }
 #zoom-moins, #zoom-plus { font-size: 17px; font-weight: 600; }
 .step-phase { font-size: 15px; color: var(--muted); margin-top: 2px; }
 .segments { display: flex; gap: 3px; margin: 0 2px 14px; }

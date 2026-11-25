@@ -60,10 +60,6 @@ class AutoRequest(StrictRequest):
     actif: bool
 
 
-class ZoomRequest(StrictRequest):
-    pas: float = Field(ge=-5.0, le=5.0, allow_inf_nan=False)
-
-
 class ProfileRequest(StrictRequest):
     profil: str = Field(min_length=1, max_length=80)
     etat: str | None = Field(default=None, max_length=80)
@@ -220,20 +216,6 @@ def create_app(simulator: Simulator | None = None, guide: Guide | None = None, r
     def stop() -> dict[str, Any]:
         guide.stop()
         return guide.status()
-
-    @app.post("/api/camera/zoom")
-    def camera_zoom(request: ZoomRequest) -> dict[str, Any]:
-        zoom = getattr(guide.camera, "zoom", None)
-        if callable(zoom):
-            zoom(request.pas)
-        return {"ok": True}
-
-    @app.post("/api/camera/recentrer")
-    def camera_recenter() -> dict[str, Any]:
-        recenter = getattr(guide.camera, "recenter", None)
-        if callable(recenter):
-            recenter()
-        return {"ok": True}
 
     @app.post("/api/montrer")
     def preview(request: PreviewRequest) -> dict[str, Any]:

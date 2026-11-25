@@ -26,7 +26,7 @@ from flowxav.simulator import Simulator, flight_phase
 LOGGER = logging.getLogger(__name__)
 HOLD_S = 0.8          # l'état attendu doit tenir ce temps (les barres électriques suivent avec retard)
 PAUSE_DONE_S = 1.5    # l'anneau reste vert avant l'étape suivante
-BRIEF_S = 3.0         # « camera »: « breve » : la vue est rendue au pilote après ce délai (phases où il pilote)
+BRIEF_S = 3.0         # « camera »: « breve » : l'anneau s'efface après ce délai (phases où il pilote)
 TICK_S = 0.2
 
 
@@ -251,7 +251,7 @@ class Session:
     pinned: int = -1          # étape choisie avec Précédente/Suivante : jamais sautée d'office
     wait_started: float | None = None   # début constaté de l'attente de l'étape (compte à rebours)
     shown_control: str | None = None    # commande où l'anneau est posé (peut suivre l'écran du CDU)
-    camera_until: float | None = None   # caméra brève : instant où la vue est rendue au pilote
+    camera_until: float | None = None   # caméra brève : instant où l'anneau s'efface
     action: str = ""                    # « Fais-le » : "", "en_cours", "fait", "echec"
     auto_done_index: int = -1           # mode automatique : étape déjà lancée (pas deux fois)
 
@@ -395,7 +395,7 @@ class Guide:
         self.overlay.show(control.u, control.v, control.label, view, self._current_pose)
 
     def _current_pose(self):
-        """Vue réellement affichée (regard libre compris), pour garder l'anneau sur la commande."""
+        """Vue réellement affichée par MSFS, pour garder l'anneau sur la commande."""
         current = getattr(self.camera, "current_pose", None)
         return current() if callable(current) else None
 

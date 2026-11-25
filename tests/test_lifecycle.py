@@ -25,53 +25,35 @@ def eventually(predicate, timeout: float = 1.0) -> None:
     assert predicate()
 
 
-class FakeFreeLook:
+class FakeCameraClient:
+    """Seule la lecture existe : toute tentative de prendre la caméra ferait échouer le test."""
+
     def __init__(self):
         self.closed = False
+        self.reads = 0
+        self.pose = Pose((-0.5, 1.5, 15.0), 10, 20, 0, 0.9)
 
-    def reset(self, _fov):
-        pass
-
-    def start(self):
-        pass
-
-    def offsets(self):
-        return SimpleNamespace(pitch=0.0, heading=0.0, zoom=1.0)
+    def camera_get(self, timeout_s=3.0):
+        self.reads += 1
+        return self.pose
 
     def close(self):
         self.closed = True
 
 
-class FakeCameraClient:
-    def __init__(self):
-        self.acquired = self.released = self.closed = False
-        self.set_count = 0
-
-    def camera_acquire(self):
-        self.acquired = True
-
-    def camera_set(self, _pose):
-        self.set_count += 1
-
-    def camera_release(self):
-        self.released = True
-
-    def messages(self):
-        return iter(())
-
-    def close(self):
-        self.closed = True
-
-
-def test_camera_acquires_releases_and_closes_every_dependency():
-    client, look = FakeCameraClient(), FakeFreeLook()
-    camera = CameraDirector(client_factory=lambda: client, freelook=look)
+def test_camera_only_follows_the_view_and_never_takes_it():
+    client = FakeCameraClient()
+    camera = CameraDirector(client_factory=lambda: client)
+    assert camera.current_pose() is None
     camera.show(Pose((0, 0, 0), 0, 0, 0, 0.8))
-    eventually(lambda: client.acquired and client.set_count > 0)
+    eventually(lambda: camera.current_pose() == client.pose)
     camera.release()
-    eventually(lambda: client.released)
+    assert camera.current_pose() is None
+    reads = client.reads
+    time.sleep(0.15)
+    assert client.reads <= reads + 1                            # plus de lecture une fois libéré
     camera.close()
-    assert client.closed and look.closed
+    assert client.closed
     assert camera._thread is not None and not camera._thread.is_alive()
 
 
