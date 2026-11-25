@@ -125,7 +125,11 @@
           </label>
         </div>
         <button class="btn btn-soft full" id="sb-importer" type="button" data-i18n="sb_import"></button>
-        <p class="note" id="sb-statut" hidden></p>
+        <div class="import-status" id="sb-statut" role="status" aria-atomic="true">
+          <p class="import-status-title" id="sb-statut-titre"></p>
+          <p class="small" id="sb-statut-detail" hidden></p>
+          <p class="small muted" id="sb-dernier-import" hidden></p>
+        </div>
         <div class="flight" id="sb-vol" hidden>
           <div class="route-line">
             <div><strong id="sb-orig"></strong><span id="sb-rwy-dep"></span></div>

@@ -5,7 +5,8 @@ autour : FlowXav le fait à sa place, autour du MÊME œil, sans saut de vue,
 pour que l'anneau reste exactement sur la commande (simple rotation).
 
 - clic droit maintenu + glisser : tourner la tête ;
-- molette : zoomer / dézoomer ;
+- clic droit maintenu + molette, ou Ctrl + molette : zoomer / dézoomer, en
+  douceur (la molette seule reste à MSFS : elle tourne les boutons) ;
 - clic milieu : rendre la caméra à MSFS (`on_release`) — MSFS revient alors
   à sa propre vue pilote, et l'anneau suit la vue réelle.
 
@@ -16,8 +17,10 @@ souris n'agit que si le pointeur est dans la zone client de MSFS.
 from __future__ import annotations
 
 import logging
+import math
 import sys
 import threading
+import time
 from dataclasses import dataclass
 from typing import Callable
 
@@ -25,6 +28,9 @@ from flowxav.sim.window import msfs_client_rect
 
 LOGGER = logging.getLogger(__name__)
 WM_MOUSEMOVE, WM_RBUTTONDOWN, WM_RBUTTONUP, WM_MBUTTONDOWN, WM_MOUSEWHEEL = 0x0200, 0x0204, 0x0205, 0x0207, 0x020A
+VK_CONTROL = 0x11
+ZOOM_STEP = 0.92        # par cran de molette
+ZOOM_TAU_S = 0.12       # le zoom rejoint la cible en douceur (constante de temps)
 PITCH_LIMIT = 85.0
 FOV_MIN, FOV_MAX = 0.25, 1.6
 
@@ -47,6 +53,7 @@ class FreeLook:
         self._thread: threading.Thread | None = None
         self._thread_id: int | None = None
         self._ready = threading.Event()
+        self._zoom_shown, self._zoom_time = 1.0, time.monotonic()
         self.active = False                          # True seulement pendant que FlowXav tient la vue
         self.on_release: Callable[[], None] | None = None
 
@@ -55,10 +62,16 @@ class FreeLook:
         with self._lock:
             self._offsets = Offsets()
             self._fov = fov
+            self._zoom_shown, self._zoom_time = 1.0, time.monotonic()
 
     def offsets(self) -> Offsets:
+        """Décalages à appliquer maintenant : le zoom glisse vers la cible au lieu de sauter d'un cran."""
         with self._lock:
-            return Offsets(self._offsets.pitch, self._offsets.heading, self._offsets.zoom)
+            now = time.monotonic()
+            ease = 1.0 - math.exp(-max(now - self._zoom_time, 0.0) / ZOOM_TAU_S)
+            self._zoom_shown += (self._offsets.zoom - self._zoom_shown) * ease
+            self._zoom_time = now
+            return Offsets(self._offsets.pitch, self._offsets.heading, self._zoom_shown)
 
     # -------------------------------------------------------------- mouvements (testables sans crochet)
     def drag(self, dx: int, dy: int, height: int) -> None:
@@ -69,9 +82,9 @@ class FreeLook:
             self._offsets.pitch = max(-PITCH_LIMIT, min(PITCH_LIMIT, self._offsets.pitch + dy * degrees_per_px))
 
     def wheel(self, notches: float) -> None:
-        """Molette bouton droit enfoncé : vers l'avant on zoome."""
+        """Clic droit + molette ou Ctrl + molette : vers l'avant on zoome (cible, atteinte en douceur)."""
         with self._lock:
-            zoom = self._offsets.zoom * (0.9 ** notches)
+            zoom = self._offsets.zoom * (ZOOM_STEP ** notches)
             self._offsets.zoom = max(FOV_MIN / self._fov, min(FOV_MAX / self._fov, zoom))
 
     # -------------------------------------------------------------- crochet Windows
@@ -133,7 +146,8 @@ class FreeLook:
                     elif wparam == WM_MOUSEMOVE and self._dragging and self._last:
                         self.drag(x - self._last[0], y - self._last[1], self._area[3] if self._area else 1080)
                         self._last = (x, y)
-                    elif wparam == WM_MOUSEWHEEL and inside(x, y):
+                    elif wparam == WM_MOUSEWHEEL and inside(x, y) and (
+                            self._dragging or user32.GetAsyncKeyState(VK_CONTROL) & 0x8000):
                         self.wheel(ct.c_short(info.mouseData >> 16).value / 120)
                     elif wparam == WM_MBUTTONDOWN and inside(x, y) and self.on_release:
                         self.on_release()

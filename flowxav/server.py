@@ -288,7 +288,7 @@ def create_app(simulator: Simulator | None = None, guide: Guide | None = None, r
 
     @app.post("/api/simbrief/importer")
     def simbrief_import(request: SimbriefRequest) -> dict[str, Any]:
-        """Sur clic de l'utilisateur seulement : jamais d'interrogation automatique de SimBrief."""
+        """Clic sur « Importer », ou import automatique de l'interface (ouverture, puis toutes les 10 min au parking)."""
         if not local:
             raise HTTPException(403, detail={"code": "reserve_au_pc"})   # second écran : pas sur un appareil distant
         profile = profile_or_404(request.profil)

@@ -1,9 +1,17 @@
-"""Caméra : FlowXav place la vue face au panneau, l'utilisateur regarde autour sans saut.
+"""Caméra : par défaut FlowXav ne prend JAMAIS la vue ; le cadrage est une option.
+
+Par défaut (frame=False), le pilote reste maître de sa vue (souris, vues
+personnalisées 1 à 0, TrackIR…) : FlowXav LIT seulement la vue réelle
+(CameraGet) pour que l'anneau suive la commande ; hors champ, une flèche au
+bord de l'écran indique où regarder.
+
+Option de cadrage (frame=True, réglage « camera.cadrage ») :
 
 1. Cadrage : à chaque commande montrée, FlowXav prend la caméra et place la
    vue de référence, l'anneau sur la commande (CameraSet renvoyé en continu,
-   ~30 Hz, sinon MSFS reprend la vue). Clic droit glissé et molette font
-   tourner et zoomer la vue autour du même œil (voir freelook) : pas de saut,
+   ~60 Hz, sinon MSFS reprend la vue). Clic droit glissé fait tourner la vue,
+   clic droit + molette (ou Ctrl + molette) zoome, autour du même œil (voir
+   freelook) : pas de saut,
    l'anneau reste exactement sur la commande.
 2. Clic milieu : la caméra est rendue à MSFS (qui revient à sa vue pilote) ;
    FlowXav ne fait plus que LIRE la vue réelle (CameraGet) pour que l'anneau
@@ -22,14 +30,15 @@ from flowxav.sim.freelook import FreeLook
 from flowxav.sim.simconnect import Pose, SimConnectClient, SimConnectError
 
 LOGGER = logging.getLogger(__name__)
-RATE_S = 0.033
+RATE_S = 0.016          # ~60 Hz : la vue suit la main sans à-coups
 READ_TIMEOUT_S = 0.5
 
 
 class CameraDirector:
     def __init__(self, client_factory: Callable[[], SimConnectClient] = lambda: SimConnectClient("FlowXav camera"),
-                 freelook: FreeLook | None = None):
+                 freelook: FreeLook | None = None, frame: bool = False):
         self._client_factory = client_factory
+        self.frame = frame                       # True : placer la vue face au panneau avant de la rendre
         self.freelook = freelook or FreeLook()
         self.freelook.on_release = self.free
         self._reference: Pose | None = None
@@ -42,12 +51,13 @@ class CameraDirector:
         self.error: str | None = None
 
     def show(self, pose: Pose) -> None:
-        """Place la vue de référence de la commande ; elle reste tenue jusqu'à ce que l'utilisateur bouge."""
+        """Commande montrée dans `pose` : suit la vue du pilote, ou la cadre d'abord si l'option est active."""
         with self._lock:
-            self._reference, self._framing, self._observed = pose, True, None
-        self.freelook.reset(pose.fov)
-        self.freelook.active = True
-        self.freelook.start()
+            self._reference, self._framing, self._observed = pose, self.frame, None
+        if self.frame:
+            self.freelook.reset(pose.fov)
+            self.freelook.active = True
+            self.freelook.start()
         self._ensure_started()
         self._wake.set()
 

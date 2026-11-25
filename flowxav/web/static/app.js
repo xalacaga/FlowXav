@@ -12,6 +12,8 @@ let lastState = null;
 let journeyKey = "";
 let paletteIndex = 0;
 let lastSuggestion;
+let simbriefAttempt = null;
+let simbriefFlight = savedFlight();
 
 // ------------------------------------------------------------------ outils
 function stored(key) { try { return localStorage.getItem(key); } catch { return null; } }
@@ -76,7 +78,7 @@ function translate() {
   document.querySelectorAll("[data-i18n-title]").forEach((node) => { node.title = t(node.dataset.i18nTitle); });
   journeyKey = "";
   renderResetButtons();
-  renderSimbrief(savedFlight());
+  renderSimbrief(simbriefFlight);
   if (lastState) render(lastState);
 }
 
@@ -404,6 +406,7 @@ function savedFlight() {
   try { return JSON.parse(stored(STORE_SIMBRIEF) || "null"); } catch { return null; }
 }
 function renderSimbrief(flight, forceInput = false) {
+  renderSimbriefStatus(flight);
   const hasId = Boolean($("sb-identifiant").value.trim());
   $("sb-vol").hidden = !flight;
   $("sb-saisie").hidden = Boolean(flight && hasId && !forceInput);
@@ -429,6 +432,33 @@ function renderSimbrief(flight, forceInput = false) {
   }));
   $("sb-route").textContent = flight.route || "";
 }
+function renderSimbriefStatus(flight) {
+  const importedAt = flight?.importedAt;
+  const dated = Number.isFinite(importedAt) && importedAt > 0 && Number.isFinite(new Date(importedAt).getTime());
+  const state = simbriefAttempt?.state || (dated ? "ok" : "");
+  const panel = $("sb-statut");
+  panel.className = `import-status ${state}`;
+  // Une fois l'import réussi, le cadre disparaît : seul le vol reste affiché. Il ne sert que
+  // pendant un import ou pour expliquer un échec.
+  panel.hidden = state !== "busy" && state !== "error";
+  $("sb-statut-titre").textContent = t(state ? `sb_status_${state}` : flight ? "sb_status_cached" : "sb_status_idle");
+
+  let detail = "";
+  if (state === "error") {
+    detail = errorText("sb", simbriefAttempt.error, simbriefAttempt.status);
+  } else if (state === "ok") {
+    detail = t("sb_ok", { file: flight.fichier, fmc: flight.fmc || "" });
+    if (flight.vents) detail += " " + t("sb_wind", { file: flight.vents });
+  }
+  $("sb-statut-detail").textContent = detail;
+  $("sb-statut-detail").hidden = !detail;
+
+  const history = $("sb-dernier-import");
+  history.textContent = dated
+    ? t("sb_last_import", { date: new Intl.DateTimeFormat(lang, { dateStyle: "medium", timeStyle: "short" }).format(importedAt) })
+    : flight && state ? t("sb_status_cached") : "";
+  history.hidden = !history.textContent;
+}
 async function copy(value) {
   try { await navigator.clipboard.writeText(value); } catch {
     const area = el("textarea"); area.value = value; document.body.append(area); area.select();
@@ -437,19 +467,24 @@ async function copy(value) {
   toast(t("copied", { value }));
 }
 async function importSimbrief() {
-  note("sb-statut", t("sb_loading"), "busy");
+  if (simbriefAttempt?.state === "busy") return;
+  simbriefAttempt = { state: "busy" };
   $("sb-importer").disabled = true;
+  renderSimbriefStatus(simbriefFlight);
   try {
     const { ok, data, status } = await post("/api/simbrief/importer", { profil: $("profil").value, identifiant: $("sb-identifiant").value });
-    if (!ok) {
-      note("sb-statut", errorText("sb", data.detail || {}, status), "error");
+    if (!ok || !data?.fichier) {
+      simbriefAttempt = { state: "error", error: data?.detail || { code: "interne", detail: `HTTP ${status}` }, status };
+      renderSimbriefStatus(simbriefFlight);
       return;
     }
-    note("sb-statut", t("sb_ok", { file: data.fichier, fmc: data.fmc }) + (data.vents ? " " + t("sb_wind", { file: data.vents }) : ""), "ok");
-    store(STORE_SIMBRIEF, JSON.stringify(data));
-    renderSimbrief(data);
+    simbriefFlight = { ...data, importedAt: Date.now() };
+    store(STORE_SIMBRIEF, JSON.stringify(simbriefFlight));
+    simbriefAttempt = null;
+    renderSimbrief(simbriefFlight);
   } catch {
-    note("sb-statut", t("sb_err_reseau"), "error");
+    simbriefAttempt = { state: "error", error: { code: "connexion_flowxav" } };
+    renderSimbriefStatus(simbriefFlight);
   } finally {
     $("sb-importer").disabled = false;
   }
@@ -607,7 +642,7 @@ async function init() {
   $("dp-check").addEventListener("click", () => departAction("/api/depart/verifier", "dp_checking"));
   $("sb-importer").addEventListener("click", importSimbrief);
   $("sb-identifiant").addEventListener("keydown", (event) => { if (event.key === "Enter") importSimbrief(); });
-  $("sb-modifier").addEventListener("click", () => { renderSimbrief(savedFlight(), true); $("sb-identifiant").focus(); });
+  $("sb-modifier").addEventListener("click", () => { renderSimbrief(simbriefFlight, true); $("sb-identifiant").focus(); });
 
   document.addEventListener("keydown", onKey);
   $("appairage-form").addEventListener("submit", pair);
@@ -619,6 +654,20 @@ async function init() {
   refreshScreen();
   setInterval(refreshScreen, 3000);
   poll();
+  autoImportSimbrief();
+  setInterval(autoImportSimbrief, SIMBRIEF_RECHECK_MS);
+}
+
+// Import SimBrief automatique : à l'ouverture, puis toutes les 10 minutes tant que l'avion est au parking
+// et qu'aucun guidage n'est en cours (un nouveau plan généré sur simbrief.com arrive sans clic).
+const SIMBRIEF_RECHECK_MS = 10 * 60 * 1000;
+let simbriefAutoDone = false;
+function autoImportSimbrief() {
+  if (!$("sb-identifiant").value.trim() || document.body.classList.contains("distant")) return;
+  const sim = lastState?.simulateur;
+  if (simbriefAutoDone && (lastState?.guide?.actif || (sim?.phase_vol && sim.phase_vol !== "parking"))) return;
+  simbriefAutoDone = true;
+  importSimbrief();
 }
 
 init();

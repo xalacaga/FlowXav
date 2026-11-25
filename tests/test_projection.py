@@ -76,17 +76,26 @@ def test_ring_waits_for_the_real_view():
     assert visible and (u, v) == pytest.approx((0.4, 0.6), abs=1e-9)
 
 
-def test_freelook_turns_and_zooms_around_the_same_eye():
-    from flowxav.sim.freelook import FreeLook
+def test_freelook_turns_and_zooms_smoothly_around_the_same_eye(monkeypatch):
+    from flowxav.sim import freelook as module
 
-    look = FreeLook()
+    clock = [100.0]
+    monkeypatch.setattr(module.time, "monotonic", lambda: clock[0])
+    look = module.FreeLook()
     look.reset(0.9)
     look.drag(100, -50, 1080)
     offsets = look.offsets()
     assert offsets.heading > 0 and offsets.pitch < 0          # main à droite et vers le haut
-    look.wheel(3)
-    assert look.offsets().zoom < 1                              # molette avant : zoom
+    look.wheel(3)                                               # trois crans vers l'avant : zoom
+    first = look.offsets().zoom
+    assert first == 1.0                                         # pas de saut au cran…
+    clock[0] += 0.05
+    middle = look.offsets().zoom
+    clock[0] += 1.0
+    final = look.offsets().zoom
+    assert 1.0 > middle > final == pytest.approx(module.ZOOM_STEP ** 3, rel=1e-3)   # … mais un glissement
     look.wheel(-100)
-    assert 0.9 * look.offsets().zoom <= 1.6                     # champ de vision borné
+    clock[0] += 2.0
+    assert 0.9 * look.offsets().zoom <= 1.6 + 1e-6              # champ de vision borné
     look.reset(0.9)
     assert look.offsets().heading == 0 and look.offsets().zoom == 1

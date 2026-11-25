@@ -292,3 +292,21 @@ def test_view_is_given_back_when_a_wait_starts(monkeypatch):
     simulator.values["APU_EGTNeedle"] = 150
     guide._tick()
     assert ("free", ()) in camera.calls
+
+
+def test_guidance_resumes_where_it_was_after_a_restart():
+    """FlowXav fermé puis relancé : même avion, la procédure reprend à l'étape enregistrée."""
+    first, simulator, _camera, _overlay = make_guide()
+    simulator.values["SIM ON GROUND"] = 1                       # l'avion a été lu
+    first.start(load_profile("pmdg_737_900"), "mise_sous_tension_apu")
+    first.go(4)
+    first._tick()
+    index = first.status()["index"]
+    second = Guide(simulator, camera=Recorder(), overlay=Recorder())
+    second._tick()
+    status = second.status()
+    assert status["actif"] and status["procedure"] == "mise_sous_tension_apu" and status["index"] == index
+    second.stop()                                               # « Arrêter » : plus rien à reprendre
+    third = Guide(simulator, camera=Recorder(), overlay=Recorder())
+    third._tick()
+    assert not third.status()["actif"]

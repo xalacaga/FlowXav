@@ -73,7 +73,7 @@ class FakeCameraClient:
 
 def test_camera_frames_first_then_gives_the_view_back_on_middle_click():
     client, look = FakeCameraClient(), FakeFreeLook()
-    camera = CameraDirector(client_factory=lambda: client, freelook=look)
+    camera = CameraDirector(client_factory=lambda: client, freelook=look, frame=True)
     reference = Pose((0, 0, 0), 0, 0, 0, 0.8)
     camera.show(reference)
     eventually(lambda: client.acquired and client.set_count > 0)
@@ -249,3 +249,39 @@ def test_open_doors_are_counted_only_when_every_door_was_read():
     assert ground_values(config, {"L:A": 0.0, "L:B": 100.0}) == {"FLOWXAV_PORTES_OUVERTES": 1}
     assert ground_values(config, {"L:A": 0.0, "L:B": 1.0}) == {"FLOWXAV_PORTES_OUVERTES": 0}
     assert ground_values(config, {"L:A": 0.0}) == {}              # porte non lue : jamais « fermée » par défaut
+
+
+def test_by_default_the_camera_is_never_taken():
+    """La vue reste au pilote (vues personnalisées 1 à 0…) : FlowXav lit seulement la vue réelle."""
+    client, look = FakeCameraClient(), FakeFreeLook()
+    camera = CameraDirector(client_factory=lambda: client, freelook=look)
+    camera.show(Pose((0, 0, 0), 0, 0, 0, 0.8))
+    eventually(lambda: camera.current_pose() == client.pose)
+    time.sleep(0.05)
+    assert not client.acquired and client.set_count == 0 and not look.active
+    camera.release()
+    camera.close()
+
+
+def test_flight_memory_survives_a_restart_for_the_same_aircraft():
+    first = Simulator(client_factory=lambda: None)
+    first._airborne_seen = True
+    first._remember_flight("737-900 PAX BW SC")
+    again = Simulator(client_factory=lambda: None)
+    again._restore_flight("737-900 PAX BW SC")
+    assert again._airborne_seen                                  # après l'atterrissage : pas « départ »
+    other = Simulator(client_factory=lambda: None)
+    other._restore_flight("A320neo")
+    assert not other._airborne_seen
+    again.reset_flight()                                         # état de départ rechargé : mémoire effacée
+    fresh = Simulator(client_factory=lambda: None)
+    fresh._restore_flight("737-900 PAX BW SC")
+    assert not fresh._airborne_seen
+
+
+def test_arrival_is_deduced_from_the_distance_to_destination():
+    on_ground = {"SIM ON GROUND": 1, "GROUND VELOCITY": 12}
+    assert flight_phase({**on_ground, "FMC_DistanceToDest": 4.0}) == "apres_atterrissage"
+    assert flight_phase({**on_ground, "FMC_DistanceToDest": 320.0}) == "roulage"
+    assert flight_phase({**on_ground, "FMC_DistanceToDest": 0.0}) == "roulage"      # FMC éteint : rien à déduire
+    assert flight_phase({**on_ground, "FMC_DistanceToDest": -1.0}) == "roulage"

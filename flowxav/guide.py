@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from flowxav import actions, settings
-from flowxav.aircraft import Profile
+from flowxav.aircraft import Profile, load_profile
 from flowxav.overlay import Overlay
 from flowxav.sim.camera import CameraDirector
 from flowxav.simulator import Simulator, flight_phase
@@ -28,6 +28,7 @@ HOLD_S = 0.8          # l'état attendu doit tenir ce temps (les barres électri
 PAUSE_DONE_S = 1.5    # l'anneau reste vert avant l'étape suivante
 BRIEF_S = 3.0         # « camera »: « breve » : la vue est rendue au pilote après ce délai (phases où il pilote)
 TICK_S = 0.2
+RESUME_MAX_S = 12 * 3600   # guidage interrompu (FlowXav fermé) repris pour le même avion dans ce délai
 
 
 def satisfied(expected: dict[str, Any], value: Any) -> bool:
@@ -270,7 +271,8 @@ class Session:
 class Guide:
     def __init__(self, simulator: Simulator, camera: CameraDirector | None = None, overlay: Overlay | None = None):
         self.simulator = simulator
-        self.camera = camera or CameraDirector()
+        # Par défaut la vue reste au pilote ; « camera.cadrage » = true la place d'abord face au panneau.
+        self.camera = camera or CameraDirector(frame=bool(settings.section("camera").get("cadrage", False)))
         self.overlay = overlay or Overlay()
         self._session: Session | None = None
         self._preview_until = 0.0
@@ -278,6 +280,8 @@ class Guide:
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._run, name="flowxav-guide", daemon=True)
         self.auto = False               # mode automatique : FlowXav fait lui-même les étapes faisables
+        self._resume_checked = False    # reprise du guidage enregistré : tentée une fois par lancement
+        self._saved_progress: tuple | None = None
         self.action_client_factory = None   # client SimConnect des actions (remplaçable en test)
 
     def start_thread(self) -> None:
@@ -291,6 +295,7 @@ class Guide:
             start = min(resume_index(procedure, values), len(procedure["etapes"]) - 1)
             self._session = Session(profile, procedure, language, index=start)
             self._preview_until = 0.0
+            self._resume_checked = True        # un guidage choisi remplace toute reprise automatique
         LOGGER.info("Procédure %s démarrée sur %s à l'étape %d", procedure_id, profile.id, start + 1)
 
     def confirm(self) -> None:
@@ -392,6 +397,7 @@ class Guide:
         with self._lock:
             self._session = None
             self._preview_until = 0.0
+            self._forget_progress()
         self.overlay.hide()
         self.camera.release()
 
@@ -488,9 +494,61 @@ class Guide:
                 LOGGER.exception("Guide")
             self._stop.wait(TICK_S)
 
+    # -------------------------------------------------------------- reprise après relance de FlowXav
+    def _save_progress(self, session: Session) -> None:
+        """Procédure et étape en cours, pour reprendre là si FlowXav est fermé puis relancé."""
+        key = (session.profile.id, session.procedure["id"], session.index, session.finished)
+        if key == self._saved_progress:
+            return
+        self._saved_progress = key
+        snapshot = self.simulator.snapshot()
+        try:
+            if session.finished:
+                settings.update("reprise", {"procedure": ""})
+            else:
+                settings.update("reprise", {"profil": session.profile.id, "procedure": session.procedure["id"],
+                                            "index": session.index, "langue": session.language,
+                                            "avion": snapshot.title, "horodatage": time.time()})
+        except OSError:
+            LOGGER.warning("Progression du guidage non enregistrée")
+
+    def _forget_progress(self) -> None:
+        self._saved_progress = None
+        try:
+            settings.update("reprise", {"procedure": ""})
+        except OSError:
+            LOGGER.warning("Progression du guidage non effacée")
+
+    def _resume(self) -> None:
+        """Au lancement : reprend le guidage interrompu, à l'étape la plus avancée entre celle
+        enregistrée et celle que l'état de l'avion permet de déduire."""
+        snapshot = self.simulator.snapshot()
+        if not (snapshot.connected and snapshot.profile_id and snapshot.source_ok and snapshot.values):
+            return                                          # avion pas encore lu : on réessaie au prochain tour
+        self._resume_checked = True
+        saved = settings.section("reprise")
+        age = time.time() - float(saved.get("horodatage", 0) or 0)
+        if not saved.get("procedure") or saved.get("profil") != snapshot.profile_id                 or saved.get("avion") != snapshot.title or not 0 <= age < RESUME_MAX_S:
+            return
+        try:
+            profile = load_profile(snapshot.profile_id)
+            procedure = profile.procedure(saved["procedure"])
+        except (KeyError, ValueError):
+            return
+        self.start(profile, procedure["id"], str(saved.get("langue", "fr")))
+        session = self._session
+        if session is not None:
+            saved_index = int(saved.get("index", 0))
+            session.index = max(session.index, min(saved_index, len(procedure["etapes"]) - 1))
+            LOGGER.info("Guidage repris : %s, étape %d", procedure["id"], session.index + 1)
+
     def _tick(self) -> None:
         now = time.monotonic()
         with self._lock:
+            if self._session is None and not self._resume_checked:
+                self._resume()
+            if self._session is not None:
+                self._save_progress(self._session)
             if self._session is None:
                 if self._preview_until and now >= self._preview_until:
                     self._preview_until = 0.0

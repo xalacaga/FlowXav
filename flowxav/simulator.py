@@ -12,12 +12,15 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
+from flowxav import settings
 from flowxav.aircraft import Profile, detect, load_profile
 from flowxav.sim.simconnect import SimConnectClient, SimConnectError
 
 LOGGER = logging.getLogger(__name__)
 STATE_PERIOD_S = 0.25
 TITLE_PERIOD_S = 5.0
+MEMORY_MAX_S = 12 * 3600      # mémoire du vol (décollage, descente vus) gardée entre deux lancements
+ARRIVAL_NM = 30.0             # au sol à moins de 30 NM de la destination du FMC : c'est une arrivée
 RETRY_S = 5.0
 
 
@@ -32,7 +35,9 @@ def _raw_flight_phase(values: dict[str, Any]) -> str:
     on_ground = number("SIM ON GROUND") >= 0.5
     speed = number("GROUND VELOCITY")
     if on_ground:
-        if number("FLOWXAV_AIRBORNE_SEEN"):
+        # Sans mémoire du vol (FlowXav lancé après l'atterrissage), la distance à la destination tranche.
+        arrived = 0.3 < number("FMC_DistanceToDest") < ARRIVAL_NM
+        if number("FLOWXAV_AIRBORNE_SEEN") or arrived:
             if speed > 3 or number("GENERAL ENG COMBUSTION:1") or number("GENERAL ENG COMBUSTION:2"):
                 return "apres_atterrissage"
             return "fin_vol"
@@ -127,21 +132,53 @@ class Simulator:
         self._thread = threading.Thread(target=self._run, name="flowxav-simulateur", daemon=True)
         self._airborne_seen = False
         self._descent_seen = False
+        self._memory_saved = (False, False, 0.0)
         self._phase_tracker = FlightPhaseTracker()
 
     def start(self) -> None:
         self._thread.start()
 
-    def reset_flight(self) -> None:
+    def reset_flight(self, forget: bool = True) -> None:
         """Oublie le vol précédent (décollage, descente vus) : nouvel avion ou état de départ rechargé.
 
         Sans cela, après un premier vol, un avion remis en Cold & Dark serait vu en « fin de vol »
-        et FlowXav proposerait la mauvaise procédure.
+        et FlowXav proposerait la mauvaise procédure. `forget` efface aussi la mémoire enregistrée
+        (état de départ rechargé) ; au lancement elle est gardée pour être restaurée.
         """
         self._airborne_seen = False
         self._descent_seen = False
         self._phase_tracker = FlightPhaseTracker()
+        self._memory_saved = (False, False, 0.0)
+        if forget:
+            try:
+                settings.update("vol", {"avion": "", "decollage_vu": False, "descente_vu": False})
+            except OSError:
+                LOGGER.warning("Mémoire du vol non effacée")
         LOGGER.info("Suivi de phase remis à zéro")
+
+    def _restore_flight(self, title: str) -> None:
+        """Relance de FlowXav en plein vol : reprend « décollage vu / descente vue » pour le même avion."""
+        saved = settings.section("vol")
+        age = time.time() - float(saved.get("horodatage", 0) or 0)
+        if title and saved.get("avion") == title and 0 <= age < MEMORY_MAX_S:
+            self._airborne_seen = bool(saved.get("decollage_vu"))
+            self._descent_seen = bool(saved.get("descente_vu"))
+            self._memory_saved = (self._airborne_seen, self._descent_seen, time.time())
+            if self._airborne_seen:
+                LOGGER.info("Mémoire du vol reprise (décollage vu%s)", ", descente vue" if self._descent_seen else "")
+
+    def _remember_flight(self, title: str) -> None:
+        """Enregistre la mémoire du vol quand elle change, et la rafraîchit toutes les 5 min en vol."""
+        airborne, descent, saved_at = self._memory_saved
+        now = time.time()
+        if (airborne, descent) == (self._airborne_seen, self._descent_seen) and                 not (self._airborne_seen and now - saved_at > 300):
+            return
+        self._memory_saved = (self._airborne_seen, self._descent_seen, now)
+        try:
+            settings.update("vol", {"avion": title, "decollage_vu": self._airborne_seen,
+                                    "descente_vu": self._descent_seen, "horodatage": now})
+        except OSError:
+            LOGGER.warning("Mémoire du vol non enregistrée")
 
     def close(self) -> None:
         self._stop.set()
@@ -206,7 +243,8 @@ class Simulator:
                     if (found and found.id) != (profile and profile.id) or title != self._snapshot.title:
                         if (found and found.id) != (profile and profile.id):
                             LOGGER.info("Avion reconnu : %s", found.id if found else "aucun profil")
-                        self.reset_flight()
+                        self.reset_flight(forget=False)
+                        self._restore_flight(title)
                     profile = found
                     self._update(title=title, profile_id=profile.id if profile else None)
                 if profile is None:
@@ -222,6 +260,7 @@ class Simulator:
                     if (self._airborne_seen and float(values.get("VERTICAL SPEED", 0)) < -300
                             and float(values.get("PLANE ALT ABOVE GROUND", 0)) > 2500):
                         self._descent_seen = True
+                    self._remember_flight(self._snapshot.title)
                     values["FLOWXAV_AIRBORNE_SEEN"] = self._airborne_seen
                     values["FLOWXAV_DESCENT_SEEN"] = self._descent_seen
                     phase = self._phase_tracker.update(values)
