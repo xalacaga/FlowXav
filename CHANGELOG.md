@@ -34,6 +34,10 @@
 - During approach and after landing, the camera shows the control for three seconds, then gives the view back to the pilot.
 - The flight phase memory is reset when the aircraft is reloaded or a start state is restored, so a second flight starts from parking instead of end of flight.
 
+### Fixed
+
+- The window could stay empty after an update (no journey, no connection): the interface scripts are now always revalidated instead of being reused from the WebView cache.
+
 ### Security
 
 - Hardened the local API against cross-site requests and DNS rebinding with loopback host/origin checks, a strict same-site session cookie, bounded request bodies and restrictive browser security headers.

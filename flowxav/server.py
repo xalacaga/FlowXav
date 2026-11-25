@@ -142,6 +142,9 @@ def create_app(simulator: Simulator | None = None, guide: Guide | None = None, r
             response.headers[name] = value
         if request.url.path.startswith("/api/"):
             response.headers["Cache-Control"] = "no-store"
+        elif request.url.path.startswith("/static/"):
+            # Toujours revalider (ETag) : un ancien app.js resté en cache avec un nouvel index.html casse l'interface.
+            response.headers["Cache-Control"] = "no-cache"
         return response
 
     def profile_or_404(profile_id: str):

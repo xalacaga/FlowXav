@@ -61,3 +61,10 @@ def test_local_api_rejects_csrf_rebinding_and_invalid_payloads():
         assert client.post("/api/guide/auto", content=b" " * (64 * 1024 + 1),
                            headers={"Content-Type": "application/json"}).status_code == 413
         assert client.post("/api/guide/arreter", headers={"Origin": "http://127.0.0.1"}).status_code == 200
+
+
+def test_static_files_are_always_revalidated():
+    """Un ancien app.js en cache avec un nouvel index.html casserait l'interface."""
+    with make_client() as client:
+        assert client.get("/static/app.js").headers["Cache-Control"] == "no-cache"
+        assert client.get("/").headers["Cache-Control"] == "no-store"
