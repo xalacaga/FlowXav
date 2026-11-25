@@ -16,7 +16,8 @@
     -0.634,
     -0.0
    ],
-   "fov": 1.183
+   "fov": 1.183,
+   "profondeur": 0.5
   },
   "panneau_sup_haut": {
    "position": [
@@ -29,7 +30,8 @@
     -0.634,
     -0.0
    ],
-   "fov": 1.183
+   "fov": 1.183,
+   "profondeur": 0.5
   },
   "panneau_sup_arriere": {
    "position": [
@@ -42,7 +44,8 @@
     -0.1813,
     -0.0
    ],
-   "fov": 0.9117
+   "fov": 0.9117,
+   "profondeur": 0.5
   },
   "tableau_centre": {
    "position": [
@@ -55,7 +58,8 @@
     1.863,
     0.0
    ],
-   "fov": 0.865
+   "fov": 0.865,
+   "profondeur": 0.54
   },
   "pylone": {
    "position": [
@@ -68,7 +72,8 @@
     -0.4126,
     -0.0
    ],
-   "fov": 0.9864
+   "fov": 0.9864,
+   "profondeur": 0.53
   },
   "cdu_gauche": {
    "position": [
@@ -81,7 +86,8 @@
     1.2463,
     0.0
    ],
-   "fov": 0.3475
+   "fov": 0.3475,
+   "profondeur": 0.9
   },
   "pylone_arriere": {
    "position": [
@@ -94,7 +100,8 @@
     -0.3178,
     0.0
    ],
-   "fov": 0.6725
+   "fov": 0.6725,
+   "profondeur": 0.85
   }
  },
  "commandes": {
@@ -320,7 +327,8 @@
    "u": 0.463,
    "v": 0.326,
    "libelle": "AC METERS (sélecteur)",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.49
   },
   "ELEC_BatSelector": {
    "vue": "panneau_sup",
@@ -621,7 +629,8 @@
    "u": 0.321,
    "v": 0.7085,
    "libelle": "CROSSFEED",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.5
   },
   "ELEC_GrdPwrSw": {
    "vue": "panneau_sup",
@@ -635,28 +644,32 @@
    "u": 0.4475,
    "v": 0.699,
    "libelle": "BUS TRANSFER",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.5
   },
   "ELEC_GenSw[1]": {
    "vue": "panneau_sup",
    "u": 0.483,
    "v": 0.785,
    "libelle": "GEN 2",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.5
   },
   "ELEC_APUGenSw[1]": {
    "vue": "panneau_sup",
    "u": 0.462,
    "v": 0.781,
    "libelle": "APU GEN 2",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.5
   },
   "ELEC_APUGenSw[0]": {
    "vue": "panneau_sup",
    "u": 0.428,
    "v": 0.781,
    "libelle": "APU GEN 1",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.5
   },
   "OH_WiperLSelector": {
    "vue": "panneau_sup",
@@ -754,21 +767,24 @@
    "u": 0.7145,
    "v": 0.671,
    "libelle": "MCP : DISENGAGE",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.54
   },
   "MCP_FDSw[1]": {
    "vue": "tableau_centre",
    "u": 0.7425,
    "v": 0.644,
    "libelle": "MCP : F/D droit",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.54
   },
   "MCP_Course[1]": {
    "vue": "tableau_centre",
    "u": 0.766,
    "v": 0.609,
    "libelle": "MCP : COURSE droit",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.52
   },
   "EFIS_VORADFSel1[1]": {
    "vue": "tableau_centre",
@@ -796,7 +812,8 @@
    "u": 0.9205,
    "v": 0.625,
    "libelle": "EFIS droit : VOR/ADF 2",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.54
   },
   "EFIS_ModeSel[1]": {
    "vue": "tableau_centre",
@@ -831,7 +848,8 @@
    "u": 0.3355,
    "v": 0.728,
    "libelle": "DISENGAGE TEST gauche",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.84
   },
   "MAIN_LightsSelector": {
    "vue": "tableau_centre",
@@ -852,21 +870,24 @@
    "u": 0.548,
    "v": 0.744,
    "libelle": "AUTO BRAKE",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.85
   },
   "MAIN_LowerDUSel[1]": {
    "vue": "tableau_centre",
    "u": 0.771,
    "v": 0.762,
    "libelle": "LOWER DU droit",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.86
   },
   "MAIN_MainPanelDUSel[1]": {
    "vue": "tableau_centre",
    "u": 0.8215,
    "v": 0.751,
    "libelle": "MAIN PANEL DUs droit",
-   "origine": "clics"
+   "origine": "clics",
+   "profondeur": 0.86
   },
   "MAIN_SpdRefSelector": {
    "vue": "tableau_centre",
@@ -880,35 +901,40 @@
    "u": 0.4401,
    "v": 0.55,
    "libelle": "VNAV",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.47
   },
   "EVT_MCP_LNAV_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.5146,
    "v": 0.55,
    "libelle": "LNAV",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.62
   },
   "EVT_MCP_CMD_A_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.6917,
    "v": 0.5593,
    "libelle": "CMD A",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_MCP_CMD_B_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.7203,
    "v": 0.5593,
    "libelle": "CMD B",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_MCP_CO_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.3781,
    "v": 0.6065,
    "libelle": "C/O",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.53
   },
   "EVT_MCP_SPD_INTV_SWITCH": {
    "vue": "tableau_centre",
@@ -922,7 +948,8 @@
    "u": 0.4651,
    "v": 0.5944,
    "libelle": "BANK ANGLE",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.34
   },
   "EVT_MCP_VOR_LOC_SWITCH": {
    "vue": "tableau_centre",
@@ -950,14 +977,16 @@
    "u": 0.6927,
    "v": 0.6083,
    "libelle": "CWS A",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_MCP_CWS_B_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.7214,
    "v": 0.6083,
    "libelle": "CWS B",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_MCP_N1_SWITCH": {
    "vue": "tableau_centre",
@@ -971,7 +1000,8 @@
    "u": 0.3661,
    "v": 0.6491,
    "libelle": "SPEED",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.53
   },
   "EVT_MCP_LVL_CHG_SWITCH": {
    "vue": "tableau_centre",
@@ -1146,49 +1176,56 @@
    "u": 0.8172,
    "v": 0.6602,
    "libelle": "EFIS D : WXR",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_EFIS_FO_STA": {
    "vue": "tableau_centre",
    "u": 0.8339,
    "v": 0.6602,
    "libelle": "EFIS D : STA",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.49
   },
   "EVT_EFIS_FO_WPT": {
    "vue": "tableau_centre",
    "u": 0.851,
    "v": 0.6602,
    "libelle": "EFIS D : WPT",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_EFIS_FO_ARPT": {
    "vue": "tableau_centre",
    "u": 0.8677,
    "v": 0.6602,
    "libelle": "EFIS D : ARPT",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_EFIS_FO_DATA": {
    "vue": "tableau_centre",
    "u": 0.8844,
    "v": 0.6602,
    "libelle": "EFIS D : DATA",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_EFIS_FO_POS": {
    "vue": "tableau_centre",
    "u": 0.9016,
    "v": 0.6602,
    "libelle": "EFIS D : POS",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_EFIS_FO_TERR": {
    "vue": "tableau_centre",
    "u": 0.9187,
    "v": 0.6602,
    "libelle": "EFIS D : TERR",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "MAIN_N1SetSelector": {
    "vue": "tableau_centre",
@@ -1202,42 +1239,48 @@
    "u": 0.2896,
    "v": 0.7269,
    "libelle": "G : AP P/RST",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.84
   },
   "EVT_DSP_CPT_AT_RESET_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.3063,
    "v": 0.7269,
    "libelle": "G : A/T P/RST",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.84
   },
   "EVT_DSP_CPT_FMC_RESET_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.3229,
    "v": 0.7269,
    "libelle": "G : FMC P/RST",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.84
   },
   "EVT_DSP_FO_AP_RESET_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.7057,
    "v": 0.7361,
    "libelle": "D : AP P/RST",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.86
   },
   "EVT_DSP_FO_AT_RESET_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.7203,
    "v": 0.7361,
    "libelle": "D : A/T P/RST",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.86
   },
   "EVT_DSP_FO_FMC_RESET_SWITCH": {
    "vue": "tableau_centre",
    "u": 0.7354,
    "v": 0.7361,
    "libelle": "D : FMC P/RST",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.86
   },
   "IRS_ModeSelector[0]": {
    "vue": "panneau_sup_arriere",
@@ -2287,21 +2330,24 @@
    "u": 0.4437,
    "v": 0.2148,
    "libelle": "SPEED BRAKE (levier)",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.62
   },
   "EVT_CONTROL_STAND_FLAPS_LEVER": {
    "vue": "pylone",
    "u": 0.6328,
    "v": 0.25,
    "libelle": "FLAPS (levier)",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.54
   },
   "EVT_CONTROL_STAND_FWD_THRUST1_LEVER": {
    "vue": "pylone",
    "u": 0.5042,
    "v": 0.5667,
    "libelle": "manette de poussée 1",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.37
   },
   "EVT_CONTROL_STAND_FWD_THRUST2_LEVER": {
    "vue": "pylone",
@@ -2385,14 +2431,16 @@
    "u": 0.2682,
    "v": 0.1444,
    "libelle": "BACKGROUND",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.82
   },
   "LTS_AFDSFloodKnob": {
    "vue": "pylone",
    "u": 0.3167,
    "v": 0.1444,
    "libelle": "AFDS FLOOD",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.82
   },
   "LTS_OutbdDUBrtKnob[0]": {
    "vue": "pylone",
@@ -2420,14 +2468,16 @@
    "u": 0.8594,
    "v": 0.1435,
    "libelle": "MAIN PANEL BRIGHT (droit)",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.82
   },
   "LTS_InbdDUBrtKnob[1]": {
    "vue": "pylone",
    "u": 0.837,
    "v": 0.1981,
    "libelle": "INBD DU BRT (droit)",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.82
   },
   "LTS_OutbdDUBrtKnob[1]": {
    "vue": "pylone",
@@ -2441,21 +2491,24 @@
    "u": 0.7438,
    "v": 0.1778,
    "libelle": "GPWS FLAP INHIBIT",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.81
   },
   "GPWS_GearInhibitSw_NORM": {
    "vue": "pylone",
    "u": 0.7578,
    "v": 0.1778,
    "libelle": "GPWS GEAR INHIBIT",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.81
   },
   "GPWS_TerrInhibitSw_NORM": {
    "vue": "pylone",
    "u": 0.7719,
    "v": 0.1778,
    "libelle": "GPWS TERR INHIBIT",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.81
   },
   "EVT_GPWS_SYS_TEST_BTN": {
    "vue": "pylone",
@@ -2511,42 +2564,48 @@
    "u": 0.588,
    "v": 0.1796,
    "libelle": "CDU gauche touche R1",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.92
   },
   "EVT_CDU_L_R2": {
    "vue": "cdu_gauche",
    "u": 0.588,
    "v": 0.213,
    "libelle": "CDU gauche touche R2",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.92
   },
   "EVT_CDU_L_R3": {
    "vue": "cdu_gauche",
    "u": 0.588,
    "v": 0.2472,
    "libelle": "CDU gauche touche R3",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.92
   },
   "EVT_CDU_L_R4": {
    "vue": "cdu_gauche",
    "u": 0.588,
    "v": 0.2815,
    "libelle": "CDU gauche touche R4",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.91
   },
   "EVT_CDU_L_R5": {
    "vue": "cdu_gauche",
    "u": 0.588,
    "v": 0.3167,
    "libelle": "CDU gauche touche R5",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.91
   },
   "EVT_CDU_L_R6": {
    "vue": "cdu_gauche",
    "u": 0.588,
    "v": 0.3519,
    "libelle": "CDU gauche touche R6",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.91
   },
   "EVT_CDU_L_INIT_REF": {
    "vue": "cdu_gauche",
@@ -2581,7 +2640,8 @@
    "u": 0.5167,
    "v": 0.4509,
    "libelle": "CDU gauche DES",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.89
   },
   "EVT_CDU_L_MENU": {
    "vue": "cdu_gauche",
@@ -2616,14 +2676,16 @@
    "u": 0.5172,
    "v": 0.4935,
    "libelle": "CDU gauche PROG",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.89
   },
   "EVT_CDU_L_EXEC": {
    "vue": "cdu_gauche",
    "u": 0.562,
    "v": 0.4944,
    "libelle": "CDU gauche EXEC",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.89
   },
   "EVT_CDU_L_N1_LIMIT": {
    "vue": "cdu_gauche",
@@ -2672,28 +2734,32 @@
    "u": 0.4875,
    "v": 0.5389,
    "libelle": "CDU gauche B",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.85
   },
   "EVT_CDU_L_C": {
    "vue": "cdu_gauche",
    "u": 0.5146,
    "v": 0.5389,
    "libelle": "CDU gauche C",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.89
   },
   "EVT_CDU_L_D": {
    "vue": "cdu_gauche",
    "u": 0.5417,
    "v": 0.5389,
    "libelle": "CDU gauche D",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.89
   },
   "EVT_CDU_L_E": {
    "vue": "cdu_gauche",
    "u": 0.5687,
    "v": 0.5389,
    "libelle": "CDU gauche E",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.89
   },
   "EVT_CDU_L_F": {
    "vue": "cdu_gauche",
@@ -2742,21 +2808,24 @@
    "u": 0.4875,
    "v": 0.6296,
    "libelle": "CDU gauche L",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.88
   },
   "EVT_CDU_L_M": {
    "vue": "cdu_gauche",
    "u": 0.5146,
    "v": 0.6296,
    "libelle": "CDU gauche M",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.88
   },
   "EVT_CDU_L_N": {
    "vue": "cdu_gauche",
    "u": 0.5417,
    "v": 0.6296,
    "libelle": "CDU gauche N",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.88
   },
   "EVT_CDU_L_O": {
    "vue": "cdu_gauche",
@@ -2784,21 +2853,24 @@
    "u": 0.5146,
    "v": 0.6741,
    "libelle": "CDU gauche R",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.88
   },
   "EVT_CDU_L_S": {
    "vue": "cdu_gauche",
    "u": 0.5417,
    "v": 0.6741,
    "libelle": "CDU gauche S",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.88
   },
   "EVT_CDU_L_T": {
    "vue": "cdu_gauche",
    "u": 0.5687,
    "v": 0.6741,
    "libelle": "CDU gauche T",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.88
   },
   "EVT_CDU_L_U": {
    "vue": "cdu_gauche",
@@ -2840,35 +2912,40 @@
    "u": 0.4615,
    "v": 0.763,
    "libelle": "CDU gauche Z",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.87
   },
   "EVT_CDU_L_SPACE": {
    "vue": "cdu_gauche",
    "u": 0.4891,
    "v": 0.763,
    "libelle": "CDU gauche SP",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.87
   },
   "EVT_CDU_L_DEL": {
    "vue": "cdu_gauche",
    "u": 0.5161,
    "v": 0.763,
    "libelle": "CDU gauche DEL",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.87
   },
   "EVT_CDU_L_SLASH": {
    "vue": "cdu_gauche",
    "u": 0.5443,
    "v": 0.763,
    "libelle": "CDU gauche /",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.87
   },
   "EVT_CDU_L_CLR": {
    "vue": "cdu_gauche",
    "u": 0.5708,
    "v": 0.763,
    "libelle": "CDU gauche CLR",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.87
   },
   "EVT_CDU_L_1": {
    "vue": "cdu_gauche",
@@ -2959,7 +3036,8 @@
    "u": 0.4068,
    "v": 0.7852,
    "libelle": "GEN 1",
-   "origine": "image"
+   "origine": "image",
+   "profondeur": 0.5
   }
  }
 }

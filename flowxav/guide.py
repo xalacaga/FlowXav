@@ -403,7 +403,8 @@ class Guide:
             self._preview_until = time.monotonic() + seconds
         view = profile.view(control.view)
         self.camera.show(view)
-        self.overlay.show(control.u, control.v, control.label, view, self._current_pose)
+        self.overlay.show(control.u, control.v, control.label, view, self._current_pose,
+                          profile.control_depth(control.key))
 
     def _current_pose(self):
         """Vue réellement affichée par MSFS, pour garder l'anneau sur la commande."""
@@ -524,7 +525,8 @@ class Guide:
                 # La touche visée a changé sur l'écran du CDU : on déplace l'anneau, pas la caméra.
                 session.shown_control = key
                 self.overlay.show(control.u, control.v, text(step["titre"], session.language),
-                                  session.profile.view(control.view), self._current_pose)
+                                  session.profile.view(control.view), self._current_pose,
+                                  session.profile.control_depth(control.key))
             if session.shown_index != session.index:
                 session.wait_started = None
                 session.shown_control = key
@@ -541,7 +543,8 @@ class Guide:
                 elif control:
                     view = session.profile.view(control.view)
                     self.camera.show(view)
-                    self.overlay.show(control.u, control.v, text(step["titre"], session.language), view, self._current_pose)
+                    self.overlay.show(control.u, control.v, text(step["titre"], session.language), view,
+                                      self._current_pose, session.profile.control_depth(control.key))
                     # En approche ou au roulage après l'atterrissage, le pilote doit garder la vue dehors.
                     session.camera_until = now + BRIEF_S if session.procedure.get("camera") == "breve" else None
                 else:
@@ -553,6 +556,10 @@ class Guide:
                 if wait and session.wait_started is None and satisfied(wait["debut"]["attendu"], values.get(wait["debut"]["cle"])):
                     session.wait_started = now
                     LOGGER.info("Attente de l'étape %s commencée", step["id"])
+                    # Rien à faire pendant l'attente : la vue est rendue au pilote, l'anneau suit sa vue réelle.
+                    free = getattr(self.camera, "free", None)
+                    if callable(free):
+                        free()
                 check = value_check(step, flight_values(values))
                 if check and satisfied(check[1], values.get(check[0])):
                     session.held_since = session.held_since or now

@@ -12,6 +12,15 @@
   "cdu_gauche": "pose_cdu_gauche.json",
   "pylone_arriere": "pose_pylone_arriere.json"
  },
+ "profondeurs": {
+  "panneau_sup": 0.5,
+  "panneau_sup_haut": 0.5,
+  "panneau_sup_arriere": 0.5,
+  "pylone": 0.53,
+  "tableau_centre": 0.54,
+  "cdu_gauche": 0.9,
+  "pylone_arriere": 0.85
+ },
  "sources": [
   {
    "seance": "panneau_sup.log",

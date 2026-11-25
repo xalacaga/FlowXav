@@ -10,7 +10,7 @@ flowxav/
   guide.py          moteur de guidage : étapes, conditions, validation
   overlay.py        anneau clignotant transparent aux clics, par-dessus MSFS
   sim/simconnect.py client SimConnect ctypes (SimVars, ClientData, caméra, événements)
-  sim/camera.py     caméra : cadre la commande, la rend dès que l'utilisateur regarde ailleurs, puis suit la vue
+  sim/camera.py     caméra : cadre la commande, regard libre sans saut (freelook), clic milieu = vue rendue à MSFS
   sim/window.py     zone client de la fenêtre MSFS
   state/            sources d'état : pmdg.py (SDK PMDG), simvars.py (variables MSFS)
   aircraft/<id>/    un dossier par avion : profile.json, carte.json, procedures/*.json

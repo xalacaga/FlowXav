@@ -1,14 +1,16 @@
 """Projection d'un point de la vue de référence dans la vue actuelle de la caméra.
 
-Une fois la caméra rendue, le pilote regarde où il veut, depuis son propre
-œil (souvent sa place, alors que les vues de référence sont relevées
-près de l'axe). La commande est placée dans l'espace le long du rayon (u, v)
-de la vue de référence, à `distance` mètres de son œil, puis reprojetée depuis
-l'œil actuel. Tant que l'œil ne bouge pas, la distance ne compte pas (simple
-rotation) ; sinon l'erreur reste faible si la distance est du bon ordre.
+Une fois la caméra rendue, MSFS remet le pilote à sa place (siège du
+commandant), alors que les vues de référence sont relevées près de l'axe :
+l'œil a bougé. La commande est donc placée dans l'espace, sur le rayon (u, v)
+de la vue de référence, là où il coupe le plan du panneau — supposé face à la
+vue, à `depth` mètres de son œil le long de l'axe de visée —, puis reprojetée
+depuis l'œil actuel. Tant que l'œil ne bouge pas, la profondeur ne compte pas.
 
-Conventions établies (voir Pose) : x vers la droite, y vers le haut, z vers
-l'avant ; tangage en degrés POSITIF vers le bas ; cap positif vers la droite ;
+Conventions établies (voir Pose) : la POSITION renvoyée par MSFS a x
+positif vers la GAUCHE (constaté le 2026-11-25 : œil rendu au siège du
+commandant à x = +0,505), y vers le haut, z vers l'avant ; les calculs
+ci-dessous travaillent avec x vers la droite (voir _eye) ; tangage en degrés POSITIF vers le bas ; cap positif vers la droite ;
 champ de vision VERTICAL en radians (constaté par triangulation de deux vues
 du pylône) ; u, v en fraction de la zone client, origine en haut à gauche.
 """
@@ -52,19 +54,28 @@ def direction(pose: Pose, u: float, v: float, aspect: float) -> Vector:
     return x / norm, y / norm, z / norm
 
 
-DEFAULT_DISTANCE_M = 0.7   # œil de référence → panneau, ordre de grandeur dans un poste de pilotage
+DEFAULT_DEPTH_M = 0.5   # œil de référence → plan du panneau, le long de l'axe de visée (réglé en vol)
 
 
-def anchor(pose: Pose, u: float, v: float, aspect: float, distance: float = DEFAULT_DISTANCE_M) -> Vector:
-    """Position (repère avion, mètres) de la commande vue en (u, v) depuis `pose`."""
-    dx, dy, dz = direction(pose, u, v, aspect)
+def _eye(pose: Pose) -> Vector:
+    """Œil dans le repère des calculs (x vers la droite) : MSFS donne x positif vers la gauche."""
     x, y, z = pose.position
-    return x + dx * distance, y + dy * distance, z + dz * distance
+    return -x, y, z
+
+
+def anchor(pose: Pose, u: float, v: float, aspect: float, depth: float = DEFAULT_DEPTH_M) -> Vector:
+    """Position de la commande vue en (u, v) depuis `pose`, sur le plan du panneau à `depth` mètres."""
+    dx, dy, dz = direction(pose, u, v, aspect)
+    ax, ay, az = direction(pose, 0.5, 0.5, aspect)
+    along = max(dx * ax + dy * ay + dz * az, 0.2)
+    x, y, z = _eye(pose)
+    t = depth / along
+    return x + dx * t, y + dy * t, z + dz * t
 
 
 def toward(pose: Pose, point: Vector) -> Vector:
-    """Direction (repère avion) du point vu depuis l'œil de `pose`."""
-    return tuple(p - e for p, e in zip(point, pose.position))  # type: ignore[return-value]
+    """Direction du point vu depuis l'œil de `pose`."""
+    return tuple(p - e for p, e in zip(point, _eye(pose)))  # type: ignore[return-value]
 
 
 def project(pose: Pose, vector: Vector, aspect: float) -> tuple[float, float, bool]:

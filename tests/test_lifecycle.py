@@ -25,10 +25,18 @@ def eventually(predicate, timeout: float = 1.0) -> None:
     assert predicate()
 
 
-class FakeLookInput:
+class FakeFreeLook:
     def __init__(self):
-        self.on_look = None
+        self.on_release = None
+        self.active = False
         self.closed = False
+        self.heading = 0.0
+
+    def reset(self, _fov):
+        self.heading = 0.0
+
+    def offsets(self):
+        return SimpleNamespace(pitch=0.0, heading=self.heading, zoom=1.0)
 
     def start(self):
         pass
@@ -63,15 +71,18 @@ class FakeCameraClient:
         self.closed = True
 
 
-def test_camera_frames_first_then_gives_the_view_back_when_the_user_looks():
-    client, look = FakeCameraClient(), FakeLookInput()
-    camera = CameraDirector(client_factory=lambda: client, look_input=look)
+def test_camera_frames_first_then_gives_the_view_back_on_middle_click():
+    client, look = FakeCameraClient(), FakeFreeLook()
+    camera = CameraDirector(client_factory=lambda: client, freelook=look)
     reference = Pose((0, 0, 0), 0, 0, 0, 0.8)
     camera.show(reference)
     eventually(lambda: client.acquired and client.set_count > 0)
-    assert camera.current_pose() == reference                   # cadré face au panneau
-    look.on_look()                                              # clic droit / molette au-dessus de MSFS
+    assert camera.current_pose() == reference and look.active   # cadré face au panneau, regard FlowXav actif
+    look.heading = 10.0                                         # clic droit glissé : la tête tourne sans saut
+    assert camera.current_pose().heading == 10.0 and camera.current_pose().position == reference.position
+    look.on_release()                                           # clic milieu : vue rendue à MSFS
     eventually(lambda: client.released and camera.current_pose() == client.pose)
+    assert not look.active
     sets = client.set_count
     time.sleep(0.1)
     assert client.set_count == sets                             # la vue n'est plus imposée

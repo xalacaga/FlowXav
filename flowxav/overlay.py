@@ -24,7 +24,7 @@ import time
 from dataclasses import dataclass
 from typing import Callable
 
-from flowxav.sim.projection import DEFAULT_DISTANCE_M, anchor, project, toward
+from flowxav.sim.projection import DEFAULT_DEPTH_M, anchor, project, toward
 from flowxav.sim.simconnect import Pose
 from flowxav.sim.window import msfs_client_rect
 
@@ -63,7 +63,7 @@ class Target:
     done: bool = False
     reference: Pose | None = None                       # vue où (u, v) a été relevé
     current: Callable[[], Pose | None] | None = None    # vue affichée maintenant
-    distance: float = DEFAULT_DISTANCE_M                # œil de référence → commande, en mètres
+    depth: float = DEFAULT_DEPTH_M                # œil de référence → commande, en mètres
     point: tuple[float, float, float] | None = None
     shown_at: float = 0.0
     done_at: float = 0.0
@@ -76,7 +76,7 @@ class Target:
         if pose is None:
             return None
         if self.point is None:
-            self.point = anchor(self.reference, self.u, self.v, aspect, self.distance)
+            self.point = anchor(self.reference, self.u, self.v, aspect, self.depth)
         return project(pose, toward(pose, self.point), aspect)
 
 
@@ -88,9 +88,9 @@ class Overlay:
 
     # -------------------------------------------------------------- API publique (tout fil)
     def show(self, u: float, v: float, label: str, reference: Pose | None = None,
-             current: Callable[[], Pose | None] | None = None, distance: float = DEFAULT_DISTANCE_M) -> None:
+             current: Callable[[], Pose | None] | None = None, depth: float = DEFAULT_DEPTH_M) -> None:
         self._ensure_started()
-        self._commands.put(("show", Target(u, v, label, reference=reference, current=current, distance=distance)))
+        self._commands.put(("show", Target(u, v, label, reference=reference, current=current, depth=depth)))
 
     def mark_done(self) -> None:
         self._commands.put(("done", None))

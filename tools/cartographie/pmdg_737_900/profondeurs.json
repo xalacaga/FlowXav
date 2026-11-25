@@ -1,0 +1,286 @@
+{
+ "EFIS_VORADFSel2[1]": {
+  "profondeur": 0.54,
+  "score": 0.602
+ },
+ "ELEC_ACMeterSelector": {
+  "profondeur": 0.49,
+  "score": 0.708
+ },
+ "ELEC_APUGenSw[0]": {
+  "profondeur": 0.5,
+  "score": 0.644
+ },
+ "ELEC_APUGenSw[1]": {
+  "profondeur": 0.5,
+  "score": 0.629
+ },
+ "ELEC_BusTransSw_AUTO": {
+  "profondeur": 0.5,
+  "score": 0.727
+ },
+ "ELEC_GenSw[0]": {
+  "profondeur": 0.5,
+  "score": 0.67
+ },
+ "ELEC_GenSw[1]": {
+  "profondeur": 0.5,
+  "score": 0.74
+ },
+ "EVT_CDU_L_B": {
+  "profondeur": 0.85,
+  "score": 0.649
+ },
+ "EVT_CDU_L_C": {
+  "profondeur": 0.89,
+  "score": 0.679
+ },
+ "EVT_CDU_L_CLR": {
+  "profondeur": 0.87,
+  "score": 0.671
+ },
+ "EVT_CDU_L_D": {
+  "profondeur": 0.89,
+  "score": 0.609
+ },
+ "EVT_CDU_L_DEL": {
+  "profondeur": 0.87,
+  "score": 0.795
+ },
+ "EVT_CDU_L_DES": {
+  "profondeur": 0.89,
+  "score": 0.689
+ },
+ "EVT_CDU_L_E": {
+  "profondeur": 0.89,
+  "score": 0.877
+ },
+ "EVT_CDU_L_EXEC": {
+  "profondeur": 0.89,
+  "score": 0.904
+ },
+ "EVT_CDU_L_L": {
+  "profondeur": 0.88,
+  "score": 0.737
+ },
+ "EVT_CDU_L_M": {
+  "profondeur": 0.88,
+  "score": 0.683
+ },
+ "EVT_CDU_L_N": {
+  "profondeur": 0.88,
+  "score": 0.74
+ },
+ "EVT_CDU_L_PROG": {
+  "profondeur": 0.89,
+  "score": 0.894
+ },
+ "EVT_CDU_L_R": {
+  "profondeur": 0.88,
+  "score": 0.63
+ },
+ "EVT_CDU_L_R1": {
+  "profondeur": 0.92,
+  "score": 0.859
+ },
+ "EVT_CDU_L_R2": {
+  "profondeur": 0.92,
+  "score": 0.839
+ },
+ "EVT_CDU_L_R3": {
+  "profondeur": 0.92,
+  "score": 0.763
+ },
+ "EVT_CDU_L_R4": {
+  "profondeur": 0.91,
+  "score": 0.705
+ },
+ "EVT_CDU_L_R5": {
+  "profondeur": 0.91,
+  "score": 0.848
+ },
+ "EVT_CDU_L_R6": {
+  "profondeur": 0.91,
+  "score": 0.872
+ },
+ "EVT_CDU_L_S": {
+  "profondeur": 0.88,
+  "score": 0.733
+ },
+ "EVT_CDU_L_SLASH": {
+  "profondeur": 0.87,
+  "score": 0.752
+ },
+ "EVT_CDU_L_SPACE": {
+  "profondeur": 0.87,
+  "score": 0.72
+ },
+ "EVT_CDU_L_T": {
+  "profondeur": 0.88,
+  "score": 0.636
+ },
+ "EVT_CDU_L_Z": {
+  "profondeur": 0.87,
+  "score": 0.817
+ },
+ "EVT_CONTROL_STAND_FLAPS_LEVER": {
+  "profondeur": 0.54,
+  "score": 0.684
+ },
+ "EVT_CONTROL_STAND_FWD_THRUST1_LEVER": {
+  "profondeur": 0.37,
+  "score": 0.649
+ },
+ "EVT_CONTROL_STAND_SPEED_BRAKE_LEVER": {
+  "profondeur": 0.62,
+  "score": 0.667
+ },
+ "EVT_DSP_CPT_AP_RESET_SWITCH": {
+  "profondeur": 0.84,
+  "score": 0.765
+ },
+ "EVT_DSP_CPT_AT_RESET_SWITCH": {
+  "profondeur": 0.84,
+  "score": 0.75
+ },
+ "EVT_DSP_CPT_FMC_RESET_SWITCH": {
+  "profondeur": 0.84,
+  "score": 0.739
+ },
+ "EVT_DSP_FO_AP_RESET_SWITCH": {
+  "profondeur": 0.86,
+  "score": 0.792
+ },
+ "EVT_DSP_FO_AT_RESET_SWITCH": {
+  "profondeur": 0.86,
+  "score": 0.793
+ },
+ "EVT_DSP_FO_FMC_RESET_SWITCH": {
+  "profondeur": 0.86,
+  "score": 0.714
+ },
+ "EVT_EFIS_FO_ARPT": {
+  "profondeur": 0.54,
+  "score": 0.724
+ },
+ "EVT_EFIS_FO_DATA": {
+  "profondeur": 0.54,
+  "score": 0.727
+ },
+ "EVT_EFIS_FO_POS": {
+  "profondeur": 0.54,
+  "score": 0.757
+ },
+ "EVT_EFIS_FO_STA": {
+  "profondeur": 0.49,
+  "score": 0.693
+ },
+ "EVT_EFIS_FO_TERR": {
+  "profondeur": 0.54,
+  "score": 0.759
+ },
+ "EVT_EFIS_FO_WPT": {
+  "profondeur": 0.54,
+  "score": 0.685
+ },
+ "EVT_EFIS_FO_WXR": {
+  "profondeur": 0.54,
+  "score": 0.714
+ },
+ "EVT_MCP_BANK_ANGLE_SELECTOR": {
+  "profondeur": 0.34,
+  "score": 0.614
+ },
+ "EVT_MCP_CMD_A_SWITCH": {
+  "profondeur": 0.54,
+  "score": 0.645
+ },
+ "EVT_MCP_CMD_B_SWITCH": {
+  "profondeur": 0.54,
+  "score": 0.676
+ },
+ "EVT_MCP_CO_SWITCH": {
+  "profondeur": 0.53,
+  "score": 0.654
+ },
+ "EVT_MCP_CWS_A_SWITCH": {
+  "profondeur": 0.54,
+  "score": 0.684
+ },
+ "EVT_MCP_CWS_B_SWITCH": {
+  "profondeur": 0.54,
+  "score": 0.714
+ },
+ "EVT_MCP_LNAV_SWITCH": {
+  "profondeur": 0.62,
+  "score": 0.61
+ },
+ "EVT_MCP_SPEED_SWITCH": {
+  "profondeur": 0.53,
+  "score": 0.639
+ },
+ "EVT_MCP_VNAV_SWITCH": {
+  "profondeur": 0.47,
+  "score": 0.62
+ },
+ "FUEL_CrossFeedSw": {
+  "profondeur": 0.5,
+  "score": 0.723
+ },
+ "GPWS_FlapInhibitSw_NORM": {
+  "profondeur": 0.81,
+  "score": 0.822
+ },
+ "GPWS_GearInhibitSw_NORM": {
+  "profondeur": 0.81,
+  "score": 0.779
+ },
+ "GPWS_TerrInhibitSw_NORM": {
+  "profondeur": 0.81,
+  "score": 0.777
+ },
+ "LTS_AFDSFloodKnob": {
+  "profondeur": 0.82,
+  "score": 0.642
+ },
+ "LTS_BackgroundKnob": {
+  "profondeur": 0.82,
+  "score": 0.812
+ },
+ "LTS_InbdDUBrtKnob[1]": {
+  "profondeur": 0.82,
+  "score": 0.603
+ },
+ "LTS_MainPanelKnob[1]": {
+  "profondeur": 0.82,
+  "score": 0.687
+ },
+ "MAIN_AutobrakeSelector": {
+  "profondeur": 0.85,
+  "score": 0.788
+ },
+ "MAIN_DisengageTestSelector[0]": {
+  "profondeur": 0.84,
+  "score": 0.734
+ },
+ "MAIN_LowerDUSel[1]": {
+  "profondeur": 0.86,
+  "score": 0.732
+ },
+ "MAIN_MainPanelDUSel[1]": {
+  "profondeur": 0.86,
+  "score": 0.686
+ },
+ "MCP_Course[1]": {
+  "profondeur": 0.52,
+  "score": 0.662
+ },
+ "MCP_DisengageBar": {
+  "profondeur": 0.54,
+  "score": 0.743
+ },
+ "MCP_FDSw[1]": {
+  "profondeur": 0.54,
+  "score": 0.62
+ }
+}

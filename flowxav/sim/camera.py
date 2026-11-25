@@ -1,12 +1,13 @@
-"""Caméra : FlowXav place d'abord la vue, puis la rend dès que l'utilisateur bouge.
+"""Caméra : FlowXav place la vue face au panneau, l'utilisateur regarde autour sans saut.
 
 1. Cadrage : à chaque commande montrée, FlowXav prend la caméra et place la
-   vue de référence, face au panneau, l'anneau sur la commande (CameraSet
-   renvoyé en continu, ~30 Hz, sinon MSFS reprend la vue).
-2. Regard libre : dès que l'utilisateur touche à la vue au-dessus de MSFS
-   (clic droit, clic milieu, molette — voir lookinput), FlowXav rend la
-   caméra à MSFS et ne fait plus que LIRE la vue réelle (CameraGet) pour que
-   l'anneau suive la commande ; hors champ, une flèche indique où regarder.
+   vue de référence, l'anneau sur la commande (CameraSet renvoyé en continu,
+   ~30 Hz, sinon MSFS reprend la vue). Clic droit glissé et molette font
+   tourner et zoomer la vue autour du même œil (voir freelook) : pas de saut,
+   l'anneau reste exactement sur la commande.
+2. Clic milieu : la caméra est rendue à MSFS (qui revient à sa vue pilote) ;
+   FlowXav ne fait plus que LIRE la vue réelle (CameraGet) pour que l'anneau
+   suive la commande ; hors champ, une flèche indique où regarder.
 """
 
 from __future__ import annotations
@@ -14,9 +15,10 @@ from __future__ import annotations
 import logging
 import threading
 import time
+from dataclasses import replace
 from typing import Callable
 
-from flowxav.sim.lookinput import LookInput
+from flowxav.sim.freelook import FreeLook
 from flowxav.sim.simconnect import Pose, SimConnectClient, SimConnectError
 
 LOGGER = logging.getLogger(__name__)
@@ -26,10 +28,10 @@ READ_TIMEOUT_S = 0.5
 
 class CameraDirector:
     def __init__(self, client_factory: Callable[[], SimConnectClient] = lambda: SimConnectClient("FlowXav camera"),
-                 look_input: LookInput | None = None):
+                 freelook: FreeLook | None = None):
         self._client_factory = client_factory
-        self.look_input = look_input or LookInput()
-        self.look_input.on_look = self.free
+        self.freelook = freelook or FreeLook()
+        self.freelook.on_release = self.free
         self._reference: Pose | None = None
         self._framing = False                    # True : FlowXav tient la vue de référence
         self._observed: Pose | None = None
@@ -43,7 +45,9 @@ class CameraDirector:
         """Place la vue de référence de la commande ; elle reste tenue jusqu'à ce que l'utilisateur bouge."""
         with self._lock:
             self._reference, self._framing, self._observed = pose, True, None
-        self.look_input.start()
+        self.freelook.reset(pose.fov)
+        self.freelook.active = True
+        self.freelook.start()
         self._ensure_started()
         self._wake.set()
 
@@ -53,6 +57,7 @@ class CameraDirector:
             if not self._framing:
                 return
             self._framing, self._observed = False, None
+        self.freelook.active = False
         LOGGER.info("Caméra rendue à l'utilisateur")
         self._wake.set()
 
@@ -61,11 +66,17 @@ class CameraDirector:
         with self._lock:
             if self._reference is None:
                 return None
-            return self._reference if self._framing else self._observed
+            if not self._framing:
+                return self._observed
+            reference = self._reference
+        offsets = self.freelook.offsets()
+        return replace(reference, pitch=reference.pitch + offsets.pitch, heading=reference.heading + offsets.heading,
+                       fov=reference.fov * offsets.zoom)
 
     def release(self) -> None:
         with self._lock:
             self._reference, self._framing, self._observed = None, False, None
+        self.freelook.active = False
         self._wake.set()
 
     def close(self) -> None:
@@ -73,7 +84,7 @@ class CameraDirector:
         self._wake.set()
         if self._thread:
             self._thread.join(timeout=3)
-        self.look_input.close()
+        self.freelook.close()
 
     def _ensure_started(self) -> None:
         if self._thread and self._thread.is_alive():
@@ -104,7 +115,7 @@ class CameraDirector:
                         if not acquired:
                             client.camera_acquire()
                             acquired = True
-                        client.camera_set(reference)
+                        client.camera_set(self.current_pose() or reference)
                         for _ in client.messages():
                             pass
                     else:

@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from flowxav.paths import resource_path
+from flowxav.sim.projection import DEFAULT_DEPTH_M
 from flowxav.sim.simconnect import Pose
 
 MAX_JSON_BYTES = 5 * 1024 * 1024
@@ -109,12 +110,16 @@ def _validate_map(data: dict[str, Any], profile_id: str) -> None:
                 _finite(value, f"{name}.{field}[{index}]")
         if not 0.05 <= _finite(view.get("fov"), f"{name}.fov") <= 3.2:
             raise ProfileDataError(f"Champ de vision invalide : {name}")
+        if "profondeur" in view and not 0.1 <= _finite(view["profondeur"], f"{name}.profondeur") <= 3.0:
+            raise ProfileDataError(f"Profondeur invalide : {name}")
     for key, control in controls.items():
         if not isinstance(control, dict) or control.get("vue") not in views:
             raise ProfileDataError(f"Commande sans vue valide : {key}")
         for field in ("u", "v"):
             if not 0.0 <= _finite(control.get(field), f"{key}.{field}") <= 1.0:
                 raise ProfileDataError(f"Coordonnée hors écran : {key}.{field}")
+        if "profondeur" in control and not 0.1 <= _finite(control["profondeur"], f"{key}.profondeur") <= 3.0:
+            raise ProfileDataError(f"Profondeur invalide : {key}")
 
 
 def _validate_procedure(data: dict[str, Any], profile: "Profile", filename: str) -> None:
@@ -185,6 +190,15 @@ class Profile:
 
     def view(self, name: str) -> Pose:
         return Pose.from_dict(self.carte["vues"][name])
+
+    def view_depth(self, name: str) -> float:
+        """Distance (m) de l'œil de la vue au plan du panneau, le long de l'axe de visée."""
+        return float(self.carte["vues"][name].get("profondeur", DEFAULT_DEPTH_M))
+
+    def control_depth(self, key: str) -> float:
+        """Profondeur de la commande mesurée par stéréo (tools/cartographie/profondeurs.py), sinon celle de sa vue."""
+        control = self.carte["commandes"][key]
+        return float(control.get("profondeur", self.view_depth(control["vue"])))
 
     def control(self, key: str) -> Control:
         c = self.carte["commandes"][key]

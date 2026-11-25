@@ -44,13 +44,27 @@ def test_off_screen_and_behind_are_pinned_to_the_right_edge():
     assert not visible
 
 
-def test_point_seen_from_another_eye():
-    """Vue relevée près de l'axe, pilote assis à gauche : la commande reste au même endroit de l'espace."""
-    point = anchor(REF, 0.5, 0.5, ASPECT, distance=0.7)
+def test_point_seen_from_the_captain_seat():
+    """MSFS donne x positif vers la GAUCHE : depuis le siège du commandant (x = +0,505,
+    constaté en vol), une commande droit devant l'œil central apparaît à DROITE."""
+    point = anchor(REF, 0.5, 0.5, ASPECT, depth=0.7)
     assert project(REF, toward(REF, point), ASPECT)[:2] == pytest.approx((0.5, 0.5), abs=1e-9)
-    seat = replace(REF, position=(REF.position[0] - 0.5, *REF.position[1:]))
+    seat = replace(REF, position=(REF.position[0] + 0.5, *REF.position[1:]))
     u, v, visible = project(seat, toward(seat, point), ASPECT)
-    assert visible and u > 0.5 and v == pytest.approx(0.5, abs=0.05)   # depuis la gauche, elle est à droite
+    assert visible and u > 0.5 and v == pytest.approx(0.5, abs=0.05)
+
+
+def test_captain_seat_capture_of_the_parking_brake():
+    """Capture du 2026-11-25 depuis le siège du commandant : poignée PARKING BRAKE vers (0,65 ; 0,40)."""
+    from flowxav.aircraft import load_profile
+
+    profile = load_profile("pmdg_737_900")
+    control = profile.control("EVT_CONTROL_STAND_PARK_BRAKE_LEVER")
+    reference = profile.view(control.view)
+    pose = Pose((0.505, 1.555, 15.402), 61.1, 37.9, 0.0, 0.865)
+    point = anchor(reference, control.u, control.v, ASPECT, profile.view_depth(control.view))
+    u, v, visible = project(pose, toward(pose, point), ASPECT)
+    assert visible and u == pytest.approx(0.651, abs=0.02) and v == pytest.approx(0.398, abs=0.02)
 
 
 def test_ring_waits_for_the_real_view():
@@ -60,3 +74,19 @@ def test_ring_waits_for_the_real_view():
     pose["value"] = REF
     u, v, visible = target.screen(ASPECT)
     assert visible and (u, v) == pytest.approx((0.4, 0.6), abs=1e-9)
+
+
+def test_freelook_turns_and_zooms_around_the_same_eye():
+    from flowxav.sim.freelook import FreeLook
+
+    look = FreeLook()
+    look.reset(0.9)
+    look.drag(100, -50, 1080)
+    offsets = look.offsets()
+    assert offsets.heading > 0 and offsets.pitch < 0          # main à droite et vers le haut
+    look.wheel(3)
+    assert look.offsets().zoom < 1                              # molette avant : zoom
+    look.wheel(-100)
+    assert 0.9 * look.offsets().zoom <= 1.6                     # champ de vision borné
+    look.reset(0.9)
+    assert look.offsets().heading == 0 and look.offsets().zoom == 1

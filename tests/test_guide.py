@@ -278,3 +278,17 @@ def test_pushback_comes_before_engine_start_with_ground_items_cleared():
                           ("portes_fermees", "cales_retirees"), ("cales_retirees", "repoussage_gsx_demande"),
                           ("repoussage_frein_serre", "eng2_grd")]:
         assert order.index(before) < order.index(after), (before, after)
+
+
+def test_view_is_given_back_when_a_wait_starts(monkeypatch):
+    """APU START : une fois le démarrage détecté, plus rien à manœuvrer — la vue est rendue au pilote."""
+    guide, simulator, camera, _overlay = make_guide()
+    monkeypatch.setattr(time, "monotonic", lambda: 1000.0)
+    guide.start(load_profile("pmdg_737_900"), "mise_sous_tension_apu")
+    guide.go(6)
+    guide._tick()
+    assert guide.status()["etape"]["id"] == "apu_start"
+    assert ("free", ()) not in camera.calls
+    simulator.values["APU_EGTNeedle"] = 150
+    guide._tick()
+    assert ("free", ()) in camera.calls

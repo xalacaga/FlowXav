@@ -36,6 +36,10 @@ def keep(key: str) -> bool:
 
 views = {name: json.loads((folder / file).read_text(encoding="utf-8"))["pose"]
          for name, file in config["vues"].items()}
+# Profondeur du panneau (m, le long de l'axe de visée) : replace l'anneau quand l'œil du pilote n'est pas
+# celui de la vue de référence. Réglée sur des captures prises depuis le siège du commandant.
+for name, depth in config.get("profondeurs", {}).items():
+    views[name]["profondeur"] = depth
 points_image = json.loads((folder / "points_image.json").read_text(encoding="utf-8"))
 controls: dict[str, dict] = {}
 for source in config["sources"]:
@@ -60,6 +64,12 @@ for source in config["sources"]:
                              "v": round(statistics.median(p[1] for p in pts), 4),
                              "libelle": labels.get(key) or config.get("libelles", {}).get(key, key),
                              "origine": "image" if "image" in source else "clics"}
+# Profondeurs mesurées par stéréo (profondeurs.py), conservées d'une reconstruction à l'autre.
+depths_file = folder / "profondeurs.json"
+if depths_file.exists():
+    for key, measured in json.loads(depths_file.read_text(encoding="utf-8")).items():
+        if key in controls:
+            controls[key]["profondeur"] = measured["profondeur"]
 carte = {"avion": aircraft, "fenetre": config["fenetre"], "vues": views, "commandes": controls}
 out = ROOT / "flowxav" / "aircraft" / aircraft / "carte.json"
 out.write_text(json.dumps(carte, indent=1, ensure_ascii=False), encoding="utf-8")
